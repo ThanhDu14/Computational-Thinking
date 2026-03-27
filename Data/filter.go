@@ -10,7 +10,7 @@ import (
 )
 
 // ĐIỀN API KEY CỦA BẠN VÀO ĐÂY
-const GEMINI_API_KEY = "AIzaSyAPV4xGc8aHCT_asXoCydWjTMrrRqGufl8"
+const GEMINI_API_KEY = "Your_API_KEY"
 
 type Review struct {
 	ReviewerName string `json:"reviewer_name"`
