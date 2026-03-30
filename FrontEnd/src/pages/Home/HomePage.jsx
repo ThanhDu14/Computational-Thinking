@@ -40,19 +40,19 @@ export default function HomePage() {
       `}</style>
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center -mt-8 pt-32 pb-20 px-6 bg-[linear-gradient(135deg,#909CC2_0%,#C7D2FE_100%)] overflow-hidden rounded-[3rem] mb-32">
+      <section className="relative w-full min-h-[100vh] flex flex-col items-center justify-center pt-32 pb-20 px-6 bg-[linear-gradient(135deg,#cad6ff_0%,#f8f5ff_100%)] overflow-hidden mb-24">
         {/* Floating Illustrations */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-          <div className="absolute top-1/4 left-10 w-64 h-64 glass-card-custom rounded-xl animate-float">
-            <img className="w-full h-full object-cover rounded-xl opacity-80" alt="map pins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz_ASohrGDDEO80TYarTvT8xLBawL3JsAoIpyYuggsmSsTadOLQybIhczQXQKtamIyiCO3iWrUuLQA2GOGgxT43woz2fRHtFhCosVbVcd2Be06pg6K_Y4sTOPnFJrNj1MpCBhZ5fLwXZyvdyGmmGrgzyc8kKgUg1iPfcWKxi4TKqAnOUTYaonR1F8S1uJ_bc3V0XFatD6FsEfKP85ejQuuL9DQmZp8-Ky-1nGfR6qg9AFzWpxYIK3XG8mYvM5JZrxAluNxKqgly4c" />
+        <div className="absolute inset-0 pointer-events-none opacity-60">
+          <div className="absolute top-1/4 left-5 md:left-20 w-64 h-64 glass-card-custom rounded-[2.5rem] animate-float overflow-hidden border border-white/50 shadow-2xl p-2">
+            <img className="w-full h-full object-cover rounded-[2rem] opacity-90" alt="travel map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz_ASohrGDDEO80TYarTvT8xLBawL3JsAoIpyYuggsmSsTadOLQybIhczQXQKtamIyiCO3iWrUuLQA2GOGgxT43woz2fRHtFhCosVbVcd2Be06pg6K_Y4sTOPnFJrNj1MpCBhZ5fLwXZyvdyGmmGrgzyc8kKgUg1iPfcWKxi4TKqAnOUTYaonR1F8S1uJ_bc3V0XFatD6FsEfKP85ejQuuL9DQmZp8-Ky-1nGfR6qg9AFzWpxYIK3XG8mYvM5JZrxAluNxKqgly4c" />
           </div>
-          <div className="absolute bottom-20 right-20 w-80 h-80 glass-card-custom rounded-xl animate-float-delayed">
-            <img className="w-full h-full object-cover rounded-xl opacity-80" alt="globe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf4CJmaqNVAqgoWdB-fVJzNejL3DEaX35x6xLDGQnV17bME2UrQlHqwfd07CB0btOJIEnaBguAeJ9N9ttKtH3umCSSj1Ael9lqzWAmvNA4k9NhPwJGq4H2m7-hv_VF0Fq9EgaUjGK-ixKorfQNdXmLYHLscE5H1qlbYhl7sR_3t9vPFrKY1VN_I9Y6GEbuGxopPd5tBL2ShXEHHSq4pK3dl1LBQjzfQOKaf5V8xBh-zRPouPKINKhZOc0Xe4pEOJeSgj4SwoRVZgw" />
+          <div className="absolute bottom-10 right-5 md:right-20 w-72 h-72 glass-card-custom rounded-full animate-float-delayed overflow-hidden border border-white/50 shadow-2xl p-2">
+            <img className="w-full h-full object-cover rounded-full opacity-90" alt="globe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf4CJmaqNVAqgoWdB-fVJzNejL3DEaX35x6xLDGQnV17bME2UrQlHqwfd07CB0btOJIEnaBguAeJ9N9ttKtH3umCSSj1Ael9lqzWAmvNA4k9NhPwJGq4H2m7-hv_VF0Fq9EgaUjGK-ixKorfQNdXmLYHLscE5H1qlbYhl7sR_3t9vPFrKY1VN_I9Y6GEbuGxopPd5tBL2ShXEHHSq4pK3dl1LBQjzfQOKaf5V8xBh-zRPouPKINKhZOc0Xe4pEOJeSgj4SwoRVZgw" />
           </div>
         </div>
         
-        <div className="relative z-10 max-w-4xl text-center space-y-8">
-          <h1 className="text-5xl md:text-[3.5rem] font-extrabold text-on-surface leading-[1.1] tracking-tight font-display">
+        <div className="relative z-10 max-w-4xl text-center space-y-8 mt-10">
+          <h1 className="text-5xl md:text-[4rem] font-extrabold text-on-surface leading-[1.1] tracking-tight font-display">
             Discover your next <br />
             <span className="text-primary italic">unforgettable journey</span>
           </h1>
@@ -75,8 +75,8 @@ export default function HomePage() {
           </div>
 
           {/* Search Bar Component */}
-          <div className="mt-16 w-full max-w-3xl mx-auto glass-card-custom p-4 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row items-center gap-4 font-body border border-white/40">
-            <div className="flex-1 w-full flex items-center px-4 bg-surface-container-low rounded-full py-3 focus-within:bg-white transition-colors group">
+          <div className="mt-16 w-full max-w-4xl mx-auto glass-card-custom p-4 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row items-center gap-4 font-body border border-white/70">
+            <div className="flex-1 w-full flex items-center px-4 bg-surface-container-low rounded-full py-3 focus-within:bg-white transition-colors group border border-outline-variant/30">
               <Search className="w-6 h-6 text-outline mr-3" />
               <input 
                 className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-medium outline-none" 
@@ -85,11 +85,11 @@ export default function HomePage() {
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              <button className="px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider whitespace-nowrap">Beach</button>
-              <button className="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-bold uppercase tracking-wider hover:bg-surface-container-highest transition-colors whitespace-nowrap">Mountain</button>
-              <button className="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-bold uppercase tracking-wider hover:bg-surface-container-highest transition-colors whitespace-nowrap">Culture</button>
+              <button className="px-5 py-3 rounded-full bg-secondary-container text-on-secondary-container text-sm font-bold tracking-wide whitespace-nowrap hover:shadow-md transition-all">Beach</button>
+              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">Mountain</button>
+              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">Culture</button>
             </div>
-            <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold">Search</button>
+            <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold ml-2 hover:bg-on-surface/90 transition-colors">Search</button>
           </div>
         </div>
       </section>
@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* Personalized AI Section */}
-      <section className="py-24 bg-surface-container-low rounded-[3rem] mb-32">
+      <section className="py-24 bg-surface-container-low rounded-[3rem] mb-32 max-w-[calc(100%-3rem)] md:max-w-7xl mx-auto">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-center max-w-2xl mx-auto">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-container/30 text-primary rounded-full font-bold text-xs uppercase tracking-widest mb-6 font-body">
