@@ -30,10 +30,10 @@ const Navbar = () => {
               Destinations
             </NavLink>
             <NavLink
-              to="/blog"
+              to="/ai-concierge"
               className={({ isActive }) => `transition-colors duration-200 ${isActive ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary'}`}
             >
-              Blog
+              AI Concierge
             </NavLink>
             <NavLink
               to="/about"
@@ -43,7 +43,20 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          <div className="flex flex-1 md:flex-none justify-end gap-3 font-body">
+          <div className="flex flex-1 md:flex-none justify-end gap-3 font-body items-center">
+            <Link
+              to="/login"
+              className="text-on-surface-variant hover:text-primary font-semibold text-sm transition-colors px-2"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="bg-primary/10 hover:bg-primary/20 text-primary px-5 py-2.5 rounded-full font-semibold text-sm transition-all"
+            >
+              Register
+            </Link>
+            <div className="h-6 w-px bg-outline-variant/30 mx-2 hidden md:block"></div>
             <Link
               to="/recommendations"
               className="bg-primary hover:bg-primary-dim text-white px-6 py-3 rounded-full font-semibold text-sm scale-95 active:scale-90 transition-all shadow-lg shadow-primary/20"
