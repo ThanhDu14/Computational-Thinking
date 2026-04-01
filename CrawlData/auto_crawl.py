@@ -21,8 +21,8 @@ if hasattr(uc.Chrome, '__del__'):
 # CẤU HÌNH HỆ THỐNG
 # ==========================================
 # 1. Cấu hình API Keys
-GEMINI_API_KEY = "AIzaSyAVhOL9TUMs1L7csfwdkTZYYHKbWNYGm-c" 
-GOOGLE_MAPS_API_KEY = "ĐIỀN_GOOGLE_MAPS_API_KEY_CỦA_BẠN_VÀO_ĐÂY" # Để trống "" nếu chưa có
+GEMINI_API_KEY = "ĐIỀN_API_KEY_VÀO_ĐÂY" # Gemini Flash 2.5
+GOOGLE_MAPS_API_KEY = "ĐIỀN_GOOGLE_MAPS_API_KEY_VÀO_ĐÂY" # Để trống "" nếu chưa có
 
 # 2. Cấu hình cào dữ liệu (Scraping)
 LIST_PAGE_URL = "https://www.tripadvisor.com.vn/Attractions-g298082-Activities-c47-Hoi_An_Quang_Nam_Province.html"
