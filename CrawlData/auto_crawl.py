@@ -1,4 +1,4 @@
-import undetected_chromedriver  uc
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,11 +7,12 @@ import time
 import random
 import json
 import os
-import reas
+import re
 import requests
 import sys
 import urllib.parse
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # Tắt lỗi báo rác [WinError 6] của undetected_chromedriver
 if hasattr(uc.Chrome, '__del__'):
@@ -21,19 +22,19 @@ if hasattr(uc.Chrome, '__del__'):
 # CẤU HÌNH HỆ THỐNG
 # ==========================================
 # 1. Cấu hình API Keys
-GEMINI_API_KEY = "ĐIỀN_API_KEY_CỦA_BẠN_VÀO_ĐÂY" # Gemini Flash 2.5
+GEMINI_API_KEY = "ĐIỀN_API_KEY_VÀO_ĐÂY" 
 
 # 2. Cấu hình cào dữ liệu (Scraping)
-LIST_PAGE_URL = "https://www.tripadvisor.com.vn/Attractions-g298082-Activities-c47-Hoi_An_Quang_Nam_Province.html"
-LOCATION = "Hoi An" # Tên địa điểm chính để hỗ trợ AI tìm kiếm chính xác hơn (Ví dụ: "Hoi An", "Da Nang", "Hue", "Phu Quoc") - KHÔNG THÊM "Vietnam" vì đã có sẵn trong prompt AI rồi
-VERSION_MAIN = 146  # Khớp với phiên bản Chrome của bạn
+LIST_PAGE_URL = "https://www.tripadvisor.com/Attractions-g293922-Activities-c47-Da_Lat_Lam_Dong_Province.html"
+LOCATION = "Da Lat" 
+VERSION_MAIN = 146  
 MAX_PAGES = 999 
 
 # 3. Cấu hình File trung gian và đầu ra
-LINKS_FILE = f"link_{LOCATION}.json" 
-RAW_DATA_FILE = f"data_{LOCATION}_raw.json"      
-MISSING_LINK_FILE = f"new_link_{LOCATION}.json"  
-FINAL_OUTPUT_FILE = f"data_{LOCATION}_final.json" 
+LINKS_FILE = f"link_{LOCATION.lower().replace(' ', '_')}.json"
+RAW_DATA_FILE = f"data_raw_{LOCATION.lower().replace(' ', '_')}.json"
+MISSING_LINK_FILE = f"new_link_{LOCATION.lower().replace(' ', '_')}.json"
+FINAL_OUTPUT_FILE = f"data_{LOCATION.lower().replace(' ', '_')}_final.json"
 
 # ==========================================
 # GIAI ĐOẠN 1: CÀO DỮ LIỆU (CRAWL)
@@ -208,7 +209,6 @@ def scrape_detail_page(driver, url):
     if desc_tag: desc = desc_tag.get_text(separator=' ', strip=True)
 
     images = []
-    
     for img in soup.find_all('img'):
         src = img.get('src') or img.get('data-src')
         if src and ('media/photo' in src or 'dynamic-media' in src):
@@ -233,37 +233,49 @@ def scrape_detail_page(driver, url):
         content = content_tag.get_text(separator=' ', strip=True) if content_tag else ""
         reviews.append({"reviewer_name": user_name, "stars": r_star, "comment": content})
 
+    # ==========================================
+    # KHẮC PHỤC LỖI ADDRESS DÀI DÒNG Ở ĐÂY
+    # ==========================================
     address = "N/A"
     for label in ["The area", "Address", "Địa chỉ", "Khu vực"]:
-        label_elements = soup.find_all(string=re.compile(label, re.IGNORECASE))
+        label_elements = soup.find_all(string=re.compile(f"^{label}$", re.IGNORECASE))
         for el in label_elements:
-            if el.strip().lower() == label.lower():
-                parent = el.parent
-                sibling = parent.find_next_sibling()
-                if sibling:
-                    text = sibling.get_text(separator=", ", strip=True)
-                    if len(text) > 10:
-                        address = text
-                        break
+            parent = el.parent
+            sibling = parent.find_next_sibling()
+            if sibling:
+                # Dùng '|' làm vách ngăn để tách các block không liên quan
+                text = sibling.get_text(separator="|", strip=True)
+                
+                # Các từ khóa báo hiệu đã lấn sang block "Rác" (Review, nearby, v.v.)
+                trash_keywords = [
+                    "Best nearby", "Restaurants", "Things to Do", "Reach out directly", 
+                    "Website", "Email", "Improve this listing", "Tours & experiences", 
+                    "Nhà hàng", "Điểm tham quan", "Gần đây"
+                ]
+                
+                # Chặt đứt chuỗi ngay tại vị trí có từ khóa rác đầu tiên
+                for trash in trash_keywords:
+                    if trash in text:
+                        text = text.split(trash)[0]
+                
+                # Thay thế '|' thành dấu phẩy chuẩn và gọt dũa khoảng trắng
+                text = text.replace('|', ', ').strip(', |.-')
+                
+                # Kiểm tra tính hợp lệ của địa chỉ
+                if len(text) > 5 and ("Vietnam" in text or "Việt Nam" in text or LOCATION in text or "Phường" in text):
+                    address = text
+                    break
         if address != "N/A":
             break
 
-    if address == "N/A" or len(address) < 5:
-        for tag in soup.find_all(['button', 'a']):
-            text = tag.get_text(separator=", ", strip=True)
-            if len(text) > 15 and ("Vietnam" in text or "Việt Nam" in text or LOCATION in text):
-                if "tour" not in text.lower() and "review" not in text.lower():
-                    address = text
-                    break
-
     if address != "N/A":
-        for trash in ["Reach out directly", "Website", "Email", "Improve this listing", "Tours & experiences"]:
-            if trash in address:
-                address = address.split(trash)[0]
+        # Tẩy luôn cụm từ "Address" hoặc "Địa chỉ" dính ở đầu chuỗi (VD: "Address, 01 Trieu Viet Vuong")
+        address = re.sub(r'^(Address|Địa chỉ|The area|Khu vực)[\s,:]*', '', address, flags=re.IGNORECASE)
         address = address.strip(' ,.-|\n\t')
         
     if len(address) < 5:
         address = "N/A"
+    # ==========================================
 
     rating_count = "N/A"
     rc_tag = soup.select_one('div[data-automation="bubbleReviewCount"]')
@@ -286,7 +298,10 @@ def phase_1_crawl():
     try:
         driver = init_driver()
         existing_data = load_json(RAW_DATA_FILE)
+        
         visited_urls = set(item['url'] for item in existing_data if 'url' in item)
+        visited_names = set(item['location_name'] for item in existing_data if 'location_name' in item)
+        
         print(f"Đã có {len(visited_urls)} địa điểm trong database tạm.")
 
         all_links = load_json(LINKS_FILE)
@@ -309,17 +324,24 @@ def phase_1_crawl():
                 try:
                     print(f"[{i}/{len(links_to_scrape)}] Xử lý: {link}")
                     data = scrape_detail_page(driver, link)
-                    if data:
-                        existing_data.append(data)
-                        save_json(existing_data, RAW_DATA_FILE) 
-                        print(f" -> Xong: {data['location_name']}")
-                        if data['address'] != 'N/A':
-                            print(f"    [+] Bắt được Address: {data['address'][:60]}...")
+                    
+                    if data and data['location_name'] != "N/A":
+                        if data['location_name'] not in visited_names:
+                            existing_data.append(data)
+                            visited_names.add(data['location_name'])
+                            save_json(existing_data, RAW_DATA_FILE) 
+                            
+                            print(f" -> Xong: {data['location_name']}")
+                            if data['address'] != 'N/A':
+                                print(f"    [+] Bắt được Address: {data['address'][:60]}...")
+                            else:
+                                print(f"    [-] Web giấu Address, sẽ tìm bằng API ở Giai đoạn 4.")
                         else:
-                            print(f"    [-] Web giấu Address, sẽ tìm bằng API ở Giai đoạn 4.")
+                            print(f" -> Bỏ qua: {data['location_name']} (Bị trùng lặp với dữ liệu đã có)")
+                        
                         success = True
                         break 
-                    else: print(" -> Load chậm/lỗi.")
+                    else: print(" -> Load chậm/lỗi hoặc trang không tồn tại.")
                 except Exception as e: print(f" -> Lỗi: {e}")
                 
                 if not success and attempt < 2: time.sleep(random.uniform(2, 3))
@@ -349,8 +371,7 @@ def phase_1_crawl():
 # ==========================================
 def classify_with_gemini(locations):
     print("⏳ Đang gửi danh sách lên Gemini 2.5 Flash để phân tích...")
-    genai.configure(api_key=GEMINI_API_KEY.strip())
-    model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
+    client = genai.Client(api_key=GEMINI_API_KEY.strip())
     
     prompt = f"""
     Bạn là chuyên gia du lịch Việt Nam. Phân loại danh sách sau: 1 (Tham quan) và 0 (Không tham quan).
@@ -361,7 +382,13 @@ def classify_with_gemini(locations):
     """
     for attempt in range(3):
         try:
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
+            )
             return json.loads(response.text)
         except Exception as e:
             if "429" in str(e) or "Quota" in str(e):
@@ -485,31 +512,25 @@ def get_osm_address(location_name):
 def get_address_from_google_search(driver, location_name):
     """Lớp 2: Lên thanh search của Google cào phần tổng quan AI / Knowledge panel và bóc tách bằng Gemini"""
     try:
-        # Giả lập thao tác tìm kiếm trên Google
         query = f"{location_name} {LOCATION} address"
         url = f"https://www.google.com/search?q={urllib.parse.quote(query)}&hl=vi"
         driver.get(url)
-        time.sleep(3) # Chờ Google load xong phần AI Overview và Knowledge Graph
+        time.sleep(3) 
         
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         
-        # Thử lấy luôn trực tiếp từ bảng Knowledge Graph (nếu có sẵn chữ Địa chỉ)
         address_tag = soup.select_one('div[data-attrid="kc:/location/location:address"]')
         if address_tag:
             addr = address_tag.get_text(separator=' ', strip=True).replace('Địa chỉ:', '').replace('Address:', '').strip()
             if len(addr) > 5:
                 return addr
                 
-        # Nếu Google hiển thị AI Overview hoặc Snippet, bốc toàn bộ vùng nội dung chính
         main_div = soup.select_one('#search') or soup.select_one('#main')
         if main_div:
             raw_text = main_div.get_text(separator=' ', strip=True)
-            
-            # Cắt 2500 ký tự đầu tiên chứa các tóm tắt quan trọng nhất
             snippet_text = raw_text[:2500]
             
-            # Truyền đoạn văn bản hỗn độn này cho Gemini xử lý
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            client = genai.Client(api_key=GEMINI_API_KEY.strip())
             prompt = f"""
             Dưới đây là văn bản cào được từ trang kết quả tìm kiếm Google cho địa điểm '{location_name}' ở {LOCATION}.
             Nhiệm vụ của bạn là đọc phần thông tin tổng quan do AI/Google tạo ra bên dưới và trích xuất đúng dòng địa chỉ của địa điểm này.
@@ -519,7 +540,10 @@ def get_address_from_google_search(driver, location_name):
             Văn bản:
             {snippet_text}
             """
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt
+            )
             addr = response.text.strip().replace('"', '').replace('`', '')
             
             if "N/A" not in addr.upper() and len(addr) > 5:
@@ -532,9 +556,13 @@ def get_address_from_google_search(driver, location_name):
 def get_gemini_address(location_name):
     """Lớp 3: Hỏi đáp mù với AI Gemini (Cứu cánh cuối cùng)"""
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        client = genai.Client(api_key=GEMINI_API_KEY.strip())
         prompt = f"Địa chỉ chính xác của khu du lịch '{location_name}' tại {LOCATION}, Việt Nam là gì? Chỉ trả về 1 dòng duy nhất chứa chuỗi địa chỉ, tuyệt đối không giải thích thêm, không ghi các từ dư thừa như 'Địa chỉ là'. Nếu bạn không biết hoặc địa điểm không có thật, hãy trả về đúng chữ 'N/A'."
-        response = model.generate_content(prompt)
+        
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         addr = response.text.strip().replace('"', '').replace('`', '')
         
         if "N/A" in addr or "không" in addr.lower():
@@ -548,7 +576,6 @@ def phase_4_fill_address(filtered_data):
     print("🗺️ GIAI ĐOẠN 4: ĐIỀN ĐỊA CHỈ (CƠ CHẾ 3 LỚP TÌM KIẾM)")
     print("="*50)
     
-    # Kiểm tra xem có địa điểm nào cần cào bằng trình duyệt không để bật Chrome lên
     need_browser = any(item.get("address") == "N/A" or not item.get("address") for item in filtered_data)
     driver = None
     if need_browser:
@@ -621,7 +648,7 @@ def phase_5_filter_missing_address(filtered_data):
 # THỰC THI TOÀN BỘ PIPELINE
 # ==========================================
 if __name__ == "__main__":
-    if GEMINI_API_KEY == "ĐIỀN_API_KEY_CỦA_BẠN_VÀO_ĐÂY" or not GEMINI_API_KEY.strip():
+    if GEMINI_API_KEY == "ĐIỀN_API_KEY_VÀO_ĐÂY" or not GEMINI_API_KEY.strip():
         print("\n❌ Bạn quên điền GEMINI API Key ở đầu file rồi kìa! Hãy điền vào để AI có thể hoạt động.")
         sys.exit()
         

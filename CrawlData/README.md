@@ -9,7 +9,7 @@ Hệ thống hoạt động tự động qua 5 bước liên hoàn:
 2. **Lọc thông minh (AI Filter):** Nhờ Gemini AI đọc hiểu và chỉ giữ lại những nơi thực sự là "Địa điểm tham quan" (loại bỏ spa, nha khoa, công ty du lịch...).
 3. **Đắp mô tả (Wiki Description):** Tự động tìm kiếm và điền các đoạn giới thiệu (description) còn thiếu bằng Wikipedia API.
 4. **Truy tìm địa chỉ (4-Layer Address Scraper):** Quét địa chỉ qua 4 lớp bảo vệ để đảm bảo không lọt dữ liệu: 
-   `OpenStreetMap` ➔ `Google Maps API` ➔ `Google Search (AI Overviews)` ➔ `Hỏi đáp trực tiếp Gemini`.
+   `OpenStreetMap` ➔ `Google Search (AI Overviews)` ➔ `Hỏi đáp trực tiếp Gemini`.
 5. **Lọc rác cuối cùng:** Xóa bỏ hoàn toàn các địa điểm tàng hình (không thể xác định được địa chỉ).
 
 ---
@@ -17,10 +17,11 @@ Hệ thống hoạt động tự động qua 5 bước liên hoàn:
 ## 🛠️ Cài Đặt Môi Trường
 
 **Yêu cầu hệ thống:**
-- Python 3.8+
+- Python 3.8+ (Ưu tiên 3.11 và 3.12 để tránh lỗi thư viện)
 - Trình duyệt Google Chrome phiên bản mới nhất.
 
 **Bước 1: Clone dự án hoặc tải mã nguồn về máy**
+
 **Bước 2: Cài đặt các thư viện cần thiết**
 Mở Terminal/Command Prompt tại thư mục chứa code và chạy lệnh sau:
 ```bash
@@ -38,8 +39,6 @@ Trước khi chạy chương trình, bạn cần mở file code Python (ví dụ
 Hệ thống cần 2 loại chìa khóa để hoạt động:
 - **`GEMINI_API_KEY` (Bắt buộc):** Dùng để AI nhận diện địa điểm tham quan và bóc tách địa chỉ.
   - *Cách lấy:* Tạo miễn phí tại [Google AI Studio](https://aistudio.google.com/).
-- **`Maps_API_KEY` (Tùy chọn):** Dùng để tra cứu địa chỉ nhanh và chính xác hơn.
-  - *Lưu ý:* Nếu bạn chưa có Key này, hãy để trống `""`, hệ thống sẽ tự động dùng OpenStreetMap và Gemini để làm phương án thay thế.
 
 ### 2. Cấu Hình Địa Điểm Cào (Đổi Tỉnh/Thành)
 Nếu bạn muốn thu thập dữ liệu ở một khu vực khác (VD: Đà Lạt, Hà Nội, TP.HCM), hãy thay đổi 2 biến sau:
@@ -67,4 +66,4 @@ Sau khi hoàn tất, hệ thống sẽ tạo ra các file sau trong cùng thư m
 - `link_{LOCATION}.json` (đổi tên tùy theo địa điểm cào): File lưu trữ danh sách URL đã quét (giúp resume nếu bị đứt mạng).
 - `data_{LOCATION}_raw.json`: File chứa dữ liệu thô chưa qua bộ lọc AI.
 - `new_link_{LOCATION}.json`: Danh sách các địa điểm bị thiếu mô tả cần tra Wiki.
-- **`data_{LOCATION}_final.json`(đổi tên tùy theo địa điểm cào)**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% có địa chỉ thực tế và đã bị loại bỏ toàn bộ dữ liệu rác.
+- **`data_{LOCATION}_final.json`**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% có địa chỉ thực tế và đã bị loại bỏ toàn bộ dữ liệu rác.

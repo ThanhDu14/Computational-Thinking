@@ -1,5 +1,6 @@
-undetected-chromedriver>=3.5.0
-selenium>=4.9.0
-beautifulsoup4>=4.12.0
-requests>=2.31.0
-google-generativeai>=0.4.0
+undetected-chromedriver
+selenium
+beautifulsoup4
+requests
+google-genai
+setuptools
