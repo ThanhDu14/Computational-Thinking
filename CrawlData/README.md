@@ -64,7 +64,7 @@ python ten_file_code_cua_ban.py
 
 Sau khi hoàn tất, hệ thống sẽ tạo ra các file sau trong cùng thư mục:
 
-- `link_hoi_an.json` (đổi tên tùy theo địa điểm cào): File lưu trữ danh sách URL đã quét (giúp resume nếu bị đứt mạng).
-- `data_raw.json`: File chứa dữ liệu thô chưa qua bộ lọc AI.
-- `new_link.json`: Danh sách các địa điểm bị thiếu mô tả cần tra Wiki.
-- **`data_HA_final.json`(đổi tên tùy theo địa điểm cào)**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% có địa chỉ thực tế và đã bị loại bỏ toàn bộ dữ liệu rác.
+- `link_{LOCATION}.json` (đổi tên tùy theo địa điểm cào): File lưu trữ danh sách URL đã quét (giúp resume nếu bị đứt mạng).
+- `data_{LOCATION}_raw.json`: File chứa dữ liệu thô chưa qua bộ lọc AI.
+- `new_link_{LOCATION}.json`: Danh sách các địa điểm bị thiếu mô tả cần tra Wiki.
+- **`data_{LOCATION}_final.json`(đổi tên tùy theo địa điểm cào)**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% có địa chỉ thực tế và đã bị loại bỏ toàn bộ dữ liệu rác.

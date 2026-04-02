@@ -1,4 +1,4 @@
-import undetected_chromedriver as uc
+import undetected_chromedriver  uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,7 +7,7 @@ import time
 import random
 import json
 import os
-import re
+import reas
 import requests
 import sys
 import urllib.parse
@@ -21,20 +21,19 @@ if hasattr(uc.Chrome, '__del__'):
 # CẤU HÌNH HỆ THỐNG
 # ==========================================
 # 1. Cấu hình API Keys
-GEMINI_API_KEY = "ĐIỀN_API_KEY_VÀO_ĐÂY" # Gemini Flash 2.5
-GOOGLE_MAPS_API_KEY = "ĐIỀN_GOOGLE_MAPS_API_KEY_VÀO_ĐÂY" # Để trống "" nếu chưa có
+GEMINI_API_KEY = "ĐIỀN_API_KEY_CỦA_BẠN_VÀO_ĐÂY" # Gemini Flash 2.5
 
 # 2. Cấu hình cào dữ liệu (Scraping)
 LIST_PAGE_URL = "https://www.tripadvisor.com.vn/Attractions-g298082-Activities-c47-Hoi_An_Quang_Nam_Province.html"
-LOCATION = "Hoi An" 
+LOCATION = "Hoi An" # Tên địa điểm chính để hỗ trợ AI tìm kiếm chính xác hơn (Ví dụ: "Hoi An", "Da Nang", "Hue", "Phu Quoc") - KHÔNG THÊM "Vietnam" vì đã có sẵn trong prompt AI rồi
 VERSION_MAIN = 146  # Khớp với phiên bản Chrome của bạn
 MAX_PAGES = 999 
 
 # 3. Cấu hình File trung gian và đầu ra
-LINKS_FILE = "link_hoi_an.json" 
-RAW_DATA_FILE = "data_raw.json"      
-MISSING_LINK_FILE = "new_link.json"  
-FINAL_OUTPUT_FILE = "data_HA_final.json" 
+LINKS_FILE = f"link_{LOCATION}.json" 
+RAW_DATA_FILE = f"data_{LOCATION}_raw.json"      
+MISSING_LINK_FILE = f"new_link_{LOCATION}.json"  
+FINAL_OUTPUT_FILE = f"data_{LOCATION}_final.json" 
 
 # ==========================================
 # GIAI ĐOẠN 1: CÀO DỮ LIỆU (CRAWL)
@@ -65,7 +64,7 @@ def get_wikimedia_images(location_name, max_images=10):
     def fetch_images(search_query):
         params = {
             "action": "query", "format": "json", "generator": "search",
-            "gsrnamespace": 6, "gsrsearch": search_query, "gsrlimit": max_images,     
+            "gsrnamespace": 6, "gsrsearch": search_query, "gsrlimit": max_images,    
             "prop": "imageinfo", "iiprop": "url|mime"        
         }
         try:
@@ -458,7 +457,7 @@ def phase_3_fill_description(filtered_data):
     return filtered_data
 
 # ==========================================
-# GIAI ĐOẠN 4: TÌM ĐỊA CHỈ (OSM -> GOOGLE MAPS -> CÀO GOOGLE SEARCH -> GEMINI)
+# GIAI ĐOẠN 4: TÌM ĐỊA CHỈ (OSM -> CÀO GOOGLE SEARCH -> GEMINI)
 # ==========================================
 def get_osm_address(location_name):
     """Lớp 1: API của Nominatim (OpenStreetMap)"""
@@ -483,34 +482,8 @@ def get_osm_address(location_name):
             time.sleep(2)
     return "N/A"
 
-def get_google_address(location_name):
-    """Lớp 2: Google Maps Text Search"""
-    if not GOOGLE_MAPS_API_KEY or GOOGLE_MAPS_API_KEY == "ĐIỀN_GOOGLE_MAPS_API_KEY_CỦA_BẠN_VÀO_ĐÂY":
-        return "N/A" 
-        
-    url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
-    clean_name = re.sub(r'[^\w\s\u00C0-\u1EF9]', ' ', location_name).strip()
-    
-    queries = [
-        f"{clean_name} {LOCATION} Vietnam", 
-        f"{clean_name}"                      
-    ]
-    
-    for q in queries:
-        params = {"query": q, "key": GOOGLE_MAPS_API_KEY}
-        try:
-            response = requests.get(url, params=params, timeout=10)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("status") == "OK" and data.get("results"):
-                    return data["results"][0].get("formatted_address", "N/A")
-        except Exception:
-            pass
-            
-    return "N/A"
-
 def get_address_from_google_search(driver, location_name):
-    """Lớp 3: [CẢI TIẾN] Lên thanh search của Google cào phần tổng quan AI / Knowledge panel và bóc tách bằng Gemini"""
+    """Lớp 2: Lên thanh search của Google cào phần tổng quan AI / Knowledge panel và bóc tách bằng Gemini"""
     try:
         # Giả lập thao tác tìm kiếm trên Google
         query = f"{location_name} {LOCATION} address"
@@ -557,7 +530,7 @@ def get_address_from_google_search(driver, location_name):
     return "N/A"
 
 def get_gemini_address(location_name):
-    """Lớp 4: Hỏi đáp mù với AI Gemini (Cứu cánh cuối cùng)"""
+    """Lớp 3: Hỏi đáp mù với AI Gemini (Cứu cánh cuối cùng)"""
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')
         prompt = f"Địa chỉ chính xác của khu du lịch '{location_name}' tại {LOCATION}, Việt Nam là gì? Chỉ trả về 1 dòng duy nhất chứa chuỗi địa chỉ, tuyệt đối không giải thích thêm, không ghi các từ dư thừa như 'Địa chỉ là'. Nếu bạn không biết hoặc địa điểm không có thật, hãy trả về đúng chữ 'N/A'."
@@ -572,14 +545,14 @@ def get_gemini_address(location_name):
 
 def phase_4_fill_address(filtered_data):
     print("\n" + "="*50)
-    print("🗺️ GIAI ĐOẠN 4: ĐIỀN ĐỊA CHỈ (CƠ CHẾ 4 LỚP TÌM KIẾM CỰC MẠNH)")
+    print("🗺️ GIAI ĐOẠN 4: ĐIỀN ĐỊA CHỈ (CƠ CHẾ 3 LỚP TÌM KIẾM)")
     print("="*50)
     
     # Kiểm tra xem có địa điểm nào cần cào bằng trình duyệt không để bật Chrome lên
     need_browser = any(item.get("address") == "N/A" or not item.get("address") for item in filtered_data)
     driver = None
     if need_browser:
-        print("🚀 Đang khởi động lại Chrome để cào Google Search (Lớp 3)...")
+        print("🚀 Đang khởi động lại Chrome để cào Google Search (Lớp 2)...")
         driver = init_driver()
         
     updated_count = 0
@@ -590,15 +563,12 @@ def phase_4_fill_address(filtered_data):
             
             address = get_osm_address(name) # Lớp 1
             
-            if address == "N/A":
-                address = get_google_address(name) # Lớp 2
-                
             if address == "N/A" and driver:
                 print("     [*] Đang bóc tách thông tin tổng quan từ Google Search AI...")
-                address = get_address_from_google_search(driver, name) # Lớp 3 (Thêm mới)
+                address = get_address_from_google_search(driver, name) # Lớp 2
                 
             if address == "N/A":
-                address = get_gemini_address(name) # Lớp 4
+                address = get_gemini_address(name) # Lớp 3
                 if address != "N/A":
                     print("     [*] Đã dùng AI Gemini dự đoán làm cứu cánh cuối cùng.")
             
@@ -607,7 +577,7 @@ def phase_4_fill_address(filtered_data):
                 updated_count += 1
                 print(f"     [+] Đã tìm thấy: {address[:50]}...")
             else:
-                print(f"     [-] Bó tay! Không tìm thấy địa chỉ ở cả 4 hệ thống.")
+                print(f"     [-] Bó tay! Không tìm thấy địa chỉ ở cả 3 hệ thống.")
                 
             time.sleep(1.5) 
             
@@ -655,9 +625,6 @@ if __name__ == "__main__":
         print("\n❌ Bạn quên điền GEMINI API Key ở đầu file rồi kìa! Hãy điền vào để AI có thể hoạt động.")
         sys.exit()
         
-    if not GOOGLE_MAPS_API_KEY or GOOGLE_MAPS_API_KEY == "ĐIỀN_GOOGLE_MAPS_API_KEY_CỦA_BẠN_VÀO_ĐÂY":
-        print("💡 Lưu ý: Bạn chưa điền Google Maps API Key. Hệ thống sẽ tự động dùng OSM và Gemini AI để thay thế.")
-        
     print("🚀 KHỞI ĐỘNG HỆ THỐNG TỰ ĐỘNG HÓA 5 TRONG 1")
     
     # 1. Cào Web
@@ -670,7 +637,7 @@ if __name__ == "__main__":
         # 3. Đắp Description
         filtered_data = phase_3_fill_description(filtered_data)
         
-        # 4. Đắp Address bằng 4 lớp bảo vệ (Có cào thông tin tổng quan AI)
+        # 4. Đắp Address bằng 3 lớp bảo vệ (Có cào thông tin tổng quan AI)
         filtered_data = phase_4_fill_address(filtered_data)
         
         # 5. Lọc rác cuối cùng: Loại bỏ địa điểm không có địa chỉ
