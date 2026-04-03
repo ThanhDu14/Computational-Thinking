@@ -6,9 +6,6 @@ const AuthPage = () => {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(location.pathname === '/login');
 
-    useEffect(() => {
-        setIsLogin(location.pathname === '/login');
-    }, [location.pathname]);
 
     const handleToggle = (mode) => {
         if (mode === 'login') {

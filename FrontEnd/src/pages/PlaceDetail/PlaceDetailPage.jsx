@@ -6,7 +6,7 @@ import Button from '../../components/common/Button';
 import { MapPin, Star, Calendar, Clock, Sparkles } from 'lucide-react';
 
 export default function PlaceDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
 
   return (
     <div className="w-full">

@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "home": "Home",
+    "destinations": "Destinations",
+    "search": "Search Trips",
+    "recommendations": "Recommendations",
+    "blog": "Blog",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "home": {
+    "hero": {
+      "title_1": "Discover your next",
+      "title_2": "unforgettable journey",
+      "subtitle": "AI-powered suggestions for destinations you'll love, crafted for the modern wanderer.",
+      "explore_btn": "Explore destinations",
+      "popular_btn": "View popular places",
+      "search_placeholder": "Where do you want to go?",
+      "search_btn": "Search"
+    },
+    "trending": {
+      "subtitle": "Inspiration",
+      "title": "Trending Destinations",
+      "view_all": "View all",
+      "card1": {
+        "tag": "Nature",
+        "title": "Azure Coastlines of the Mediterranean",
+        "desc": "Experience the hidden coves and sapphire waters of the Amalfi Coast's best kept secrets."
+      },
+      "card2": {
+        "tag": "Culture",
+        "title": "Ancient Markets of the Silk Road",
+        "desc": "A sensory journey through the spices, silks, and stories of historical Uzbekistan."
+      },
+      "card3": {
+        "tag": "Nature",
+        "title": "Glacial Peaks and Silent Valleys",
+        "desc": "Escape to the serenity of the high Alps, where time moves as slowly as the glaciers."
+      },
+      "view_details": "View details"
+    },
+    "ai": {
+      "subtitle": "Smart Assistant",
+      "title": "Tailored for your taste",
+      "desc": "Our AI learns from your preferences to curate the perfect escape.",
+      "card1": {
+        "title": "The Solo Adventurer's Path",
+        "desc": "Safety-focused, high-engagement solo itineraries in safe urban hubs."
+      },
+      "card2": {
+        "title": "Eco-Conscious Escapes",
+        "desc": "Sustainable stays and low-carbon transport journeys through lush rainforests."
+      },
+      "btn": "Generate plan"
+    },
+    "stats": {
+      "destinations": "Destinations",
+      "countries": "Countries",
+      "happy": "Happy Travelers"
+    },
+    "blog": {
+      "title": "Traveler Stories",
+      "card1": {
+        "title": "The Art of Minimalist Packing: 10 Days in One Bag",
+        "desc": "Learn how to traverse the globe with only the essentials without sacrificing style or comfort."
+      },
+      "card2": {
+        "title": "Hidden Tokyo: Beyond the Neon and Crowds",
+        "desc": "Discover the quiet temples and artisanal coffee shops tucked away in the world's busiest city."
+      },
+      "read_more": "Read more"
+    }
+  },
+  "about": {
+    "hero_title_1": "Engineering the",
+    "hero_title_2": "Future of Travel",
+    "hero_subtitle": "We're not just a booking platform. We're your digital gateway to the stratosphere of luxury exploration, powered by the most sophisticated AI on the planet.",
+    "stats": {
+      "trips": "Trips Curated",
+      "countries": "Countries",
+      "accuracy": "AI Accuracy",
+      "rating": "User Rating"
+    },
+    "mission": {
+      "title": "Our Purpose",
+      "heading_1": "Personalization at the",
+      "heading_2": "Speed of Thought.",
+      "p1": "In an era of endless options, the true luxury is relevance. SmartTravel was founded on the belief that travel shouldn't be about scrolling through generic listings—it should be about discovering experiences that resonate with your soul.",
+      "p2": "Our proprietary AI engines process millions of data points, from real-time climate patterns to local cultural festivals, ensuring that every itinerary we generate is as unique as a fingerprint. We bridge the gap between human intuition and machine precision.",
+      "p3": "Whether you're seeking a silent retreat in the Andes or a high-energy culinary tour through Tokyo, our Digital Concierge understands the nuance of your desires before you even voice them."
+    },
+    "team": {
+      "title": "The Team",
+      "heading": "The Architects of Journey",
+      "subtitle": "Meet the visionaries blending aerospace engineering with hospitality to redefine your transit."
+    },
+    "cta": {
+      "heading": "Ready to transcend the ordinary?",
+      "subtitle": "Our concierge is standing by to build your next stratosphere journey. Reach out to our global support team or start your exploration today.",
+      "start": "Start Planning",
+      "contact": "Contact Us"
+    }
+  }
+}

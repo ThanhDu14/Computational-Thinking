@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "home": "Trang Chủ",
+    "destinations": "Điểm Đến",
+    "search": "Tìm Chuyến Đi",
+    "recommendations": "Gợi Ý Chuyến Đi",
+    "blog": "Bài Viết",
+    "contact": "Liên Hệ",
+    "about": "Giới Thiệu"
+  },
+  "home": {
+    "hero": {
+      "title_1": "Khám phá chuyến đi",
+      "title_2": "để đời tiếp theo của bạn",
+      "subtitle": "Những gợi ý điểm đến phù hợp sở thích do AI tuyển chọn, dành cho những người yêu xê dịch hiện đại.",
+      "explore_btn": "Khám phá điểm đến",
+      "popular_btn": "Xem nơi nổi bật",
+      "search_placeholder": "Bạn muốn đi đâu?",
+      "search_btn": "Tìm"
+    },
+    "trending": {
+      "subtitle": "Nguồn Cảm Hứng",
+      "title": "Điểm Đến Đang Thịnh Hành",
+      "view_all": "Xem tất cả",
+      "card1": {
+        "tag": "Thiên nhiên",
+        "title": "Bờ biển Azure Địa Trung Hải",
+        "desc": "Trải nghiệm những vịnh nhỏ ẩn mình và làn nước ngọc bích của Bờ biển Amalfi tuyệt đẹp."
+      },
+      "card2": {
+        "tag": "Văn hóa",
+        "title": "Những Khu chợ cổ trên Con Đường Tơ Lụa",
+        "desc": "Chuyến hành trình đánh thức giác quan qua những hương liệu, dải lụa và câu chuyện lịch sử của Uzbekistan."
+      },
+      "card3": {
+        "tag": "Thiên nhiên",
+        "title": "Đỉnh Băng Hà và Thung Lũng Yên Tĩnh",
+        "desc": "Trốn tìm sự thanh bình trên vùng núi Alps cao vút, nơi thời gian trôi chậm chạp như các dòng sông băng."
+      },
+      "view_details": "Xem chi tiết"
+    },
+    "ai": {
+      "subtitle": "Trợ Lý Thông Minh",
+      "title": "Tinh chỉnh theo sở thích của bạn",
+      "desc": "AI của chúng tôi học hỏi từ sở thích của bạn để thiết kế một chuyến đi hoàn hảo.",
+      "card1": {
+        "title": "Hành Trình Kẻ Độc Hành",
+        "desc": "Lịch trình đề cao an toàn, trải nghiệm sâu sắc dành riêng cho người đi một mình tại các đô thị sầm uất."
+      },
+      "card2": {
+        "title": "Nghỉ Dưỡng Thân Thiện Sinh Thái",
+        "desc": "Những điểm trung chuyển bền vững và phương tiện xanh xuyên qua các khu rừng nguyên sinh tươi tốt."
+      },
+      "btn": "Tạo lịch trình"
+    },
+    "stats": {
+      "destinations": "Điểm đến",
+      "countries": "Quốc gia",
+      "happy": "Khách hàng hài lòng"
+    },
+    "blog": {
+      "title": "Câu Chuyện Của Lữ Khách",
+      "card1": {
+        "title": "Nghệ Thuật Xếp Đồ Tối Giản: 10 Ngày Trong 1 Balo",
+        "desc": "Học cách đi khắp thế giới chỉ với những thứ thiết yếu mà không mất đi phong cách và sự thoải mái."
+      },
+      "card2": {
+        "title": "Tokyo Cám Dỗ Bất Ngờ: Phía Sau Ánh Đèn Neon",
+        "desc": "Khám phá những ngôi đền tĩnh mịch và quán cà phê thủ công ẩn mình trong thành phố nhộn nhịp nhất thế giới."
+      },
+      "read_more": "Đọc tiếp"
+    }
+  },
+  "about": {
+    "hero_title_1": "Kiến tạo",
+    "hero_title_2": "Tương lai Du lịch",
+    "hero_subtitle": "Chúng tôi không chỉ là nền tảng đặt vé. Chúng tôi là cánh cổng kỹ thuật số đưa bạn đến với những chuyến thám hiểm sang trọng bậc nhất, được vận hành bởi AI tiên tiến nhất hành tinh.",
+    "stats": {
+      "trips": "Lịch Trình Tạo Ra",
+      "countries": "Quốc Gia Đã Đi",
+      "accuracy": "Độ Chính Xác Hàng Đầu",
+      "rating": "Điểm Đánh Giá"
+    },
+    "mission": {
+      "title": "Sứ mệnh của chúng tôi",
+      "heading_1": "Cá nhân hóa ở mức",
+      "heading_2": "Tốc độ Tư duy.",
+      "p1": "Trong kỷ nguyên của vô số hạn mục, sự xa xỉ thực sự là tính phù hợp. SmartTravel được thành lập với niềm tin rằng du lịch không nên là việc lướt qua các danh sách chung chung—mà là khám phá những chặng đường tạo ra sự cộng hưởng với tâm hồn bạn.",
+      "p2": "Công cụ AI độc quyền của chúng tôi xử lý hàng triệu điểm dữ liệu, từ thời tiết theo thời gian thực đến các lễ hội văn hóa địa phương, đảm bảo mọi lịch trình chúng tôi tạo ra đều độc nhất như dấu vân tay. Chúng tôi xóa nhòa khoảng cách giữa trực giác con người và sự chuẩn xác của máy móc.",
+      "p3": "Cho dù bạn tìm kiếm một nơi tĩnh tâm trên dãy Andes hay một tour ẩm thực tràn đầy năng lượng qua Tokyo, Trợ lý Ảo của chúng tôi thấu hiểu mọi sắc thái mong muốn của bạn trước cả khi bạn nói ra."
+    },
+    "team": {
+      "title": "Đội Ngũ",
+      "heading": "Những Kiến trúc sư Hành trình",
+      "subtitle": "Gặp gỡ những người nhìn xa trông rộng kết hợp kỹ thuật hàng không vũ trụ với ngành dịch vụ nhà hàng khách sạn để định nghĩa lại sự di chuyển của bạn."
+    },
+    "cta": {
+      "heading": "Sẵn sàng vượt qua sự tầm thường?",
+      "subtitle": "Trợ lý ảo của chúng tôi luôn túc trực để xây dựng hành trình không gian bứt phá tiếp theo cho bạn. Hãy liên hệ với đội ngũ hỗ trợ toàn cầu hoặc bắt đầu hành trình khám phá ngay hôm nay.",
+      "start": "Bắt đầu Lên lịch",
+      "contact": "Liên hệ Chúng tôi"
+    }
+  }
+}

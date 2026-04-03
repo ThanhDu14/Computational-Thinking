@@ -1,7 +1,19 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
+import { Sun, Moon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const currentLang = i18n.language || '';
+    const newLang = currentLang.startsWith('vi') ? 'en' : 'vi';
+    i18n.changeLanguage(newLang);
+  };
+
   return (
     <div className="fixed w-full z-50 top-0 left-0 px-6 pt-6 pointer-events-none">
       <header className="pointer-events-auto bg-surface/80 backdrop-blur-2xl rounded-xl shadow-[0_10px_40px_-10px_rgba(39,44,81,0.06)] transition-all duration-300">
@@ -27,7 +39,7 @@ const Navbar = () => {
               to="/destinations"
               className={({ isActive }) => `transition-colors duration-200 ${isActive ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary'}`}
             >
-              Destinations
+              {t('nav.destinations', 'Destinations')}
             </NavLink>
             <NavLink
               to="/ai-concierge"
@@ -39,11 +51,27 @@ const Navbar = () => {
               to="/about"
               className={({ isActive }) => `transition-colors duration-200 ${isActive ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary'}`}
             >
-              About
+              {t('nav.about', 'About')}
             </NavLink>
           </div>
 
           <div className="flex flex-1 md:flex-none justify-end gap-3 font-body items-center">
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors font-bold text-sm"
+              aria-label="Toggle Language"
+            >
+              {(i18n.language || '').startsWith('vi') ? 'VI' : 'EN'}
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors mr-1"
+              aria-label="Toggle Dark Mode"
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
             <Link
               to="/login"
               className="text-on-surface-variant hover:text-primary font-semibold text-sm transition-colors px-2"
