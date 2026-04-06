@@ -18,7 +18,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Protected/Main Routes with Layout (Navbar & Footer) */}
         <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<HomePage />} />

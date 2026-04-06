@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import Button from '../../components/common/Button';
 import PlaceCard from '../../components/places/PlaceCard';
+import { useTranslation } from 'react-i18next';
 
 export default function SearchPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   
   const searchResults = [
@@ -19,7 +21,7 @@ export default function SearchPage() {
         <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200')] bg-cover mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm"></div>
         <div className="relative z-10 max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-display font-bold mb-10 tracking-tighter drop-shadow-md">Where to next?</h1>
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-10 tracking-tighter drop-shadow-md">{t('search_page.hero_title')}</h1>
           
           {/* Search Input */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -29,17 +31,17 @@ export default function SearchPage() {
                 type="text" 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search destinations, cities, or activities..." 
+                placeholder={t('search_page.search_placeholder')} 
                 className="w-full bg-transparent border-none outline-none text-on-surface text-lg placeholder-on-surface-variant/70 font-body font-medium"
               />
             </div>
             <Button variant="primary" className="py-4 px-10 text-lg shadow-lg hover:shadow-xl bg-white text-primary hover:text-primary-dim">
-              Search
+              {t('search_page.search_btn')}
             </Button>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 py-2 font-body text-[15px] font-semibold text-primary-container">
-            <span className="text-white/80">Popular:</span>
+            <span className="text-white/80">{t('search_page.popular')}</span>
             <span className="cursor-pointer hover:text-white transition-colors">Santorini</span>
             <span className="cursor-pointer hover:text-white transition-colors">Kyoto</span>
             <span className="cursor-pointer hover:text-white transition-colors">Bali</span>
@@ -50,9 +52,9 @@ export default function SearchPage() {
       {/* Results Area */}
       <div className="flex justify-between items-end mb-8 border-b border-outline-variant/20 pb-4">
         <div>
-          <h2 className="text-3xl font-display font-bold text-on-surface mb-1">Search Results</h2>
+          <h2 className="text-3xl font-display font-bold text-on-surface mb-1">{t('search_page.results_title')}</h2>
         </div>
-        <span className="text-on-surface-variant font-body font-bold text-sm uppercase tracking-wider bg-surface-container-low px-4 py-1.5 rounded-full">{searchResults.length} places</span>
+        <span className="text-on-surface-variant font-body font-bold text-sm uppercase tracking-wider bg-surface-container-low px-4 py-1.5 rounded-full">{searchResults.length} {t('search_page.places_count')}</span>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

@@ -87,9 +87,9 @@ export default function HomePage() {
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              <button className="px-5 py-3 rounded-full bg-secondary-container text-on-secondary-container text-sm font-bold tracking-wide whitespace-nowrap hover:shadow-md transition-all">Beach</button>
-              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">Mountain</button>
-              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">Culture</button>
+              <button className="px-5 py-3 rounded-full bg-secondary-container text-on-secondary-container text-sm font-bold tracking-wide whitespace-nowrap hover:shadow-md transition-all">{t('home.hero.tag_beach')}</button>
+              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_mountain')}</button>
+              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_culture')}</button>
             </div>
             <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold ml-2 hover:bg-on-surface/90 transition-colors">{t('home.hero.search_btn')}</button>
           </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
       {/* Stats Section */}
       <section className="mb-32 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="glass-card-custom p-12 rounded-[2rem border border-outline-variant/10 text-center space-y-4 shadow-sm hover:shadow-md transition-shadow">
+          <div className="glass-card-custom p-12 rounded-[2rem] border border-outline-variant/10 text-center space-y-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">10k+</div>
             <div className="text-sm uppercase tracking-widest text-on-surface-variant font-bold font-body">{t('home.stats.destinations')}</div>
           </div>

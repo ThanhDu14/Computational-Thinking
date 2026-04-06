@@ -16,7 +16,10 @@
       "explore_btn": "Khám phá điểm đến",
       "popular_btn": "Xem nơi nổi bật",
       "search_placeholder": "Bạn muốn đi đâu?",
-      "search_btn": "Tìm"
+      "search_btn": "Tìm",
+      "tag_beach": "Biển",
+      "tag_mountain": "Núi đồi",
+      "tag_culture": "Văn hóa"
     },
     "trending": {
       "subtitle": "Nguồn Cảm Hứng",
@@ -92,7 +95,41 @@
     "team": {
       "title": "Đội Ngũ",
       "heading": "Những Kiến trúc sư Hành trình",
-      "subtitle": "Gặp gỡ những người nhìn xa trông rộng kết hợp kỹ thuật hàng không vũ trụ với ngành dịch vụ nhà hàng khách sạn để định nghĩa lại sự di chuyển của bạn."
+      "subtitle": "Gặp gỡ những người nhìn xa trông rộng kết hợp kỹ thuật hàng không vũ trụ với ngành dịch vụ nhà hàng khách sạn để định nghĩa lại sự di chuyển của bạn.",
+      "members": {
+        "du": {
+          "role": "Lập Trình Viên Front-End",
+          "desc": "Đam mê tạo ra những trải nghiệm mượt mà trên từng cú click chuột. Thiết kế giao diện với tôn chỉ: Đẹp, dễ dùng và không có bug."
+        },
+        "dat": {
+          "role": "Trưởng Nhóm - Kỹ Sư AI",
+          "desc": "Người dẫn dắt team đi qua muôn vàn deadline. Dành phần lớn thời gian để dạy AI cách thấu hiểu người dùng hơn là code."
+        },
+        "duy": {
+          "role": "Lập Trình Viên Back-End",
+          "desc": "Phù thủy đằng sau bức màn, người lo liệu toàn bộ phần ngầm của hệ thống để đảm bảo ứng dụng luôn chạy 'nhanh như chớp'."
+        },
+        "hien": {
+          "role": "Lập Trình Viên Front-End",
+          "desc": "Nghiện CSS và các hiệu ứng chuyển động. Chịu trách nhiệm biến những ý tưởng thiết kế trên giấy thành giao diện sống động."
+        },
+        "hung": {
+          "role": "Lập Trình Viên Back-End",
+          "desc": "Thích giải quyết các bài toán logic phức tạp, biến những luồng dữ liệu thô kệch thành các API sạch đẹp và ổn định."
+        },
+        "anh": {
+          "role": "Nhà Khoa Học Dữ Liệu",
+          "desc": "Yêu thích các con số và biểu đồ. Người khai phá xu hướng ẩn trong kho dữ liệu khổng lồ để gợi ý chuyến đi 'chuẩn gu' nhất."
+        },
+        "hieu": {
+          "role": "Quản Lý Sản Phẩm",
+          "desc": "Nhạc trưởng của team, chuyên cân bằng giữa những ý tưởng bay bổng của dev và yêu cầu thực tế của người dùng."
+        },
+        "nguyen": {
+          "role": "Đảm Bảo Chất Lượng",
+          "desc": "Chuyên gia đi tìm 'sạn', với phương châm thà bắt dev sửa lại còn hơn là để lọt một lỗi nhỏ đến tay người dùng."
+        }
+      }
     },
     "cta": {
       "heading": "Sẵn sàng vượt qua sự tầm thường?",
@@ -100,5 +137,187 @@
       "start": "Bắt đầu Lên lịch",
       "contact": "Liên hệ Chúng tôi"
     }
+  },
+  "destinations": {
+    "header": {
+      "label": "Khám Phá Toàn Cầu",
+      "title_1": "Điểm đến tiếp theo ",
+      "title_2": "là đâu?",
+      "desc": "Khám phá bộ sưu tập những cảnh quan ngoạn mục, trung tâm văn hóa và những viên ngọc ẩn mình được thiết kế cho những chuyến đi tự do hóa."
+    },
+    "filter": {
+      "price_range": "Mức Giá",
+      "price_free": "Điểm Tham Quan Miễn Phí",
+      "price_paid": "Vui Chơi Có Phí",
+      "weather": "Thời Tiết",
+      "weather_sunny": "Nhiều nắng",
+      "weather_moderate": "Mát mẻ",
+      "weather_tropical": "Nhiệt đới",
+      "region": "Khu Vực",
+      "region_all": "Tất cả khu vực"
+    },
+    "card": {
+      "price": "Giá Vé",
+      "free": "Miễn phí",
+      "opening": "Giờ mở cửa",
+      "varies": "Thay đổi",
+      "view_details": "Xem chi tiết"
+    },
+    "pagination": {
+      "page": "Trang {{current}} trên {{total}}"
+    },
+    "cta": {
+      "title": "Hòa mình vào chuyến đi.",
+      "desc": "Đăng ký để nhận các lịch trình độc quyền và quyền truy cập sớm vào các điểm đến bồng bềnh được tuyển chọn riêng.",
+      "placeholder": "Nhập email của bạn",
+      "button": "Đăng Ký"
+    }
+  },
+  "contact": {
+    "header": {
+      "title": "Liên Hệ",
+      "subtitle": "Chúng tôi ở đây để giúp bạn",
+      "desc": "Cho dù bạn có câu hỏi về lịch trình, giá cả, hay bất kỳ điều gì khác, đội ngũ của chúng tôi luôn sẵn sàng giải đáp mọi thắc mắc."
+    },
+    "info": {
+      "email_title": "Gửi Email",
+      "email_desc": "Đội ngũ thân thiện của chúng tôi luôn sẵn sàng hỗ trợ.",
+      "office_title": "Văn Phòng",
+      "office_desc": "Ghé thăm trụ sở của chúng tôi.",
+      "phone_title": "Điện Thoại",
+      "phone_desc": "Thứ 2 - Thứ 6 từ 8h sáng đến 5h chiều."
+    },
+    "form": {
+      "title": "Gửi tin nhắn cho chúng tôi",
+      "first_name": "Họ",
+      "first_name_ph": "Nguyễn",
+      "last_name": "Tên",
+      "last_name_ph": "Văn A",
+      "email": "Thư điện tử",
+      "email_ph": "nguyenvana@example.com",
+      "message": "Nội dung",
+      "message_ph": "Chúng tôi có thể giúp gì cho bạn?",
+      "submit": "Gửi Tin Nhắn"
+    }
+  },
+  "recommendations": {
+    "step1": "Bước 1 của 3",
+    "step2": "Bước 2 của 3",
+    "step3": "Bước 3 của 3",
+    "vibe_selection": "Chọn Phong Cách",
+    "companion_selection": "Bạn Đồng Hành",
+    "budget_selection": "Dự Trù Ngân Sách",
+    "title": "Phong cách của bạn là gì?",
+    "subtitle": "Hãy cho chúng tôi biết bạn muốn cảm nhận điều gì trong chuyến đi này. Chúng tôi sẽ gợi ý những điểm đến phù hợp nhất.",
+    "title_step2": "Bạn đi du lịch cùng ai?",
+    "subtitle_step2": "Một chuyến hành trình tuyệt vời phụ thuộc rất nhiều vào người đồng hành.",
+    "title_step3": "Ngân sách bạn vạch ra là bao nhiêu?",
+    "subtitle_step3": "Chúng tôi sẽ tìm kiếm những trải nghiệm vừa vặn với ví tiền của bạn nhất.",
+    "chilling": {
+      "title": "Thư giãn",
+      "desc": "Nhịp sống chậm, hoàng hôn và chân trời tĩnh lặng."
+    },
+    "adventure": {
+      "title": "Phiêu lưu",
+      "desc": "Tìm kiếm cảm giác mạnh và những lối mòn hoang sơ."
+    },
+    "culture": {
+      "title": "Văn hóa",
+      "desc": "Lịch sử, nghệ thuật và những truyền thống địa phương."
+    },
+    "food": {
+      "title": "Ẩm thực",
+      "desc": "Hành trình vị giác và những hương vị tiềm ẩn."
+    },
+    "solo": {
+      "title": "Cá nhân",
+      "desc": "Một mình một chân trời, tự do khám phá."
+    },
+    "couple": {
+      "title": "Cặp đôi",
+      "desc": "Trải nghiệm lãng mạn cho hai người."
+    },
+    "family": {
+      "title": "Gia đình",
+      "desc": "An toàn, vui vẻ và gắn kết mọi thế hệ."
+    },
+    "friends": {
+      "title": "Bạn bè",
+      "desc": "Khuấy đảo mọi giới hạn với hội nhóm."
+    },
+    "budget_eco": {
+      "title": "Tiết kiệm",
+      "desc": "Tối đa trải nghiệm, tối thiểu chi phí."
+    },
+    "budget_mid": {
+      "title": "Tầm trung",
+      "desc": "Tiện nghi tốt, giữ cân bằng chi tiêu."
+    },
+    "budget_lux": {
+      "title": "Sang trọng",
+      "desc": "Nghỉ dưỡng đẳng cấp cùng dịch vụ 5 sao."
+    },
+    "btn_next": "Tiếp tục",
+    "btn_generate": "Tạo lịch trình hoàn hảo",
+    "btn_skip": "Bỏ qua lần này",
+    "btn_view_itinerary": "Xem Lịch Trình Chi Tiết",
+    "btn_restart": "Làm Lại Từ Đầu",
+    "loading_ai": "AI đang phân tích và thiết kế chuyến đi hoàn hảo cho bạn...",
+    "mock_result": {
+      "title": "Chuyến Đi Dành Riêng Cho Bạn",
+      "dest_name": "Phố cổ Hội An",
+      "summary": "Dựa trên các lựa chọn của bạn, chúng tôi đề xuất một hành trình 'Chữa Lành' 3 ngày tại Hội An. Trải nghiệm nhịp sống chậm rãi giữa lòng phố cổ thanh bình, khám phá văn hoá đậm đà và tận hưởng những món ăn truyền thống đặc sắc."
+    }
+  },
+  "blog": {
+    "header_title": "Câu chuyện Lữ hành",
+    "header_subtitle": "Blog của chúng tôi",
+    "card1_title": "Nghệ thuật đóng gói tối giản: 10 ngày trong 1 chiếc túi",
+    "card1_desc": "Khám phá cách du lịch nhẹ nhàng mà không làm mất đi phong cách hay sự thoải mái trong chuyến phiêu lưu tiếp theo của bạn.",
+    "card2_title": "Tokyo ẩn giấu: Phía sau sự ồn ào và đèn Neon",
+    "card2_desc": "Bước ra khỏi lộ trình quen thuộc và khám phá những khu phố cổ yên tĩnh nằm ẩn sau những tòa nhà chọc trời.",
+    "read_story": "Đọc bài viết"
+  },
+  "search_page": {
+    "hero_title": "Điểm đến tiếp theo?",
+    "search_placeholder": "Tìm kiếm điểm đến, thành phố, hoạt động...",
+    "search_btn": "Tìm Kiếm",
+    "popular": "Phổ biến:",
+    "results_title": "Kết quả tìm kiếm",
+    "places_count": "địa điểm"
+  },
+  "place_detail": {
+    "not_found": "Không tìm thấy điểm đến",
+    "reviews": "đánh giá",
+    "about": "Giới thiệu địa điểm",
+    "anonymous": "Lữ khách Ẩn danh",
+    "experience_price": "Giá Trải Nghiệm",
+    "free": "Miễn Phí",
+    "opening_hours": "Giờ mở cửa",
+    "varies": "Linh hoạt",
+    "check_availability": "Kiểm Tra Lịch Trống",
+    "save_wishlist": "Lưu Vào Yêu Thích",
+    "no_charge_yet": "Bạn sẽ không bị tính phí lúc này."
+  },
+  "aiconcierge": {
+    "greeting": "Xin chào! Tôi là AI Concierge. Tôi có thể giúp bạn lên kế hoạch cho chuyến đi tiếp theo, tìm kiếm thông tin hoặc chỉ đơn giản là trò chuyện. Hôm nay bạn cần giúp gì không?",
+    "user_msg_1": "Gợi ý cho tôi một lịch trình 3 ngày tại Đà Lạt vào tháng 11 nhé. Tôi muốn những nơi yên tĩnh và có kiến trúc đẹp.",
+    "bot_msg_1": "Đà Lạt vào tháng 11 đang bước vào mùa cỏ hồng và hoa dã quỳ, không khí se lạnh rất tuyệt. Dưới đây là gợi ý lịch trình \"Chậm & Nghệ thuật\" cho bạn:",
+    "bento_1_title": "Ngày 1: Di sản & Sương mù",
+    "bento_1_desc": "Khám phá **Dinh III Bảo Đại** và các biệt thự Pháp cổ tại đường Trần Hưng Đạo. Chiều ghé **Ana Mandara Villas** thưởng trà.",
+    "bento_2_title": "Ngày 2: Nghệ thuật & Cà phê",
+    "bento_2_desc": "Sáng thăm **Stop and Go Art Space**. Chiều thư giãn tại các quán cà phê khuất trong hẻm như **Tùng Coffee** hoặc **Thông Ơi**.",
+    "bot_msg_2": "Tôi hiểu rồi! Đó là một ý tưởng tuyệt vời. Bạn có muốn tôi đi sâu vào chi tiết hơn cho từng địa điểm không?",
+    "nav_chat": "Trò chuyện",
+    "nav_history": "Lịch sử",
+    "nav_explore": "Khám phá",
+    "nav_settings": "Cài đặt",
+    "premium_member": "Thành viên Premium",
+    "online": "Đang Trực Tuyến",
+    "thinking": "AI Concierge đang suy nghĩ...",
+    "input_placeholder": "Hỏi AI Concierge bất cứ điều gì...",
+    "chip_creative": "Chế độ Sáng tạo",
+    "chip_summary": "Tóm tắt văn bản",
+    "chip_image": "Tạo hình ảnh"
   }
 }

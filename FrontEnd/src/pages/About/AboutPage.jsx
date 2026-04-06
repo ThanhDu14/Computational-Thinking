@@ -5,7 +5,10 @@ import Du from '../../assets/images/Du.png';
 import Hieu from '../../assets/images/Hieu.png';
 import Duy from '../../assets/images/Duy.png'
 import Anh from '../../assets/images/Anh.png'
-
+import Dat from '../../assets/images/Dat.png'
+import Hien from '../../assets/images/Hien.png'
+import Hung from '../../assets/images/Hung.png'
+import Nguyen from '../../assets/images/Nguyen.png'
 export default function AboutPage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -106,9 +109,9 @@ export default function AboutPage() {
                                     <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white mb-6 shadow-xl relative z-10 group-hover:scale-105 transition-transform duration-500">
                                         <img alt="CEO Avatar" className="w-full h-full object-cover" src={Du} />
                                     </div>
-                                    <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyen Thanh Du</h3>
-                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">Front-End Developer</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Former aerospace engineer dedicated to making the world more accessible through intelligent data.</p>
+                                    <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyễn Thành Dự</h3>
+                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">{t('about.team.members.du.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.du.desc')}</p>
                                 </div>
                             </div>
 
@@ -117,11 +120,11 @@ export default function AboutPage() {
                                 <div className="absolute inset-0 bg-secondary/10 rounded-3xl rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
                                 <div className="relative glass-panel-about shimmer-border-about rounded-3xl p-10 flex flex-col items-center text-center shadow-lg hover:-translate-y-2 transition-transform duration-300">
                                     <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white mb-6 shadow-xl relative z-10 group-hover:scale-105 transition-transform duration-500">
-                                        <img alt="CTO Avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDf2yqOzbanJgpFoTYvw5F4gLdSkCOY54KHwSjCwzmWm32uiYNUB89G6wvQ4Sz6p33h36iDTuhutJhrm1wX_UmAcLlil6R53KXmWAeEEkrCwKvsYXkYvVCykywOCqewsAZqWcyRVaNaZEc26jQTVy9QRh8IzOAPqvJ-iZzK6OaRatBBHkPBgcLePF5bAwqJkNgkJ8I_drI44GOLXzjba8ZfDuVxui1sg8Sru2A36GktGYWo_1EtGVLLiu9DIvDKF7UurL8ID7wDK4" />
+                                        <img alt="CTO Avatar" className="w-full h-full object-cover" src={Dat} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyễn Quốc Đạt</h3>
-                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">Leader-AI Enginner</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Pioneer in neural mapping, ensuring every destination recommendation feels like a personal discovery.</p>
+                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">{t('about.team.members.dat.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.dat.desc')}</p>
                                 </div>
                             </div>
 
@@ -133,8 +136,8 @@ export default function AboutPage() {
                                         <img alt="Design Director Avatar" className="w-full h-full object-cover" src={Duy} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyễn Đức Duy</h3>
-                                    <p className="text-tertiary-dim font-body font-bold mb-5 uppercase tracking-wider text-xs bg-tertiary-dim/10 px-3 py-1 rounded-full">BackEnd Developer</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Crafting the "Ethereal Navigator" design language that makes planning as beautiful as the journey itself.</p>
+                                    <p className="text-tertiary-dim font-body font-bold mb-5 uppercase tracking-wider text-xs bg-tertiary-dim/10 px-3 py-1 rounded-full">{t('about.team.members.duy.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.duy.desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -146,11 +149,11 @@ export default function AboutPage() {
                                 <div className="absolute inset-0 bg-primary/10 rounded-3xl rotate-2 transition-transform group-hover:rotate-0 duration-500"></div>
                                 <div className="relative glass-panel-about shimmer-border-about rounded-3xl p-10 flex flex-col items-center text-center shadow-lg hover:-translate-y-2 transition-transform duration-300">
                                     <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white mb-6 shadow-xl relative z-10 group-hover:scale-105 transition-transform duration-500">
-                                        <img alt="Team member" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop" />
+                                        <img alt="Team member" className="w-full h-full object-cover" src={Hien} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Mai Văn Hiển</h3>
-                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">FrontEnd Developer</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Mastermind behind our robust server architecture, ensuring lightning-fast searches worldwide.</p>
+                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">{t('about.team.members.hien.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.hien.desc')}</p>
                                 </div>
                             </div>
 
@@ -159,11 +162,11 @@ export default function AboutPage() {
                                 <div className="absolute inset-0 bg-secondary/10 rounded-3xl -rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
                                 <div className="relative glass-panel-about shimmer-border-about rounded-3xl p-10 flex flex-col items-center text-center shadow-lg hover:-translate-y-2 transition-transform duration-300">
                                     <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white mb-6 shadow-xl relative z-10 group-hover:scale-105 transition-transform duration-500">
-                                        <img alt="Team member" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop" />
+                                        <img alt="Team member" className="w-full h-full object-cover" src={Hung} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Lê Quốc Hưng</h3>
-                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">BackEnd Developer</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Translating complex data into seamless, intuitive interfaces that delight our travelers.</p>
+                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">{t('about.team.members.hung.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.hung.desc')}</p>
                                 </div>
                             </div>
 
@@ -175,8 +178,8 @@ export default function AboutPage() {
                                         <img alt="Team member" className="w-full h-full object-cover" src={Anh} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyễn Thế Anh</h3>
-                                    <p className="text-tertiary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-tertiary/10 px-3 py-1 rounded-full">Data Scientist</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Analyzing global travel trends to continuously refine our personalized recommendation engine.</p>
+                                    <p className="text-tertiary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-tertiary/10 px-3 py-1 rounded-full">{t('about.team.members.anh.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.anh.desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -191,8 +194,8 @@ export default function AboutPage() {
                                         <img alt="Team member" className="w-full h-full object-cover" src={Hieu} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Nguyễn Đại Hiếu</h3>
-                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">Product Manager</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Orchestrating cross-functional teams to deliver exceptional features matching our vision.</p>
+                                    <p className="text-primary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-primary/10 px-3 py-1 rounded-full">{t('about.team.members.hieu.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.hieu.desc')}</p>
                                 </div>
                             </div>
 
@@ -201,11 +204,11 @@ export default function AboutPage() {
                                 <div className="absolute inset-0 bg-secondary/10 rounded-3xl rotate-2 transition-transform group-hover:rotate-0 duration-500"></div>
                                 <div className="relative glass-panel-about shimmer-border-about rounded-3xl p-10 flex flex-col items-center text-center shadow-lg hover:-translate-y-2 transition-transform duration-300">
                                     <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white mb-6 shadow-xl relative z-10 group-hover:scale-105 transition-transform duration-500">
-                                        <img alt="Team member" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" />
+                                        <img alt="Team member" className="w-full h-full object-cover" src={Nguyen} />
                                     </div>
                                     <h3 className="font-display text-2xl font-bold text-on-background mb-1">Trần Văn Nguyên</h3>
-                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">Quality Assurance</p>
-                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">Rigorous testing expert dedicated to ensuring every journey booked is absolutely flawless.</p>
+                                    <p className="text-secondary font-body font-bold mb-5 uppercase tracking-wider text-xs bg-secondary/10 px-3 py-1 rounded-full">{t('about.team.members.nguyen.role')}</p>
+                                    <p className="text-[15px] text-on-surface-variant leading-relaxed">{t('about.team.members.nguyen.desc')}</p>
                                 </div>
                             </div>
                         </div>

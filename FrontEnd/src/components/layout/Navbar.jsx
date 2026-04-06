@@ -15,8 +15,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="fixed w-full z-50 top-0 left-0 px-6 pt-6 pointer-events-none">
-      <header className="pointer-events-auto bg-surface/80 backdrop-blur-2xl rounded-xl shadow-[0_10px_40px_-10px_rgba(39,44,81,0.06)] transition-all duration-300">
+    <div className="fixed w-full z-50 top-0 left-0 pointer-events-none">
+      <header className="pointer-events-auto bg-surface/80 backdrop-blur-2xl shadow-[0_10px_40px_-10px_rgba(39,44,81,0.06)] transition-all duration-300">
         <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">

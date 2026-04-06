@@ -1,85 +1,186 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SectionHeader from '../../components/common/SectionHeader';
 import GlassCard from '../../components/common/GlassCard';
 import Button from '../../components/common/Button';
-import { MapPin, Star, Calendar, Clock, Sparkles } from 'lucide-react';
+import { MapPin, Star, Calendar, Clock, Sparkles, UserCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+import datadalat from '../../data/data_da_lat_final.json';
+import dataha from '../../data/data_HA_final.json';
+import datathanhhoa from '../../data/data_thanh_hoa_final.json';
 
 export default function PlaceDetailPage() {
   const params = useParams();
+  const locationName = decodeURIComponent(params.id || '');
+  const { t } = useTranslation();
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const allData = [
+    ...datadalat.map(item => ({ ...item, region: 'Da Lat' })),
+    ...dataha.map(item => ({ ...item, region: 'Hoi An' })),
+    ...datathanhhoa.map(item => ({ ...item, region: 'Thanh Hoa' }))
+  ];
+
+  const item = allData.find(d => d.location_name === locationName);
+
+  if (!item) {
+    return <div className="p-20 text-center text-2xl font-bold min-h-screen pt-40">{t('place_detail.not_found')}</div>;
+  }
+
+  const imgs = item.images || [];
+  const mainImg = imgs[0] || "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e";
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative h-[65vh] rounded-[3rem] overflow-hidden mb-16 shadow-2xl">
-        <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e" alt="Santorini" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
-        <div className="absolute bottom-12 left-12 md:bottom-16 md:left-16 right-12 text-white">
-          <span className="bg-surface/30 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase mb-6 inline-block">Cyclades, Greece</span>
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-4 drop-shadow-xl">Santorini</h1>
-          <div className="flex items-center gap-6 text-surface-container-low font-body drop-shadow-md font-medium text-lg">
-            <span className="flex items-center gap-2"><MapPin className="w-5 h-5" /> Aegean Sea</span>
-            <span className="flex items-center gap-2 text-secondary-container"><Star className="w-5 h-5 fill-secondary-container" /> 4.9 (2.4k reviews)</span>
-          </div>
+    <div className="w-full bg-surface-container-lowest min-h-screen">
+      {/* Top Details (Title & Location) */}
+      <div className="pt-24 pb-8 px-6 max-w-7xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-4 text-on-surface tracking-tight bg-gradient-to-r from-on-surface to-on-surface/70 bg-clip-text text-transparent">
+          {item.location_name}
+        </h1>
+        <div className="flex items-center flex-wrap gap-x-6 gap-y-2 text-on-surface-variant font-body font-medium text-lg">
+          <span className="flex items-center gap-2">
+            <Star className="w-5 h-5 fill-secondary-container text-secondary-container inline" />
+            <span className="font-bold text-on-surface">{item.overall_rating}</span> 
+            <span className="underline cursor-pointer hover:text-on-surface transition-colors">({item.rating_count} {t('place_detail.reviews')})</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-outline-variant">•</span>
+            <MapPin className="w-5 h-5 shrink-0 text-primary" />
+            <span className="underline cursor-pointer hover:text-on-surface transition-colors">{item.address} - {item.region}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Image Grid (Airbnb Style) */}
+      <section className="mb-14 max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[40vh] md:h-[55vh] rounded-3xl overflow-hidden drop-shadow-xl bg-surface-container">
+           {/* Main Large Image */}
+           <div className="md:col-span-2 h-full overflow-hidden group">
+              <img src={mainImg} className="w-full h-full object-cover rounded-l-3xl hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Main" />
+           </div>
+           {/* Sub Images - Top Right */}
+           <div className="hidden md:grid grid-cols-1 grid-rows-2 gap-3 h-full">
+              <div className="overflow-hidden group h-full">
+                <img src={imgs[1] || mainImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Sub 1" />
+              </div>
+              <div className="overflow-hidden group h-full">
+                <img src={imgs[2] || mainImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Sub 2" />
+              </div>
+           </div>
+           {/* Sub Images - Bottom Right */}
+           <div className="hidden md:grid grid-cols-1 grid-rows-2 gap-3 h-full">
+              <div className="overflow-hidden group h-full">
+                <img src={imgs[3] || mainImg} className="w-full h-full object-cover rounded-tr-3xl hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Sub 3" />
+              </div>
+              <div className="overflow-hidden group h-full">
+                <img src={imgs[4] || mainImg} className="w-full h-full object-cover rounded-br-3xl hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Sub 4" />
+              </div>
+           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 flex flex-col gap-12">
-          {/* Overview */}
-          <section>
-            <SectionHeader title="Overview" className="mb-6" />
-            <p className="text-on-surface-variant font-body leading-relaxed text-lg mb-6">
-              World-famous for its stunning sunsets, whitewashed villages clinging to the cliffs, and the azure Aegean Sea. Santorini is a caldera—the remains of a volcanic eruption that destroyed the earliest settlements on a formerly single island, and created the current geological caldera.
-            </p>
-          </section>
-
-          {/* Highlights */}
-          <section>
-            <SectionHeader title="Highlights" className="mb-6" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <GlassCard className="p-6">
-                <h4 className="font-display font-bold text-lg mb-2 text-on-surface">Oia Sunsets</h4>
-                <p className="text-on-surface-variant text-sm font-body">Experience the most photographed sunset in the world from the ruins of the castle.</p>
-              </GlassCard>
-              <GlassCard className="p-6">
-                <h4 className="font-display font-bold text-lg mb-2 text-on-surface">Volcanic Beaches</h4>
-                <p className="text-on-surface-variant text-sm font-body">Relax on the unique red and black sand beaches sculpted by volcanic activity.</p>
-              </GlassCard>
-            </div>
-          </section>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <GlassCard className="sticky top-32 flex flex-col gap-6">
-            <div className="flex justify-between items-end border-b border-outline-variant/20 pb-6">
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-1">Price</span>
-                <span className="text-3xl font-display font-bold text-on-surface">$1,200</span>
-              </div>
-              <span className="text-sm text-on-surface-variant font-body mb-1">per person</span>
-            </div>
+      {/* Main Content & Sidebar */}
+      <div className="max-w-7xl mx-auto px-6 pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          
+          {/* Left Column (Content) */}
+          <div className="lg:col-span-2 flex flex-col gap-14">
             
-            <div className="flex flex-col gap-4 font-body text-sm font-medium">
-              <div className="flex justify-between text-on-surface">
-                <span className="flex items-center gap-2 text-on-surface-variant"><Calendar className="w-4 h-4" /> Duration</span>
-                <span>5 Days</span>
-              </div>
-              <div className="flex justify-between text-on-surface">
-                <span className="flex items-center gap-2 text-on-surface-variant"><Clock className="w-4 h-4" /> Best Time</span>
-                <span>May - Sep</span>
-              </div>
-            </div>
+            {/* Overview */}
+            <section className="border-b border-outline-variant/30 pb-10">
+              <h2 className="text-3xl font-display font-bold text-on-surface mb-6">{t('place_detail.about')}</h2>
+              <p className="text-on-surface-variant font-body leading-loose text-lg font-medium opacity-90 text-justify">
+                {item.description}
+              </p>
+            </section>
 
-            <Button variant="primary" className="w-full mt-4 !rounded-2xl">
-              Book Experience <Sparkles className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" className="w-full !rounded-2xl bg-white/50 backdrop-blur-sm">
-              Save to Wishlist
-            </Button>
-          </GlassCard>
+            {/* Reviews (Horizontal Scroll) */}
+            {item.reviews && item.reviews.length > 0 && (
+            <section className="border-b border-outline-variant/30 pb-10">
+              <h2 className="text-3xl font-display font-bold text-on-surface mb-8 flex items-center gap-3">
+                 <Star className="w-7 h-7 fill-secondary-container text-secondary-container" />
+                 {item.overall_rating} <span className="opacity-70 text-2xl font-medium">({item.rating_count} {t('place_detail.reviews')})</span>
+              </h2>
+              
+              <div className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar -mx-6 px-6">
+                {item.reviews.map((review, idx) => (
+                  <GlassCard key={idx} className="p-8 flex flex-col gap-5 min-w-[320px] max-w-[320px] snap-center shrink-0 border border-outline-variant/30 bg-surface/40 hover:bg-surface/80 hover:-translate-y-1 transition-all duration-300">
+                     <div className="flex items-center gap-4">
+                         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-container to-primary/20 flex items-center justify-center shrink-0 shadow-inner">
+                            {review.reviewer_name ? (
+                                <span className="font-display font-bold text-primary text-xl">{review.reviewer_name.charAt(0).toUpperCase()}</span>
+                            ) : (
+                                <UserCircle className="w-8 h-8 text-primary/70"/>
+                            )}
+                         </div>
+                         <div className="flex flex-col">
+                             <h4 className="font-bold text-on-surface text-lg line-clamp-1">{review.reviewer_name || t('place_detail.anonymous')}</h4>
+                             <div className="flex items-center gap-1 text-secondary-container">
+                                <Star className="w-3.5 h-3.5 fill-secondary-container" />
+                                <span className="text-sm font-bold">{review.stars}</span>
+                             </div>
+                         </div>
+                     </div>
+                     <p className="text-on-surface-variant/90 text-base font-body line-clamp-4 flex-1">
+                        "{review.comment}"
+                     </p>
+                  </GlassCard>
+                ))}
+              </div>
+              
+              {/* Custom scrollbar hide styles */}
+              <style>{`
+                .hide-scrollbar::-webkit-scrollbar { display: none; }
+                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+              `}</style>
+            </section>
+            )}
+          </div>
+
+          {/* Right Column (Sidebar) */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-28">
+              <GlassCard className="flex flex-col gap-6 p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 bg-white/70 backdrop-blur-2xl rounded-3xl">
+                
+                {/* Price Label */}
+                <div className="flex justify-between items-end pb-6 border-b border-outline-variant/20">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-extrabold text-on-surface-variant uppercase tracking-[0.2em] mb-2">{t('place_detail.experience_price')}</span>
+                    <span className="text-5xl font-display font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">{t('place_detail.free')}</span>
+                  </div>
+                </div>
+                
+                {/* Vital Stats */}
+                <div className="flex flex-col gap-5 font-body text-base font-medium text-on-surface-variant py-2">
+                  <div className="flex justify-between items-center group">
+                    <span className="flex items-center gap-3"><Clock className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" /> {t('place_detail.opening_hours')}</span>
+                    <span className="text-right truncate max-w-[150px] font-bold text-on-surface" title={item.opening_hours || t('place_detail.varies')}>
+                        {item.opening_hours || t('place_detail.varies')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Call To Actions */}
+                <Button variant="primary" className="w-full mt-4 !rounded-2xl py-4 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all">
+                  <span className="font-bold text-lg">{t('place_detail.check_availability')}</span> <Sparkles className="w-5 h-5 ml-2 inline" />
+                </Button>
+                
+                <Button variant="outline" className="w-full !rounded-2xl py-4 bg-white/50 backdrop-blur-md border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all text-primary font-bold">
+                  {t('place_detail.save_wishlist')}
+                </Button>
+
+                <div className="mt-2 text-center text-xs font-medium text-on-surface-variant opacity-70">
+                    {t('place_detail.no_charge_yet')}
+                </div>
+              </GlassCard>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
