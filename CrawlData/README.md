@@ -1,16 +1,15 @@
 # Code thu Thập & xử Lý Dữ Liệu Du Lịch (TripAdvisor Scraper & AI Pipeline)
 
-Dùng để tự động hóa giúp thu thập, chắt lọc và làm giàu dữ liệu các địa điểm du lịch từ TripAdvisor. Hệ thống kết hợp sức mạnh của **Selenium**, **BeautifulSoup**, API bản đồ và Trí tuệ nhân tạo **Gemini 2.5 Flash** để tạo ra một bộ dữ liệu đầy đủ.
+Dùng để tự động hóa giúp thu thập, chắt lọc và làm giàu dữ liệu các địa điểm du lịch từ TripAdvisor. Hệ thống kết hợp sức mạnh của **Selenium**, **BeautifulSoup**, và Trí tuệ nhân tạo **Gemini 2.5 Flash** để tạo ra một bộ dữ liệu đầy đủ.
 
 ## ✨ Luồng Hoạt Động (5 Giai Đoạn)
 
-Hệ thống hoạt động tự động qua 5 bước liên hoàn:
-1. **Cào dữ liệu thô (Crawl):** Lấy toàn bộ link và thông tin cơ bản của các địa điểm từ TripAdvisor.
-2. **Lọc thông minh (AI Filter):** Nhờ Gemini AI đọc hiểu và chỉ giữ lại những nơi thực sự là "Địa điểm tham quan" (loại bỏ spa, nha khoa, công ty du lịch...).
-3. **Đắp mô tả (Wiki Description):** Tự động tìm kiếm và điền các đoạn giới thiệu (description) còn thiếu bằng Wikipedia API.
-4. **Truy tìm địa chỉ (4-Layer Address Scraper):** Quét địa chỉ qua 4 lớp bảo vệ để đảm bảo không lọt dữ liệu: 
-   `OpenStreetMap` ➔ `Google Search (AI Overviews)` ➔ `Hỏi đáp trực tiếp Gemini`.
-5. **Lọc rác cuối cùng:** Xóa bỏ hoàn toàn các địa điểm tàng hình (không thể xác định được địa chỉ).
+Hệ thống hoạt động tự động qua 5 bước liên hoàn được lập trình sẵn:
+1. **Cào dữ liệu thô (Crawl):** Lấy toàn bộ link và thông tin cơ bản của các địa điểm từ TripAdvisor. Hệ thống tự động chuyển đổi các đường link `.com.vn` sang `.com` để đảm bảo dữ liệu thu thập được đồng nhất bằng tiếng Anh. Các địa điểm không có đánh giá sao hoặc không có ảnh gốc từ TripAdvisor sẽ tự động bị loại.
+2. **Lọc thông minh (AI Filter):** Nhờ Gemini 2.5 Flash đọc hiểu và chỉ giữ lại những nơi thực sự là "Địa điểm tham quan" (đánh giá 1), tự động loại bỏ các dịch vụ không liên quan như spa, nha khoa, công ty du lịch (đánh giá 0).
+3. **Đắp mô tả (3-Layer Description):** Tự động điền các đoạn giới thiệu tiếng Anh còn thiếu qua 3 lớp phòng ngự: `Wikipedia` ➔ `Google Search (AI Overview/Snippet)` ➔ `Hỏi đáp trực tiếp Gemini`. Hệ thống cũng tự động lọc bỏ các mô tả rác (chứa các từ như "read more", "bubbles").
+4. **Truy tìm địa chỉ (3-Layer Address Scraper):** Quét và tìm kiếm địa chỉ qua 3 lớp: `OpenStreetMap` ➔ `Google Search` ➔ `Gemini`. Điểm đặc biệt là hệ thống tích hợp sẵn bộ dịch nội bộ để tự động chuẩn hóa các thuật ngữ tiếng Việt sang tiếng Anh (Ví dụ: "Phường" ➔ "Ward", "Thành phố" ➔ "City", "Đường" ➔ "Street").
+5. **Lọc và làm sạch cuối cùng:** Xóa bỏ hoàn toàn các địa điểm tàng hình (không có địa chỉ hợp lệ) và tự động dùng Regex gọt sạch các tiền tố rác (như "Address:").
 
 ---
 
@@ -42,8 +41,8 @@ Hệ thống cần 2 loại chìa khóa để hoạt động:
 
 ### 2. Cấu Hình Địa Điểm Cào (Đổi Tỉnh/Thành)
 Nếu bạn muốn thu thập dữ liệu ở một khu vực khác (VD: Đà Lạt, Hà Nội, TP.HCM), hãy thay đổi 2 biến sau:
-- **`LIST_PAGE_URL`**: Lên web TripAdvisor, tìm kiếm khu vực bạn muốn cào (chọn mục *Attractions* hoặc *Things to Do*), copy link hiển thị trên trình duyệt và dán vào biến này.
-  - *Ví dụ thu thập Đà Lạt:* `"https://www.tripadvisor.com.vn/Attractions-g293922-Activities-Da_Lat_Lam_Dong_Province.html"`
+- **`LIST_PAGE_URL`**: Lên web TripAdvisor, tìm kiếm khu vực bạn muốn cào (chọn mục *Things to Do* -> *LOCATION + Landmarks*),hoặc search Top landmarks Tripvisor + Location để tìm Web phù hợp, copy link hiển thị trên trình duyệt và dán vào biến này.
+  - *Ví dụ thu thập Đà Lạt:* `"https://www.tripadvisor.com/Attractions-g293922-Activities-c47-Da_Lat_Lam_Dong_Province.html"`
 - **`LOCATION`**: Tên tiếng Anh không dấu của khu vực đó. Biến này giúp API bản đồ và AI định vị chính xác hơn, tránh nhầm lẫn với các tỉnh khác.
   - *Ví dụ:* `"Da Lat"` hoặc `"Ho Chi Minh City"`.
 
@@ -61,9 +60,8 @@ python ten_file_code_cua_ban.py
 ```
 ## 📂 Dữ Liệu Đầu Ra (Output)
 
-Sau khi hoàn tất, hệ thống sẽ tạo ra các file sau trong cùng thư mục:
+Sau khi hoàn tất, hệ thống sẽ tạo ra các file lưu trữ nội bộ sau:
 
-- `link_{LOCATION}.json` (đổi tên tùy theo địa điểm cào): File lưu trữ danh sách URL đã quét (giúp resume nếu bị đứt mạng).
-- `data_{LOCATION}_raw.json`: File chứa dữ liệu thô chưa qua bộ lọc AI.
-- `new_link_{LOCATION}.json`: Danh sách các địa điểm bị thiếu mô tả cần tra Wiki.
-- **`data_{LOCATION}_final.json`**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% có địa chỉ thực tế và đã bị loại bỏ toàn bộ dữ liệu rác.
+- `link_{LOCATION}.json`: File lưu trữ danh sách URL đã quét, dùng để khôi phục tiến trình nếu chương trình bị ngắt giữa chừng.
+- `data_raw_{LOCATION}.json`: File chứa dữ liệu thô vừa cào xong (chưa qua bộ lọc AI).
+- **`data_{LOCATION}_final.json`**: **✨ File Dữ Liệu Hoàn Chỉnh ✨** Chứa danh sách các địa điểm đã được làm sạch, 100% dịch chuẩn tiếng Anh, có địa chỉ thực tế và loại bỏ toàn bộ dữ liệu rác.
