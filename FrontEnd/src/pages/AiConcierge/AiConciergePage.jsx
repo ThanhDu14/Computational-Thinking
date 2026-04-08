@@ -6,38 +6,42 @@ import {
   MoreHorizontal, ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function AiConciergePage() {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([
+  const { t } = useTranslation();
+  const getDefaultMessages = () => ([
     {
       role: 'bot',
-      text: "Xin chào! Tôi là AI Concierge. Tôi có thể giúp bạn lên kế hoạch cho chuyến đi tiếp theo, tìm kiếm thông tin hoặc chỉ đơn giản là trò chuyện. Hôm nay bạn cần giúp gì không?",
+      text: t('aiconcierge.greeting'),
       timestamp: "09:41 AM"
     },
     {
       role: 'user',
-      text: "Gợi ý cho tôi một lịch trình 3 ngày tại Đà Lạt vào tháng 11 nhé. Tôi muốn những nơi yên tĩnh và có kiến trúc đẹp.",
+      text: t('aiconcierge.user_msg_1'),
       timestamp: "09:42 AM"
     },
     {
       role: 'bot',
-      text: "Đà Lạt vào tháng 11 đang bước vào mùa cỏ hồng và hoa dã quỳ, không khí se lạnh rất tuyệt. Dưới đây là gợi ý lịch trình \"Chậm & Nghệ thuật\" cho bạn:",
+      text: t('aiconcierge.bot_msg_1'),
       timestamp: "09:43 AM",
       bento: [
         {
-          title: "Ngày 1: Di sản & Sương mù",
-          desc: "Khám phá **Dinh III Bảo Đại** và các biệt thự Pháp cổ tại đường Trần Hưng Đạo. Chiều ghé **Ana Mandara Villas** thưởng trà.",
+          title: t('aiconcierge.bento_1_title'),
+          desc: t('aiconcierge.bento_1_desc'),
           image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBdqQfrN_7P3KExVi90-KVCRh--TLzeEpafRypdQoAfPN40HMfqX-n9mukgaXaaBeRIbAd281qF8wz67nMbNTWG9em-WFQNeewzC5nzea3hSaG3jsgEdMXJgWnHgAuF-MbWcs7GGZa6PBktj9m__Ai6Z1fmY_-aTkMECG7HfbAInfV8GfBDq650J2XeEzV8wRqqiH2d7h7ii5-GuF5FVZqtLU8i8NsGrfRY-XlibwFARPEFOJ5eo68UgzxuceW9q3Vz-s7yhvRhKbHi"
         },
         {
-          title: "Ngày 2: Nghệ thuật & Cà phê",
-          desc: "Sáng thăm **Stop and Go Art Space**. Chiều thư giãn tại các quán cà phê khuất trong hẻm như **Tùng Coffee** hoặc **Thông Ơi**.",
+          title: t('aiconcierge.bento_2_title'),
+          desc: t('aiconcierge.bento_2_desc'),
           image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAmXyTYv-lNJnebpV7dr9B6OR_Kpz2tk3s6Hgj47A5VJFN_k3wZDudtI2jT_ZXPsh5DOCNFIrt_B07N-gMN2YuO3Sn-OTImSpKMIenrKtW1aAIm3JXwfk4QrAJF-yEurvYiJ5lbG8V2wsDdXO24QTZQTBVxz1miCjoIpqgE9Syk2km8KpMeu1NFGDc7AvMupfseI0UFSnLYglbQryYqCHISlX8ljRKOD5SlPE5rNy7xZA4IpCydIGKrwlZ_Ygwsbs9mQiacRJF_yFdw"
         }
       ]
     }
   ]);
+
+  const [messages, setMessages] = useState(getDefaultMessages());
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -45,6 +49,13 @@ export default function AiConciergePage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    setMessages(prev => {
+      if (prev.length === 3) return getDefaultMessages();
+      return prev;
+    });
+  }, [t]);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -56,7 +67,7 @@ export default function AiConciergePage() {
     setTimeout(() => {
       setMessages(prev => [...prev, {
         role: 'bot',
-        text: "Tôi hiểu rồi! Đó là một ý tưởng tuyệt vời. Bạn có muốn tôi đi sâu vào chi tiết hơn cho từng địa điểm không?",
+        text: t('aiconcierge.bot_msg_2'),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }]);
       setIsTyping(false);
@@ -95,19 +106,19 @@ export default function AiConciergePage() {
         <nav className="flex-1 space-y-2">
           <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-[#4f5b7d] font-bold border-r-2 border-[#4f5b7d] bg-white/40">
             <MessageSquare className="w-5 h-5" />
-            <span>Chat</span>
+            <span>{t('aiconcierge.nav_chat')}</span>
           </button>
           <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-[#585c60] hover:bg-white/40">
             <History className="w-5 h-5" />
-            <span>History</span>
+            <span>{t('aiconcierge.nav_history')}</span>
           </button>
           <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-[#585c60] hover:bg-white/40">
             <Compass className="w-5 h-5" />
-            <span>Explore</span>
+            <span>{t('aiconcierge.nav_explore')}</span>
           </button>
           <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-[#585c60] hover:bg-white/40">
             <Settings className="w-5 h-5" />
-            <span>Settings</span>
+            <span>{t('aiconcierge.nav_settings')}</span>
           </button>
         </nav>
 
@@ -118,7 +129,7 @@ export default function AiConciergePage() {
             </div>
             <div className="overflow-hidden">
               <p className="font-semibold truncate">Alex Rivera</p>
-              <p className="text-[10px] uppercase tracking-wider text-[#585c60]">Premium Member</p>
+              <p className="text-[10px] uppercase tracking-wider text-[#585c60]">{t('aiconcierge.premium_member')}</p>
             </div>
           </div>
         </div>
@@ -138,7 +149,7 @@ export default function AiConciergePage() {
             </div>
             <div>
               <h2 className="text-xl font-bold bg-gradient-to-r from-[#4f5b7d] to-[#909CC2] bg-clip-text text-transparent font-display">AI Concierge Assistant</h2>
-              <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Online</span>
+              <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">{t('aiconcierge.online')}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -197,7 +208,7 @@ export default function AiConciergePage() {
                 <span className="w-2 h-2 rounded-full bg-[#4f5b7d] animate-bounce delay-100"></span>
                 <span className="w-2 h-2 rounded-full bg-[#4f5b7d] animate-bounce delay-200"></span>
               </div>
-              <span className="text-xs text-[#585c60] font-label italic">AI Concierge đang suy nghĩ...</span>
+              <span className="text-xs text-[#585c60] font-label italic">{t('aiconcierge.thinking')}</span>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -218,7 +229,7 @@ export default function AiConciergePage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Hỏi AI Concierge bất cứ điều gì..."
+                placeholder={t('aiconcierge.input_placeholder')}
                 className="flex-1 bg-transparent border-none focus:ring-0 text-[#2c2f33] placeholder:text-[#585c60]/50 font-body px-2"
               />
               <div className="flex items-center gap-1">
@@ -238,15 +249,15 @@ export default function AiConciergePage() {
             <div className="mt-4 flex flex-wrap justify-center gap-4">
               <button className="text-[10px] font-label uppercase tracking-widest text-[#585c60] hover:text-[#4f5b7d] transition-colors flex items-center gap-1.5 bg-white/40 px-3 py-1.5 rounded-full border border-white/40">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Chế độ Sáng tạo</span>
+                <span>{t('aiconcierge.chip_creative')}</span>
               </button>
               <button className="text-[10px] font-label uppercase tracking-widest text-[#585c60] hover:text-[#4f5b7d] transition-colors flex items-center gap-1.5 bg-white/40 px-3 py-1.5 rounded-full border border-white/40">
                 <FileText className="w-3.5 h-3.5" />
-                <span>Tóm tắt văn bản</span>
+                <span>{t('aiconcierge.chip_summary')}</span>
               </button>
               <button className="text-[10px] font-label uppercase tracking-widest text-[#585c60] hover:text-[#4f5b7d] transition-colors flex items-center gap-1.5 bg-white/40 px-3 py-1.5 rounded-full border border-white/40">
                 <ImageIcon className="w-3.5 h-3.5" />
-                <span>Tạo hình ảnh</span>
+                <span>{t('aiconcierge.chip_image')}</span>
               </button>
             </div>
           </div>

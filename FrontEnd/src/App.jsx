@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthPage from './UI/AuthPage'
 import Layout from './components/layout/Layout'
 
-// Existing Pages
 import HomePage from './pages/Home/HomePage'
 import PlaceDetailPage from './pages/PlaceDetail/PlaceDetailPage'
 import RecommendationsPage from './pages/Recommendations/RecommendationsPage'
@@ -11,8 +10,6 @@ import AboutPage from './pages/About/AboutPage'
 import DestinationsPage from './pages/Destinations/DestinationsPage'
 import ContactPage from './pages/Contact/ContactPage'
 import BlogPage from './pages/Blog/BlogPage'
-
-// New Pages (from Stitch)
 import AiConciergePage from './pages/AiConcierge/AiConciergePage'
 
 import './App.css'
@@ -21,7 +18,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Protected/Main Routes with Layout (Navbar & Footer) */}
         <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<HomePage />} />
