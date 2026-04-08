@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, ArrowRight, Sparkles, Brain, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 export default function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className="w-full">
@@ -40,7 +41,7 @@ export default function HomePage() {
           background: linear-gradient(135deg, #4f5b7d 0%, #cad6ff 100%);
         }
       `}</style>
-      
+
       {/* Hero Section */}
       <section className="relative w-full min-h-[100vh] flex flex-col items-center justify-center pt-32 pb-20 px-6 bg-[linear-gradient(135deg,#cad6ff_0%,#f8f5ff_100%)] overflow-hidden mb-24">
         {/* Floating Illustrations */}
@@ -52,7 +53,7 @@ export default function HomePage() {
             <img className="w-full h-full object-cover rounded-full opacity-90" alt="globe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf4CJmaqNVAqgoWdB-fVJzNejL3DEaX35x6xLDGQnV17bME2UrQlHqwfd07CB0btOJIEnaBguAeJ9N9ttKtH3umCSSj1Ael9lqzWAmvNA4k9NhPwJGq4H2m7-hv_VF0Fq9EgaUjGK-ixKorfQNdXmLYHLscE5H1qlbYhl7sR_3t9vPFrKY1VN_I9Y6GEbuGxopPd5tBL2ShXEHHSq4pK3dl1LBQjzfQOKaf5V8xBh-zRPouPKINKhZOc0Xe4pEOJeSgj4SwoRVZgw" />
           </div>
         </div>
-        
+
         <div className="relative z-10 max-w-4xl text-center space-y-8 mt-10">
           <h1 className="text-5xl md:text-[4rem] font-extrabold text-on-surface leading-[1.1] tracking-tight font-display">
             {t('home.hero.title_1')} <br />
@@ -62,13 +63,13 @@ export default function HomePage() {
             {t('home.hero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 font-body">
-            <button 
+            <button
               onClick={() => navigate('/search')}
               className="luminous-gradient-custom text-on-primary px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transition-all shadow-xl shadow-primary/30"
             >
               {t('home.hero.explore_btn')}
             </button>
-            <button 
+            <button
               onClick={() => navigate('/destinations')}
               className="bg-surface-container-lowest/50 backdrop-blur-md text-on-surface px-8 py-4 rounded-full text-lg font-bold hover:bg-white transition-all shadow-md"
             >
@@ -80,10 +81,13 @@ export default function HomePage() {
           <div className="mt-16 w-full max-w-4xl mx-auto glass-card-custom p-4 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row items-center gap-4 font-body border border-white/70">
             <div className="flex-1 w-full flex items-center px-4 bg-surface-container-low rounded-full py-3 focus-within:bg-white transition-colors group border border-outline-variant/30">
               <Search className="w-6 h-6 text-outline mr-3" />
-              <input 
-                className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-medium outline-none" 
-                placeholder={t('home.hero.search_placeholder')} 
-                type="text" 
+              <input
+                className="bg-transparent border-none focus:ring-0 w-full text-on-surface placeholder:text-outline-variant font-medium outline-none"
+                placeholder={t('home.hero.search_placeholder')}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') navigate('/search?q=' + encodeURIComponent(searchQuery)) }}
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
@@ -91,7 +95,8 @@ export default function HomePage() {
               <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_mountain')}</button>
               <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_culture')}</button>
             </div>
-            <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold ml-2 hover:bg-on-surface/90 transition-colors">{t('home.hero.search_btn')}</button>
+            <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold ml-2 hover:bg-on-surface/90 transition-colors" onClick={() => navigate('/search?q=' + encodeURIComponent(searchQuery))}>{t('home.hero.search_btn')}
+            </button>
           </div>
         </div>
       </section>
@@ -107,7 +112,7 @@ export default function HomePage() {
             {t('home.trending.view_all')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {/* Card 1 */}
           <div onClick={() => navigate('/destinations')} className="group cursor-pointer">
@@ -161,7 +166,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-extrabold text-on-surface mb-6 font-display">{t('home.ai.title')}</h2>
             <p className="text-lg text-on-surface-variant font-body">{t('home.ai.desc')}</p>
           </div>
-          
+
           <div className="flex flex-col gap-6">
             {/* AI Card 1 */}
             <div className="glass-card-custom p-8 md:p-10 rounded-[2rem] border border-white/40 flex flex-col md:flex-row items-center justify-between gap-8 hover:-translate-y-1 transition-all shadow-xl shadow-surface-tint/5">
@@ -174,7 +179,7 @@ export default function HomePage() {
                   <p className="text-on-surface-variant font-body text-[15px]">{t('home.ai.card1.desc')}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => navigate('/recommendations')}
                 className="luminous-gradient-custom text-on-primary px-10 py-4 rounded-full font-bold shadow-lg shadow-primary/20 whitespace-nowrap font-body hover:scale-105 transition-transform"
               >
@@ -193,7 +198,7 @@ export default function HomePage() {
                   <p className="text-on-surface-variant font-body text-[15px]">{t('home.ai.card2.desc')}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => navigate('/recommendations')}
                 className="luminous-gradient-custom text-on-primary px-10 py-4 rounded-full font-bold shadow-lg shadow-primary/20 whitespace-nowrap font-body hover:scale-105 transition-transform"
               >
@@ -235,7 +240,7 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 cursor-pointer">
           {/* Blog Card 1 */}
           <div onClick={() => navigate('/blog')} className="group relative overflow-hidden rounded-3xl bg-surface-container-lowest shadow-lg border border-outline-variant/5">

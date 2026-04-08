@@ -11,6 +11,7 @@ import DestinationsPage from './pages/Destinations/DestinationsPage'
 import ContactPage from './pages/Contact/ContactPage'
 import BlogPage from './pages/Blog/BlogPage'
 import AiConciergePage from './pages/AiConcierge/AiConciergePage'
+import BlogDetailPage from './pages/Blog/BlogDetailPage'
 
 import './App.css'
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogDetailPage />} />
         </Route>
         <Route path="/ai-concierge" element={<AiConciergePage />} />
         <Route path="/login" element={<AuthPage />} />
