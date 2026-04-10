@@ -14,7 +14,6 @@ GO
 CREATE TABLE Locations (
     location_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(), 
     name NVARCHAR(255) NOT NULL, 
-    category NVARCHAR(100), 
     latitude DECIMAL(9,6), 
     longitude DECIMAL(9,6), 
     duration_minutes INT,
@@ -24,6 +23,18 @@ CREATE TABLE Locations (
     count_rating INT
 )
 GO
+
+CREATE TABLE Categories (
+    category_id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    category_name NVARCHAR(255) NOT NULL,
+    DESCRIPTION NVARCHAR(255) NOT NULL
+)
+
+CREATE TABLE LocationCategories(
+    location_id UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Locations.location_id, 
+    category_id UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Categories.category_id, 
+    PRIMARY KEY(location_id, category_id)
+)
 
 -- 3. Distance Matrix
 CREATE TABLE LocationDistanceMatrix (
@@ -35,6 +46,8 @@ CREATE TABLE LocationDistanceMatrix (
     PRIMARY KEY (origin_id, destination_id, travel_by) 
 )
 GO
+
+
 
 -- 4. Planning Tables
 CREATE TABLE Plans (
