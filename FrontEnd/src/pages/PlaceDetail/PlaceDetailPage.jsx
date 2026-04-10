@@ -145,13 +145,13 @@ export default function PlaceDetailPage() {
           {/* Right Column (Sidebar) */}
           <div className="lg:col-span-1">
             <div className="sticky top-28">
-              <GlassCard className="flex flex-col gap-6 p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 bg-white/70 backdrop-blur-2xl rounded-3xl">
+              <GlassCard className="flex flex-col gap-6 p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-outline-variant/30 bg-surface-container-lowest dark:bg-surface-container backdrop-blur-2xl rounded-3xl">
                 
                 {/* Price Label */}
                 <div className="flex justify-between items-end pb-6 border-b border-outline-variant/20">
                   <div className="flex flex-col">
                     <span className="text-xs font-extrabold text-on-surface-variant uppercase tracking-[0.2em] mb-2">{t('place_detail.experience_price')}</span>
-                    <span className="text-5xl font-display font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">{t('place_detail.free')}</span>
+                    <span className="text-5xl font-display font-black text-primary">{t('place_detail.free')}</span>
                   </div>
                 </div>
                 
@@ -170,7 +170,7 @@ export default function PlaceDetailPage() {
                   <span className="font-bold text-lg">{t('place_detail.check_availability')}</span> <Sparkles className="w-5 h-5 ml-2 inline" />
                 </Button>
                 
-                <Button variant="outline" className="w-full !rounded-2xl py-4 bg-white/50 backdrop-blur-md border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all text-primary font-bold">
+                <Button variant="outline" className="w-full !rounded-2xl py-4 bg-surface-container backdrop-blur-md border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all text-primary font-bold">
                   {t('place_detail.save_wishlist')}
                 </Button>
 

@@ -50,6 +50,11 @@ export default function RecommendationsPage() {
             border: 1.5px solid rgba(217, 221, 224, 0.3);
             box-shadow: 0 20px 40px rgba(79, 91, 125, 0.06);
         }
+        .dark .glass-container-recom {
+            background: rgba(28, 31, 54, 0.75);
+            border: 1.5px solid rgba(70, 74, 107, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
 
         .primary-gradient-recom {
             background: linear-gradient(135deg, #909CC2 0%, #C7D2FE 100%);
@@ -57,6 +62,9 @@ export default function RecommendationsPage() {
 
         .hero-gradient-bg-recom {
             background: radial-gradient(circle at top left, #cad6ff 0%, #f5f7f9 40%, #dee5fd 80%);
+        }
+        .dark .hero-gradient-bg-recom {
+            background: radial-gradient(circle at top left, #1a2040 0%, #0f101f 40%, #13162e 80%);
         }
 
         .step-node-active-recom {

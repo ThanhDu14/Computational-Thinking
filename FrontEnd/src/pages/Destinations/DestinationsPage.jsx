@@ -51,6 +51,11 @@ export default function DestinationsPage() {
                 radial-gradient(circle at bottom left, #a0f5b4 0%, #f8f5ff 40%);
             background-attachment: fixed;
         }
+        .dark .destinations-bg {
+            background: radial-gradient(circle at top right, #1a2040 0%, #0f101f 40%),
+                radial-gradient(circle at bottom left, #0a1a12 0%, #0f101f 40%);
+            background-attachment: fixed;
+        }
 
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -61,6 +66,10 @@ export default function DestinationsPage() {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
+        }
+        .dark .glass-card-dest {
+            background: rgba(38, 41, 69, 0.75);
+            border-color: rgba(70, 74, 107, 0.4);
         }
       `}</style>
 
@@ -78,7 +87,7 @@ export default function DestinationsPage() {
 
                 {/* Filter Bar */}
                 <section className="mb-12">
-                    <div className="glass-card-dest rounded-[2rem] p-6 flex flex-wrap items-center gap-6 shadow-[0_20px_40px_-10px_rgba(39,44,81,0.04)] border border-white/40">
+                    <div className="glass-card-dest rounded-[2rem] p-6 flex flex-wrap items-center gap-6 shadow-[0_20px_40px_-10px_rgba(39,44,81,0.04)] border border-white/40 dark:border-outline-variant/30">
                         {/* Price Range */}
                         <div className="flex-1 min-w-[200px]">
                             <label className="block font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase mb-2 ml-1">{t('destinations.filter.price_range')}</label>
@@ -191,7 +200,7 @@ export default function DestinationsPage() {
                                                 </span>
                                             </div>
                                         )}
-                                        <button className={isLarge ? "w-full md:w-auto px-8 py-4 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-bold shadow-xl hover:-translate-y-1 transition-transform font-body" : "px-6 py-3 rounded-full bg-surface-container-highest text-on-primary-container font-semibold hover:bg-primary hover:text-white transition-all scale-100 active:scale-95 font-body flex items-center gap-2"}>
+                                        <button className={isLarge ? "w-full md:w-auto px-8 py-4 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-bold shadow-xl hover:-translate-y-1 transition-transform font-body" : "px-6 py-3 rounded-full bg-surface-container text-on-surface font-semibold hover:bg-primary hover:text-white transition-all scale-100 active:scale-95 font-body flex items-center gap-2"}>
                                             {t('destinations.card.view_details')}
                                         </button>
                                     </div>
@@ -212,7 +221,7 @@ export default function DestinationsPage() {
                             <span className="material-symbols-outlined font-bold" style={{ fontVariationSettings: "'wght' 600" }}>chevron_left</span>
                         </button>
 
-                        <div className="px-6 py-3 rounded-full bg-white/60 backdrop-blur-md shadow-sm border border-white/40">
+                        <div className="px-6 py-3 rounded-full bg-surface-container backdrop-blur-md shadow-sm border border-outline-variant/30">
                             <span className="text-sm font-bold text-on-surface">{t('destinations.pagination.page', { current: currentPage, total: totalPages })}</span>
                         </div>
 
