@@ -14,6 +14,7 @@ import ContactPage from './pages/Contact/ContactPage'
 import BlogPage from './pages/Blog/BlogPage'
 import AiConciergePage from './pages/AiConcierge/AiConciergePage'
 import BlogDetailPage from './pages/Blog/BlogDetailPage'
+import WishlistPage from './pages/Wishlist/WishlistPage'
 
 import './App.css'
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/ai-concierge" element={<AiConciergePage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
           </Route>
         </Route>
 

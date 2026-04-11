@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useWishlist } from '../../context/WishlistContext';
+import { Sun, Moon, LogOut, ChevronDown, User, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import WishlistDrawer from '../common/WishlistDrawer';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -8,15 +14,40 @@ const Navbar = () => {
   const [hoveredTab, setHoveredTab] = useState(null);
   const location = useLocation();
 
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
+  const { user, isAuthenticated, logout } = useAuth();
+  const { wishlist, setIsWishlistOpen } = useWishlist();
+  const navigate = useNavigate();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuRef = useRef(null);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
   });
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const avatarLetter = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const navLinks = [
-    { path: '/home', label: 'Explore' },
-    { path: '/destinations', label: 'Destinations' },
-    { path: '/ai-concierge', label: 'AI Concierge' },
-    { path: '/about', label: 'About' },
+    { path: '/home', label: t('nav.explore', 'Explore') },
+    { path: '/destinations', label: t('nav.destinations', 'Destinations') },
+    { path: '/ai-concierge', label: t('nav.ai_concierge', 'AI Concierge') },
+    { path: '/about', label: t('nav.about', 'About') },
   ];
 
   return (
@@ -67,28 +98,108 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-1 md:flex-none justify-end gap-3 font-body items-center">
-            <Link
-              to="/login"
-              className="text-on-surface-variant hover:text-primary font-semibold text-sm transition-colors px-2"
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-surface-variant/50 transition-colors text-on-surface"
+              aria-label="Toggle dark mode"
             >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="bg-primary/10 hover:bg-primary/20 text-primary px-5 py-2.5 rounded-full font-semibold text-sm transition-all"
-            >
-              Register
-            </Link>
-            <div className="h-6 w-px bg-outline-variant/30 mx-2 hidden md:block"></div>
-            <Link
-              to="/recommendations"
-              className="bg-primary hover:bg-primary-dim text-white px-6 py-3 rounded-full font-semibold text-sm hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg shadow-primary/20"
-            >
-              Get recommendations
-            </Link>
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            {isAuthenticated && (
+              <button
+                onClick={() => setIsWishlistOpen(prev => !prev)}
+                className="relative p-2 rounded-full text-on-surface-variant hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors mr-2"
+                aria-label="Wishlist"
+              >
+                <Heart size={20} className={wishlist.length > 0 ? "fill-red-500 text-red-500" : ""} />
+                {wishlist.length > 0 && (
+                  <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-surface">
+                    {wishlist.length}
+                  </span>
+                )}
+              </button>
+            )}
+
+            {isAuthenticated ? (
+              /* User Menu (khi đã đăng nhập) */
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setShowUserMenu(prev => !prev)}
+                  className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-primary/5 transition-colors group"
+                >
+                  {/* Avatar circle */}
+                  <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm shadow-md shadow-primary/20">
+                    {avatarLetter}
+                  </div>
+                  <span className="text-sm font-semibold text-on-surface hidden md:block max-w-[100px] truncate">
+                    {user?.name}
+                  </span>
+                  <ChevronDown size={14} className={`text-on-surface-variant transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-surface/95 backdrop-blur-xl rounded-2xl shadow-xl border border-outline-variant/20 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* User Info */}
+                    <div className="px-4 py-3 border-b border-outline-variant/10">
+                      <p className="text-sm font-bold text-on-surface truncate">{user?.name}</p>
+                      <p className="text-xs text-on-surface-variant truncate">{user?.email}</p>
+                    </div>
+                    {/* Menu Items */}
+                    <button
+                      onClick={() => { setShowUserMenu(false); navigate('/recommendations'); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <User size={15} />
+                      {t('nav.recommendations', 'Recommendations')}
+                    </button>
+                    <button
+                      onClick={() => { setShowUserMenu(false); setIsWishlistOpen(prev => !prev); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <Heart size={15} />
+                      {t('nav.wishlist', 'Wishlist')} ({wishlist.length})
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors rounded-b-2xl"
+                    >
+                      <LogOut size={15} />
+                      Đăng xuất
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Login/Register buttons (khi chưa đăng nhập) */
+              <>
+                <Link
+                  to="/login"
+                  className="text-on-surface-variant hover:text-primary font-semibold text-sm transition-colors px-2"
+                >
+                  {t('nav.login', 'Login')}
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-primary/10 hover:bg-primary/20 text-primary px-5 py-2.5 rounded-full font-semibold text-sm transition-all"
+                >
+                  {t('nav.register', 'Register')}
+                </Link>
+                <div className="h-6 w-px bg-outline-variant/30 mx-2 hidden md:block"></div>
+                <Link
+                  to="/recommendations"
+                  className="bg-primary hover:bg-primary-dim text-white px-6 py-3 rounded-full font-semibold text-sm scale-95 hover:scale-100 active:scale-90 transition-all shadow-lg shadow-primary/20"
+                >
+                  {t('nav.get_recommendations', 'Get recommendations')}
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </header>
+      <WishlistDrawer />
     </div>
   );
 };

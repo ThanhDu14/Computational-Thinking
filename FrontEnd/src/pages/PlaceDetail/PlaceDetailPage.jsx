@@ -4,8 +4,11 @@ import { motion } from 'framer-motion';
 import SectionHeader from '../../components/common/SectionHeader';
 import GlassCard from '../../components/common/GlassCard';
 import Button from '../../components/common/Button';
-import { MapPin, Star, Calendar, Clock, Sparkles, UserCircle } from 'lucide-react';
+import { MapPin, Star, Calendar, Clock, Sparkles, UserCircle, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 import datadalat from '../../data/data_da_lat_final.json';
 import dataha from '../../data/data_HA_final.json';
@@ -15,6 +18,9 @@ export default function PlaceDetailPage() {
   const params = useParams();
   const locationName = decodeURIComponent(params.id || '');
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { isAuthenticated } = useAuth();
 
   // Scroll to top on mount
   useEffect(() => {
@@ -32,6 +38,19 @@ export default function PlaceDetailPage() {
   if (!item) {
     return <div className="p-20 text-center text-2xl font-bold min-h-screen pt-40">{t('place_detail.not_found')}</div>;
   }
+
+  const inWishlist = isInWishlist(item);
+
+  const handleHeartClick = (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      if (window.confirm("Vui lòng đăng nhập để lưu vào Wishlist. Bạn có muốn tới trang đăng nhập không?")) {
+        navigate('/login');
+      }
+      return;
+    }
+    toggleWishlist(item);
+  };
 
   const imgs = item.images || [];
   const mainImg = imgs[0] || "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e";
@@ -176,8 +195,17 @@ export default function PlaceDetailPage() {
                   <span className="font-bold text-lg">{t('place_detail.check_availability')}</span> <Sparkles className="w-5 h-5 ml-2 inline" />
                 </Button>
                 
-                <Button variant="outline" className="w-full !rounded-2xl py-4 bg-surface-container backdrop-blur-md border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all text-primary font-bold">
-                  {t('place_detail.save_wishlist')}
+                <Button 
+                    onClick={handleHeartClick}
+                    variant="outline" 
+                    className={`w-full !rounded-2xl py-4 bg-surface-container backdrop-blur-md border-2 transition-all font-bold flex items-center justify-center gap-2 ${
+                        inWishlist 
+                        ? 'border-red-500/50 bg-red-500/5 hover:bg-red-500/10 text-red-500' 
+                        : 'border-primary/20 hover:border-primary/50 hover:bg-primary/5 text-primary'
+                    }`}
+                >
+                  <Heart className={`w-5 h-5 ${inWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+                  {inWishlist ? "Đã lưu vào Wishlist" : t('place_detail.save_wishlist')}
                 </Button>
 
                 <div className="mt-2 text-center text-xs font-medium text-on-surface-variant opacity-70">

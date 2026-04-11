@@ -6,7 +6,13 @@
     "recommendations": "Recommendations",
     "blog": "Blog",
     "contact": "Contact",
-    "about": "About"
+    "about": "About",
+    "explore": "Explore",
+    "ai_concierge": "AI Concierge",
+    "login": "Login",
+    "register": "Register",
+    "get_recommendations": "Get recommendations",
+    "wishlist": "Wishlist"
   },
   "home": {
     "hero": {

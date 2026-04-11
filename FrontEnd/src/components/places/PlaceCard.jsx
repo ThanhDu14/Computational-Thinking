@@ -1,12 +1,32 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Star, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { MapPin, Star, ArrowRight, Heart } from 'lucide-react';
 import GlassCard from '../common/GlassCard';
 import Button from '../common/Button';
 import { motion } from 'framer-motion';
+import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
 
 const PlaceCard = ({ place }) => {
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   if (!place) return null;
+
+  const inWishlist = isInWishlist(place);
+
+  const handleHeartClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      if (window.confirm("Vui lòng đăng nhập để lưu vào Wishlist. Bạn có muốn tới trang đăng nhập không?")) {
+        navigate('/login');
+      }
+      return;
+    }
+    toggleWishlist(place);
+  };
 
   return (
     <Link to={`/place/${place.id}`} className="block h-full outline-none">
@@ -29,6 +49,16 @@ const PlaceCard = ({ place }) => {
               <span>{place.rating}</span>
             </div>
           )}
+          {/* Heart Badge for Wishlist */}
+          <button
+            onClick={handleHeartClick}
+            className="absolute top-4 right-4 bg-surface/80 hover:bg-surface backdrop-blur-md p-2 rounded-full text-on-surface flex items-center justify-center shadow-sm transition-all z-10 active:scale-90"
+            aria-label="Add to wishlist"
+          >
+            <Heart 
+              className={`w-5 h-5 transition-colors ${inWishlist ? 'fill-red-500 text-red-500' : 'text-on-surface-variant'}`} 
+            />
+          </button>
         </motion.div>
 
         <div className="flex flex-col flex-grow">

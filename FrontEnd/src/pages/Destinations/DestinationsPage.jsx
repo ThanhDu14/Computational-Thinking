@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
 
 import datadalat from '../../data/data_da_lat_final.json';
 import dataha from '../../data/data_HA_final.json';
@@ -9,6 +11,8 @@ import datathanhhoa from '../../data/data_thanh_hoa_final.json';
 export default function DestinationsPage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { isAuthenticated } = useAuth();
 
     // Combine datasets
     const allData = useMemo(() => {
@@ -41,6 +45,18 @@ export default function DestinationsPage() {
             setCurrentPage(page);
             window.scrollTo({ top: 300, behavior: 'smooth' });
         }
+    };
+
+    const handleHeartClick = (e, item) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!isAuthenticated) {
+            if (window.confirm("Vui lòng đăng nhập để lưu vào Wishlist. Bạn có muốn tới trang đăng nhập không?")) {
+                navigate('/login');
+            }
+            return;
+        }
+        toggleWishlist(item);
     };
 
     return (
@@ -129,7 +145,7 @@ export default function DestinationsPage() {
                             </div>
                         </div>
                         <div className="flex gap-3 mt-6 md:mt-0 shrink-0">
-                            <button 
+                            <button
                                 onClick={() => setIsImmersiveMode(true)}
                                 className="h-12 px-6 rounded-full bg-slate-900 text-white flex items-center gap-2 shadow-lg hover:scale-105 transition-transform active:scale-95 font-body font-bold"
                             >
@@ -157,8 +173,11 @@ export default function DestinationsPage() {
                                     <div className="absolute top-6 left-6 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md text-primary text-[10px] font-bold tracking-widest uppercase shadow-sm">
                                         {item.region}
                                     </div>
-                                    <button className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/50 backdrop-blur-md text-primary flex items-center justify-center hover:bg-white/80 transition-colors shadow-sm">
-                                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
+                                    <button
+                                        onClick={(e) => handleHeartClick(e, item)}
+                                        className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/50 backdrop-blur-md text-primary flex items-center justify-center hover:bg-white/80 transition-colors shadow-sm z-10"
+                                    >
+                                        <span className={`material-symbols-outlined ${isInWishlist(item) ? 'text-red-500' : ''}`} style={{ fontVariationSettings: isInWishlist(item) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                                     </button>
                                 </div>
                                 <div className={`p-8 ${isLarge ? 'flex flex-col md:flex-row md:items-center justify-between gap-6' : ''}`}>
@@ -252,16 +271,11 @@ export default function DestinationsPage() {
                     </div>
                 </section>
             </main>
-
-            {/* FAB */}
-            <button className="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-40">
-                <span className="material-symbols-outlined text-3xl">chat_bubble</span>
-            </button>
             {/* TIKTOK IMMERSIVE MODE */}
             {isImmersiveMode && (
                 <div className="fixed inset-0 z-[9999] bg-black text-white h-screen w-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide">
                     {/* Exit Button */}
-                    <button 
+                    <button
                         onClick={() => setIsImmersiveMode(false)}
                         className="fixed top-8 left-6 z-[10000] w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center hover:bg-black/60 transition-colors border border-white/20 touch-manipulation"
                     >
@@ -271,70 +285,70 @@ export default function DestinationsPage() {
                     {filteredData.map((item, index) => {
                         const imageSrc = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/1080x1920?text=No+Image';
                         const extractedRating = item.overall_rating ? item.overall_rating.split('/')[0].trim() : '4.5';
-                        
+
                         return (
                             <div key={`tiktok-${index}`} className="relative h-screen w-full snap-start snap-always shrink-0 bg-black flex items-center justify-center overflow-hidden border-b border-black">
                                 {/* Blurred Background Effect (Desktop only) */}
                                 <div className="absolute inset-0 hidden md:block">
                                     <img src={imageSrc} alt="" className="w-full h-full object-cover opacity-50 blur-[50px] scale-125" />
                                 </div>
-                                
+
                                 {/* Centered Content Container */}
                                 <div className="relative w-full md:max-w-md lg:max-w-[480px] h-full shadow-[0_0_80px_rgba(0,0,0,1)] bg-zinc-950 flex flex-col justify-end border-x border-white/10 z-10">
                                     {/* Using object-contain on very wide images if needed, but cover is fine here since the aspect ratio is phone-like */}
                                     <img src={imageSrc} alt={item.location_name} className="absolute inset-0 w-full h-full object-cover rounded-sm" />
                                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/95 pointer-events-none"></div>
-                                    
+
                                     {/* Info Container - Bottom Left */}
                                     <div className="absolute bottom-8 left-6 right-20 pb-4 pointer-events-auto z-20">
-                                    <div className="flex items-center gap-2 mb-3">
-                                         <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-widest uppercase border border-white/30 flex items-center gap-1 shadow-lg">
-                                            <span className="material-symbols-outlined text-[14px]">location_on</span>
-                                            {item.region}
-                                         </span>
-                                    </div>
-                                    <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-2 text-white drop-shadow-2xl shadow-black">{item.location_name}</h2>
-                                    <p className="text-white/90 font-body text-sm md:text-base line-clamp-3 mb-6 drop-shadow-lg shadow-black/50 font-medium">
-                                        {item.description}
-                                    </p>
-                                    <button 
-                                        onClick={() => { setIsImmersiveMode(false); navigate('/place/' + encodeURIComponent(item.location_name)); }}
-                                        className="bg-primary hover:bg-primary-dim text-white font-bold px-8 py-3.5 rounded-full flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
-                                    >
-                                        Khám Phá <span className="material-symbols-outlined text-[18px]">explore</span>
-                                    </button>
-                                </div>
-
-                                {/* Actions Container - Bottom Right */}
-                                <div className="absolute bottom-16 right-4 flex flex-col items-center gap-7 pointer-events-auto">
-                                    <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                                        <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-red-500/20 hover:border-red-500/50 transition-all active:scale-90">
-                                            <span className="material-symbols-outlined text-[28px] text-white hover:text-red-500" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-widest uppercase border border-white/30 flex items-center gap-1 shadow-lg">
+                                                <span className="material-symbols-outlined text-[14px]">location_on</span>
+                                                {item.region}
+                                            </span>
+                                        </div>
+                                        <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-2 text-white drop-shadow-2xl shadow-black">{item.location_name}</h2>
+                                        <p className="text-white/90 font-body text-sm md:text-base line-clamp-3 mb-6 drop-shadow-lg shadow-black/50 font-medium">
+                                            {item.description}
+                                        </p>
+                                        <button
+                                            onClick={() => { setIsImmersiveMode(false); navigate('/place/' + encodeURIComponent(item.location_name)); }}
+                                            className="bg-primary hover:bg-primary-dim text-white font-bold px-8 py-3.5 rounded-full flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 border border-white/20 shadow-xl"
+                                        >
+                                            Khám Phá <span className="material-symbols-outlined text-[18px]">explore</span>
                                         </button>
-                                        <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{Math.floor(Math.random() * 50) + 10}K</span>
                                     </div>
 
-                                    <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                                        <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-blue-500/20 hover:border-blue-500/50 transition-all active:scale-90">
-                                            <span className="material-symbols-outlined text-[26px] text-white hover:text-blue-500" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
-                                        </button>
-                                        <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{Math.floor(Math.random() * 900) + 100}</span>
-                                    </div>
+                                    {/* Actions Container - Bottom Right */}
+                                    <div className="absolute bottom-16 right-4 flex flex-col items-center gap-7 pointer-events-auto">
+                                        <div className="flex flex-col items-center gap-1 group cursor-pointer" onClick={(e) => handleHeartClick(e, item)}>
+                                            <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-red-500/20 hover:border-red-500/50 transition-all active:scale-90">
+                                                <span className={`material-symbols-outlined text-[28px] ${isInWishlist(item) ? 'text-red-500' : 'text-white hover:text-red-500'}`} style={{ fontVariationSettings: isInWishlist(item) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                                            </button>
+                                            <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{isInWishlist(item) ? 'Đã lưu' : 'Lưu'}</span>
+                                        </div>
 
-                                    <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                                        <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-green-500/20 hover:border-green-500/50 transition-all active:scale-90">
-                                            <span className="material-symbols-outlined text-[28px] text-white hover:text-green-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                        </button>
-                                        <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{extractedRating}</span>
-                                    </div>
+                                        <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                                            <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-blue-500/20 hover:border-blue-500/50 transition-all active:scale-90">
+                                                <span className="material-symbols-outlined text-[26px] text-white hover:text-blue-500" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
+                                            </button>
+                                            <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{Math.floor(Math.random() * 900) + 100}</span>
+                                        </div>
 
-                                    <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                                        <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-white/40 transition-all active:scale-90">
-                                            <span className="material-symbols-outlined text-[28px] text-white">share</span>
-                                        </button>
-                                        <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">Share</span>
+                                        <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                                            <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-green-500/20 hover:border-green-500/50 transition-all active:scale-90">
+                                                <span className="material-symbols-outlined text-[28px] text-white hover:text-green-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                                            </button>
+                                            <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">{extractedRating}</span>
+                                        </div>
+
+                                        <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                                            <button className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20 hover:bg-white/40 transition-all active:scale-90">
+                                                <span className="material-symbols-outlined text-[28px] text-white">share</span>
+                                            </button>
+                                            <span className="text-[11px] font-bold text-white shadow-black drop-shadow-md">Share</span>
+                                        </div>
                                     </div>
-                                </div>
                                 </div> {/* Cntr Container Close */}
                             </div>
                         );

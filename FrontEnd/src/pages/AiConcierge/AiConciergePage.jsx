@@ -7,10 +7,15 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AiConciergePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuth();
+
+  const userAvatar = user?.photoURL || user?.picture || null;
+  const userName = user?.displayName || user?.name || user?.email?.split('@')[0] || 'Khách';
   const getDefaultMessages = () => ([
     {
       role: 'bot',
@@ -124,11 +129,14 @@ export default function AiConciergePage() {
 
         <div className="mt-auto px-4 pt-6">
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 border border-white/20">
-            <div className="w-10 h-10 rounded-full bg-slate-300 overflow-hidden">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLd3Q-XzlTM6Atd9TtjfMrAQbA3x9Mb8jLB59Jl0SkiQfo0Y_jNVaJaP9UdyCd9wF0I-mpmjk37d6ivvKcEU3-Ms-y_p--NXOUN61fv9m4YBIOTB4v1wPFD-dLH74Xq5eXwfQa46EfoAr4iIq91EHGqS0LX_AwqHVjJ8j1zKBPQW3lFDOtjOhXWqolOvyg33M2bpgwiHcZj0Tyy1-zHv9bp2uR9tMPVDe-pKogATog-8cnhmUjPrrEqoBLKosIErfPLIjSGYyBeftc" alt="Alex" className="w-full h-full object-cover" />
+            <div className="w-10 h-10 rounded-full bg-slate-300 overflow-hidden flex items-center justify-center">
+                {userAvatar 
+                    ? <img src={userAvatar} alt={userName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    : <span className="text-white font-bold text-sm bg-primary w-full h-full flex items-center justify-center">{userName.charAt(0).toUpperCase()}</span>
+                }
             </div>
             <div className="overflow-hidden">
-              <p className="font-semibold truncate">Alex Rivera</p>
+              <p className="font-semibold truncate">{userName}</p>
               <p className="text-[10px] uppercase tracking-wider text-[#585c60]">{t('aiconcierge.premium_member')}</p>
             </div>
           </div>
@@ -168,8 +176,11 @@ export default function AiConciergePage() {
                     <Bot className="w-5 h-5 text-[#4f5b7d]" />
                   </div>
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-slate-300 overflow-hidden">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfWFHCwAAHE3tQ0uQ6CgSk8aT4-gtv8Q-kVmbf3Rt30Uwk_8giVC8ziwiYq2UKdgun583Jq8gAadE3sNahXwNff4VJnE70_EbPDkeww7o6zgATbzGIl54BPBrQGhWrxF21xCO20Fhi2rCv9QHPttqns84fMSV3WkH9Wmm_7y3h2OVwt4joLdvLTyYm83O1ijseXk_hk-LKcFXoJZhh8BEgQN2RgS9OgOsDKS8QOQB3t8hYWjp_u4abW7aZZwNKpft1Da9h-1KWVc3w" alt="Me" className="w-full h-full object-cover" />
+                  <div className="w-8 h-8 rounded-full bg-slate-300 overflow-hidden flex items-center justify-center">
+                    {userAvatar
+                      ? <img src={userAvatar} alt={userName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      : <span className="text-white font-bold text-xs bg-primary w-full h-full flex items-center justify-center">{userName.charAt(0).toUpperCase()}</span>
+                    }
                   </div>
                 )}
               </div>

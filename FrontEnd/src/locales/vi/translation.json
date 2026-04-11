@@ -6,7 +6,13 @@
     "recommendations": "Gợi Ý Chuyến Đi",
     "blog": "Bài Viết",
     "contact": "Liên Hệ",
-    "about": "Giới Thiệu"
+    "about": "Giới Thiệu",
+    "explore": "Khám phá",
+    "ai_concierge": "Trợ lý AI",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "get_recommendations": "Nhận gợi ý",
+    "wishlist": "Yêu thích"
   },
   "home": {
     "hero": {

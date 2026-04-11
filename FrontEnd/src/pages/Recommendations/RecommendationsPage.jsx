@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SkeletonCard } from '../../components/common/Skeleton';
+import TripPlanner from '../../components/places/TripPlanner';
+
+import datadalat from '../../data/data_da_lat_final.json';
+import dataha from '../../data/data_HA_final.json';
+import datathanhhoa from '../../data/data_thanh_hoa_final.json';
 
 export default function RecommendationsPage() {
   const navigate = useNavigate();
@@ -9,6 +14,7 @@ export default function RecommendationsPage() {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [plannerData, setPlannerData] = useState(null);
 
   // User selections
   const [selectedVibe, setSelectedVibe] = useState(null);
@@ -30,6 +36,24 @@ export default function RecommendationsPage() {
       }`;
   };
 
+  const generateItinerary = () => {
+      const allData = [...datadalat, ...dataha, ...datathanhhoa];
+      const randomItems = [];
+      const dataCopy = [...allData];
+      for (let i = 0; i < 9; i++) {
+          if(dataCopy.length === 0) break;
+          const randomIndex = Math.floor(Math.random() * dataCopy.length);
+          randomItems.push(dataCopy.splice(randomIndex, 1)[0]);
+      }
+      
+      const columns = {
+          'day-1': { title: 'Day 1', items: randomItems.slice(0, 3) },
+          'day-2': { title: 'Day 2', items: randomItems.slice(3, 6) },
+          'day-3': { title: 'Day 3', items: randomItems.slice(6, 9) }
+      };
+      setPlannerData(columns);
+  };
+
   const handleNext = () => {
     if (step < 3) {
       setStep(step + 1);
@@ -37,6 +61,7 @@ export default function RecommendationsPage() {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
+        generateItinerary();
         setShowResult(true);
       }, 2000);
     }
@@ -115,35 +140,29 @@ export default function RecommendationsPage() {
             )}
 
             {showResult && !isLoading && (
-               <div className="flex flex-col items-center max-w-2xl mx-auto space-y-8 animate-fade-in-up pb-8">
+               <div className="flex flex-col items-center w-full space-y-8 animate-fade-in-up pb-8 mt-6">
                    <div className="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center shadow-lg shadow-primary-container/40">
-                     <span className="material-symbols-outlined text-4xl text-primary font-bold">check</span>
+                     <span className="material-symbols-outlined text-4xl text-primary font-bold">auto_awesome</span>
                    </div>
-                   <div className="text-center">
-                     <h2 className="text-3xl font-display font-bold text-on-surface mb-4">{t('recommendations.mock_result.title')}</h2>
-                     <p className="text-on-surface-variant font-body leading-relaxed">{t('recommendations.mock_result.summary')}</p>
+                   <div className="text-center max-w-2xl px-4">
+                     <h2 className="text-3xl font-display font-bold text-on-surface mb-4">Lịch trình đề xuất 3 Ngày</h2>
+                     <p className="text-on-surface-variant font-body leading-relaxed">Chúng tôi đã thiết kế một chuyến đi dựa trên sở thích của bạn. Bạn có thể tự do <strong className="text-primary font-bold">KÉO & THẢ</strong> để thay đổi vị trí các điểm đến giữa các ngày theo ý muốn nhé!</p>
                    </div>
 
-                   <div className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6 transition-all hover:shadow-xl hover:-translate-y-1">
-                      <div className="flex items-center gap-4">
-                         <img alt="Hoi An" src="https://images.unsplash.com/photo-1555921015-5532091f6026?auto=format&fit=crop&q=80&w=300&h=300" className="w-20 h-20 rounded-xl object-cover shadow-sm" />
-                         <div>
-                            <h3 className="text-xl font-bold font-display text-on-surface">{t('recommendations.mock_result.dest_name')}</h3>
-                            <div className="flex gap-2 mt-2 hidden sm:flex">
-                               <span className="text-xs px-2 py-1 bg-surface-container-high text-on-surface-variant font-semibold rounded-md">Culture</span>
-                               <span className="text-xs px-2 py-1 bg-surface-container-high text-on-surface-variant font-semibold rounded-md">Friends</span>
-                            </div>
-                         </div>
-                      </div>
-                      <button onClick={() => navigate('/place/Hoi%20An')} className="bg-primary text-on-primary px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg hover:bg-primary-dim transition-all whitespace-nowrap">
-                         {t('recommendations.btn_view_itinerary')}
-                      </button>
+                   <div className="w-full mt-6 px-4 md:px-10 z-20">
+                      {plannerData && <TripPlanner initialData={plannerData} />}
                    </div>
                    
-                   <button onClick={() => {setStep(1); setShowResult(false);}} className="mt-8 text-on-surface-variant font-medium hover:text-primary transition-colors flex items-center gap-2 font-body">
-                     <span className="material-symbols-outlined text-sm">refresh</span>
-                     {t('recommendations.btn_restart')}
-                   </button>
+                   <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                     <button onClick={() => {setStep(1); setShowResult(false);}} className="text-on-surface-variant font-bold hover:text-primary transition-colors flex items-center justify-center gap-2 font-body px-8 py-3.5 bg-surface-container rounded-full border border-outline-variant/30 hover:border-primary/50 shadow-sm">
+                       <span className="material-symbols-outlined text-[18px]">refresh</span>
+                       Tạo lại lịch trình khác
+                     </button>
+                     <button className="bg-primary text-white font-bold hover:bg-primary-dim transition-colors flex items-center justify-center gap-2 font-body px-8 py-3.5 rounded-full shadow-lg shadow-primary/20 hover:-translate-y-1">
+                       <span className="material-symbols-outlined text-[18px]">favorite</span>
+                       Lưu My Itinerary
+                     </button>
+                   </div>
                </div>
             )}
 
