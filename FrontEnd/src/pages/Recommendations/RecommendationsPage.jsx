@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { SkeletonCard } from '../../components/common/Skeleton';
 
 export default function RecommendationsPage() {
   const navigate = useNavigate();
@@ -102,9 +103,14 @@ export default function RecommendationsPage() {
             </div>
 
             {isLoading && (
-               <div className="flex flex-col items-center justify-center py-24 space-y-6">
-                 <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                 <h2 className="text-2xl font-display font-bold text-on-surface text-center px-4 animate-pulse">{t('recommendations.loading_ai')}</h2>
+               <div className="flex flex-col items-center py-16 space-y-6 w-full max-w-2xl mx-auto">
+                 <h2 className="text-2xl font-display font-bold text-on-surface text-center animate-pulse mb-8">
+                   {t('recommendations.loading_ai')}
+                 </h2>
+                 <div className="w-full space-y-4">
+                   <SkeletonCard />
+                   <SkeletonCard />
+                 </div>
                </div>
             )}
 

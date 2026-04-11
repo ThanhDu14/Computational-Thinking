@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthPage from './UI/AuthPage'
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './components/common/ProtectedRoute'
+import TopProgressBar from './components/common/TopProgressBar'
 
 import HomePage from './pages/Home/HomePage'
 import PlaceDetailPage from './pages/PlaceDetail/PlaceDetailPage'
@@ -19,6 +20,7 @@ import './App.css'
 function App() {
   return (
     <Router>
+      <TopProgressBar />
       <Routes>
         {/* Public routes — có Navbar + Footer */}
         <Route element={<Layout />}>

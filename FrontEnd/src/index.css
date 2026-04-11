@@ -1,84 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
-@layer base {
-  /* LIGHT MODE (Hiện tại) */
-  :root {
-    --bg-primary: #4f5b7d;
-    --bg-on-primary: #ffffff;
-    --bg-primary-container: #cad6ff;
-    --bg-on-primary-container: #001257;
-    --bg-secondary: #0a6a37;
-    --bg-on-secondary: #ffffff;
-    --bg-secondary-container: #a0f5b4;
-    --bg-on-secondary-container: #002110;
-    --bg-tertiary: #006385;
-    --bg-background: #f8f5ff;
-    --bg-surface: #f8f5ff;
-    --bg-surface-container-low: #f1efff;
-    --bg-surface-container: #e6e6ff;
-    --bg-surface-container-high: #d8d8f0;
-    --bg-surface-container-highest: #c9c9e0;
-    --bg-surface-lowest: #ffffff;
-    --text-on-surface: #272c51;
-    --text-on-surface-variant: #545981;
-    --border-outline-variant: #a6aad7;
-    --bg-glass: rgba(255, 255, 255, 0.7);
-  }
-
-  /* DARK MODE Toggles */
-  .dark {
-    --bg-primary: #b4c4ff;
-    --bg-on-primary: #1e2a5e;
-    --bg-primary-container: #364366;
-    --bg-on-primary-container: #dce2ff;
-    --bg-secondary: #85dfa0;
-    --bg-on-secondary: #003919;
-    --bg-secondary-container: #005128;
-    --bg-on-secondary-container: #a0f5b4;
-    --bg-tertiary: #7bd0fb;
-    --bg-background: #0f101f;
-    --bg-surface: #161729;
-    --bg-surface-container-low: #1d1e34;
-    --bg-surface-container: #262945;
-    --bg-surface-container-high: #2e3052;
-    --bg-surface-container-highest: #383b5f;
-    --bg-surface-lowest: #080811;
-    --text-on-surface: #e4e4f5;
-    --text-on-surface-variant: #aeb1cf;
-    --border-outline-variant: #464a6b;
-    --bg-glass: rgba(38, 41, 69, 0.7);
-  }
-  
-  /* Reset màu nền chung để Tailwind app dụng màu mới */
-  body {
-    background-color: var(--bg-background);
-    color: var(--text-on-surface);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-}
-
-/* Ánh xạ css variables vào Tailwind Theme */
 @theme {
-  --color-primary: var(--bg-primary);
-  --color-on-primary: var(--bg-on-primary);
-  --color-primary-container: var(--bg-primary-container);
-  --color-on-primary-container: var(--bg-on-primary-container);
-  --color-secondary: var(--bg-secondary);
-  --color-on-secondary: var(--bg-on-secondary);
-  --color-secondary-container: var(--bg-secondary-container);
-  --color-on-secondary-container: var(--bg-on-secondary-container);
-  --color-tertiary: var(--bg-tertiary);
-  --color-background: var(--bg-background);
-  --color-surface: var(--bg-surface);
-  --color-surface-container-low: var(--bg-surface-container-low);
-  --color-surface-container: var(--bg-surface-container);
-  --color-surface-container-high: var(--bg-surface-container-high);
-  --color-surface-container-highest: var(--bg-surface-container-highest);
-  --color-surface-container-lowest: var(--bg-surface-lowest);
-  --color-on-surface: var(--text-on-surface);
-  --color-on-surface-variant: var(--text-on-surface-variant);
-  --color-outline-variant: var(--border-outline-variant);
+  --color-primary: #4f5b7d;
+  --color-primary-container: #cad6ff;
+  --color-secondary: #0a6a37;
+  --color-secondary-container: #a0f5b4;
+  --color-tertiary: #006385;
+  --color-background: #f8f5ff;
+  --color-surface: #f8f5ff;
+  --color-surface-container-low: #f1efff;
+  --color-surface-container: #e6e6ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #272c51;
+  --color-on-surface-variant: #545981;
+  --color-outline-variant: #a6aad7;
 
   --font-display: "Plus Jakarta Sans", sans-serif;
   --font-body: "Be Vietnam Pro", sans-serif;

@@ -3,19 +3,25 @@ import { Link } from 'react-router-dom';
 import { MapPin, Star, ArrowRight } from 'lucide-react';
 import GlassCard from '../common/GlassCard';
 import Button from '../common/Button';
+import { motion } from 'framer-motion';
 
 const PlaceCard = ({ place }) => {
   if (!place) return null;
 
   return (
     <Link to={`/place/${place.id}`} className="block h-full outline-none">
-      <GlassCard hoverEffect className="p-4 md:p-5 flex flex-col group overflow-hidden h-full">
-        <div className="relative h-48 sm:h-56 rounded-2xl overflow-hidden mb-6">
+      <GlassCard hoverEffect className="p-4 md:p-5 flex flex-col group overflow-hidden h-full transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+        <motion.div layoutId={`place-image-${place.id}`} className="relative h-48 sm:h-56 rounded-2xl overflow-hidden mb-6">
           <img 
             src={place.image || "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1"} 
             alt={place.name} 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
+          <div className="absolute inset-0 bg-[#1c1f36]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+              <span className="text-white font-bold tracking-wide transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 flex items-center gap-2">
+                Xem chi tiết <ArrowRight className="w-4 h-4" />
+              </span>
+          </div>
           {/* Top Badge */}
           {place.rating && (
             <div className="absolute top-4 left-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-on-surface uppercase tracking-wider flex items-center gap-1 shadow-sm">
@@ -23,12 +29,12 @@ const PlaceCard = ({ place }) => {
               <span>{place.rating}</span>
             </div>
           )}
-        </div>
+        </motion.div>
 
         <div className="flex flex-col flex-grow">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h3 className="text-xl font-display font-bold text-on-surface line-clamp-1 mb-1">{place.name}</h3>
+              <h3 className="text-xl font-display font-bold text-on-surface line-clamp-1 mb-1 group-hover:text-primary transition-colors">{place.name}</h3>
               <div className="flex items-center text-on-surface-variant font-body text-sm gap-1">
                 <MapPin className="w-4 h-4 text-primary shrink-0" />
                 <span className="line-clamp-1">{place.location}</span>
@@ -48,7 +54,7 @@ const PlaceCard = ({ place }) => {
               </span>
             </div>
             <Button variant="primary" className="!px-4 !py-3 !rounded-xl pointer-events-none">
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </div>

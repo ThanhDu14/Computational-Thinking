@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SectionHeader from '../../components/common/SectionHeader';
 import GlassCard from '../../components/common/GlassCard';
 import Button from '../../components/common/Button';
@@ -61,7 +62,12 @@ export default function PlaceDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[40vh] md:h-[55vh] rounded-3xl overflow-hidden drop-shadow-xl bg-surface-container">
            {/* Main Large Image */}
            <div className="md:col-span-2 h-full overflow-hidden group">
-              <img src={mainImg} className="w-full h-full object-cover rounded-l-3xl hover:scale-110 transition-transform duration-700 cursor-pointer" alt="Main" />
+              <motion.img 
+                layoutId={`place-image-${params.id}`} 
+                src={mainImg} 
+                className="w-full h-full object-cover rounded-l-3xl hover:scale-110 transition-transform duration-700 cursor-pointer" 
+                alt="Main" 
+              />
            </div>
            {/* Sub Images - Top Right */}
            <div className="hidden md:grid grid-cols-1 grid-rows-2 gap-3 h-full">
