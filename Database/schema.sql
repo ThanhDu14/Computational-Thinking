@@ -3,11 +3,24 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. User Management
 CREATE TABLE Users (
+    -- Dữ liệu định danh (Giữ nguyên UUID để bảo vệ các bảng con)
     user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    email VARCHAR(255) UNIQUE NOT NULL,
-    preferences TEXT 
+    
+    -- Dữ liệu từ Firebase (Cửa 1) - Có thể NULL
+    firebase_uid VARCHAR(255) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    
+    -- Dữ liệu Tự code Auth Local (Cửa 2) - Có thể NULL
+    username VARCHAR(50) UNIQUE,
+    password VARCHAR(255),
+    
+    -- Dữ liệu dùng chung (Bắt buộc phải có theo struct Go)
+    name VARCHAR(255) NOT NULL,
+    provider VARCHAR(50) NOT NULL,
+    role VARCHAR(50) DEFAULT 'tourist',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- 2. Location Data
 CREATE TABLE Locations (
     location_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
