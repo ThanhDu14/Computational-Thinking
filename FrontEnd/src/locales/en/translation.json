@@ -290,7 +290,13 @@
     "search_btn": "Search",
     "popular": "Popular:",
     "results_title": "Search Results",
-    "places_count": "places"
+    "places_count": "places",
+    "results_for": "Results for: ",
+    "no_results_title": "No results found",
+    "no_results_desc": "Try entering a different keyword or check out the suggestions above.",
+    "tag_dalat": "Da Lat",
+    "tag_hoian": "Hoi An",
+    "tag_thanhhoa": "Thanh Hoa"
   },
   "place_detail": {
     "not_found": "Destination not found",

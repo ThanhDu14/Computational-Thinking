@@ -108,9 +108,9 @@ export default function SearchPage() {
 
           <div className="flex flex-wrap justify-center gap-4 py-2 font-body text-[15px] font-semibold text-primary-container">
             <span className="text-white/80">{t('search_page.popular')}</span>
-            <span onClick={() => handleTagClick('Da Lat')} className="cursor-pointer hover:text-white transition-colors">Đà Lạt</span>
-            <span onClick={() => handleTagClick('Hoi An')} className="cursor-pointer hover:text-white transition-colors">Hội An</span>
-            <span onClick={() => handleTagClick('Thanh Hoa')} className="cursor-pointer hover:text-white transition-colors">Thanh Hóa</span>
+            <span onClick={() => handleTagClick('Da Lat')} className="cursor-pointer hover:text-white transition-colors">{t('search_page.tag_dalat', 'Đà Lạt')}</span>
+            <span onClick={() => handleTagClick('Hoi An')} className="cursor-pointer hover:text-white transition-colors">{t('search_page.tag_hoian', 'Hội An')}</span>
+            <span onClick={() => handleTagClick('Thanh Hoa')} className="cursor-pointer hover:text-white transition-colors">{t('search_page.tag_thanhhoa', 'Thanh Hóa')}</span>
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function SearchPage() {
         <div className="flex justify-between items-end mb-8 border-b border-outline-variant/20 pb-4">
           <div>
             <h2 className="text-3xl font-display font-bold text-on-surface mb-1">{t('search_page.results_title')}</h2>
-            {activeQuery && <p className="text-on-surface-variant font-body">Kết quả cho: <span className="font-bold text-primary">"{activeQuery}"</span></p>}
+            {activeQuery && <p className="text-on-surface-variant font-body">{t('search_page.results_for', 'Kết quả cho: ')}<span className="font-bold text-primary">"{activeQuery}"</span></p>}
           </div>
           <span className="text-on-surface-variant font-body font-bold text-sm uppercase tracking-wider bg-surface-container-low px-4 py-1.5 rounded-full">{searchResults.length} {t('search_page.places_count')}</span>
         </div>
@@ -173,8 +173,8 @@ export default function SearchPage() {
              <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6">
                 <Search className="w-10 h-10 text-outline" />
              </div>
-             <h3 className="text-2xl font-bold font-display text-on-surface mb-2">Không tìm thấy kết quả</h3>
-             <p className="text-on-surface-variant font-body">Thử nhập từ khóa khác hoặc tham khảo các thẻ gợi ý phía trên.</p>
+             <h3 className="text-2xl font-bold font-display text-on-surface mb-2">{t('search_page.no_results_title', 'Không tìm thấy kết quả')}</h3>
+             <p className="text-on-surface-variant font-body">{t('search_page.no_results_desc', 'Thử nhập từ khóa khác hoặc tham khảo các thẻ gợi ý phía trên.')}</p>
           </div>
         )}
       </div>

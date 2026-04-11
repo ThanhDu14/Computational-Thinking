@@ -290,7 +290,13 @@
     "search_btn": "Tìm Kiếm",
     "popular": "Phổ biến:",
     "results_title": "Kết quả tìm kiếm",
-    "places_count": "địa điểm"
+    "places_count": "địa điểm",
+    "results_for": "Kết quả cho: ",
+    "no_results_title": "Không tìm thấy kết quả",
+    "no_results_desc": "Thử nhập từ khóa khác hoặc tham khảo các thẻ gợi ý phía trên.",
+    "tag_dalat": "Đà Lạt",
+    "tag_hoian": "Hội An",
+    "tag_thanhhoa": "Thanh Hóa"
   },
   "place_detail": {
     "not_found": "Không tìm thấy điểm đến",

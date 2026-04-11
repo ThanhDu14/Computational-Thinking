@@ -33,6 +33,12 @@ const Navbar = () => {
 
   const avatarLetter = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
+  const toggleLanguage = () => {
+    const currentLang = i18n.language || '';
+    const newLang = currentLang.startsWith('vi') ? 'en' : 'vi';
+    i18n.changeLanguage(newLang);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -98,6 +104,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-1 md:flex-none justify-end gap-3 font-body items-center">
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors font-bold text-sm"
+              aria-label="Toggle Language"
+            >
+              {(i18n.language || '').startsWith('vi') ? 'VI' : 'EN'}
+            </button>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
