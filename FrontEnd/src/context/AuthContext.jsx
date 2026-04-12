@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }) => {
 
   // --- CÁC HÀM XỬ LÝ AUTHENTICATION TỪ UI ---
 
-  // Đăng nhập bằng Email/Password (Trực tiếp với Backend)
-  const login = useCallback(async (email, password) => {
+  // Đăng nhập bằng Local (Trực tiếp với Backend)
+  const login = useCallback(async (username, password) => {
     try {
-      const userData = await authService.loginLocalBackend(email, password);
+      const userData = await authService.loginLocalBackend(username, password);
       const userWithMeta = { ...userData, authType: 'local' };
       localStorage.setItem('smart_travel_user', JSON.stringify(userWithMeta));
       setUser(userWithMeta);
@@ -46,10 +46,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Đăng ký bằng Email/Password (Trực tiếp với Backend)
-  const register = useCallback(async (name, email, password) => {
+  // Đăng ký (Trực tiếp với Backend)
+  const register = useCallback(async (username, password, confirm_password) => {
     try {
-      const userData = await authService.registerLocalBackend({ name, email, password });
+      const userData = await authService.registerLocalBackend({ username, password, confirm_password });
       const userWithMeta = { ...userData, authType: 'local' };
       localStorage.setItem('smart_travel_user', JSON.stringify(userWithMeta));
       setUser(userWithMeta);
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
       const userData = await authService.loginWithGoogleBackend(idToken);
-      
+
       const userWithMeta = { ...userData, authType: 'google', firebaseUid: result.user.uid };
       localStorage.setItem('smart_travel_user', JSON.stringify(userWithMeta));
       setUser(userWithMeta);
@@ -79,25 +79,34 @@ export const AuthProvider = ({ children }) => {
   // Đăng xuất
   const logout = useCallback(async () => {
     try {
-      // 1. Gọi backend logout
-      const idToken = user?.authType === 'google' ? await auth.currentUser?.getIdToken() : null;
-      await authService.logoutBackend(idToken);
+      const isFirebase = auth.currentUser;
+      const isLocal = localStorage.getItem('smart_travel_user');
 
-      // 2. Logout Firebase (nếu là Google user)
-      if (user?.authType === 'google') {
-        await signOut(auth);
+      // Nếu xài Google (Cửa 1):
+      if (isFirebase) {
+        // Lấy token làm mới nhất (bắt buộc tham số true)
+        const freshToken = await auth.currentUser.getIdToken(true);
+        await authService.logoutBackend(freshToken);
+        await signOut(auth); // Quét sạch Web Session Firebase
       }
 
-      // 3. Clear local state
-      localStorage.removeItem('smart_travel_user');
+      // Nếu xài Local Tự Trồng (Cửa 2):
+      if (isLocal) {
+        // Stateless JWT: Tự ném thẻ vào thùng rác là mất quyền
+        localStorage.removeItem('smart_travel_user');
+      }
+
       setUser(null);
+
+      // Redirect về trang /login
+      window.location.href = '/login';
     } catch (error) {
-      console.error("Logout error:", error);
-      // Vẫn clear local cho chắc chắn
-      localStorage.removeItem('smart_travel_user');
+      console.error('Logout error:', error);
+      localStorage.clear();
       setUser(null);
+      window.location.href = '/login';
     }
-  }, [user]);
+  }, []);
 
   const isAuthenticated = !!user;
 

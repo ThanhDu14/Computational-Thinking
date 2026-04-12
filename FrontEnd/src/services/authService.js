@@ -28,16 +28,16 @@ export const loginWithGoogleBackend = async (idToken) => {
 };
 
 /**
- * Đăng nhập Local (Email/Password) trực tiếp với backend.
+ * Đăng nhập Local trực tiếp với backend.
  */
-export const loginLocalBackend = async (email, password) => {
+export const loginLocalBackend = async (username, password) => {
   const response = await fetch('/api/auth/local/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       "X-Pinggy-No-Screen": "true"
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ username, password }),
   });
 
   if (!response.ok) {
@@ -77,7 +77,7 @@ export const logoutBackend = async (idToken) => {
     'Content-Type': 'application/json',
     "X-Pinggy-No-Screen": "true"
   };
-  
+
   if (idToken) {
     headers['Authorization'] = `Bearer ${idToken}`;
   }

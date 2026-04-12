@@ -20,7 +20,7 @@ const AuthPage = () => {
     const navigate = useNavigate();
     const { login, register, loginWithGoogle, isAuthenticated } = useAuth();
     const [isLogin, setIsLogin] = useState(location.pathname === '/login');
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+    const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -52,29 +52,36 @@ const AuthPage = () => {
         e.preventDefault();
         setError('');
 
-        if (!formData.email || !formData.password) {
-            setError('Vui lòng nhập đầy đủ thông tin.');
-            return;
-        }
-        if (!isLogin && formData.password !== formData.confirmPassword) {
-            setError('Mật khẩu xác nhận không khớp.');
-            return;
-        }
-        if (formData.password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự.');
-            return;
+        if (isLogin) {
+            if (!formData.username || !formData.password) {
+                setError('Vui lòng nhập đầy đủ thông tin.');
+                return;
+            }
+        } else {
+            if (!formData.username || !formData.password || !formData.confirmPassword) {
+                setError('Vui lòng nhập đầy đủ thông tin.');
+                return;
+            }
+            if (formData.password !== formData.confirmPassword) {
+                setError('Mật khẩu xác nhận không khớp.');
+                return;
+            }
+            if (formData.password.length < 6) {
+                setError('Mật khẩu phải có ít nhất 6 ký tự.');
+                return;
+            }
         }
 
         setIsLoading(true);
         try {
             if (isLogin) {
-                await login(formData.email, formData.password);
+                await login(formData.username, formData.password);
             } else {
-                await register(formData.name || formData.email.split('@')[0], formData.email, formData.password);
+                await register(formData.username, formData.password, formData.confirmPassword);
             }
             // onAuthStateChanged sẽ tự cập nhật user → useEffect sẽ navigate
         } catch (err) {
-            const msg = FIREBASE_ERRORS[err.code] || `Đã xảy ra lỗi: ${err.message}`;
+            const msg = FIREBASE_ERRORS[err.code] || `Đã xảy ra lỗi: ${err?.response?.data?.error || err.message}`;
             setError(msg);
         } finally {
             setIsLoading(false);
@@ -189,28 +196,14 @@ const AuthPage = () => {
 
                         {/* Form */}
                         <form className="space-y-5" onSubmit={handleSubmit}>
-                            {!isLogin && (
-                                <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-400">
-                                    <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">Voyager Name</label>
-                                    <input
-                                        name="name"
-                                        className="w-full bg-black/20 border border-white/5 rounded-full py-4 px-7 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400/50 transition-all font-body text-sm shadow-inner"
-                                        placeholder="Full Name"
-                                        type="text"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            )}
-
-                            <div className="space-y-1.5">
-                                <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">Email Address</label>
+                            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-400">
+                                <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">Username</label>
                                 <input
-                                    name="email"
+                                    name="username"
                                     className="w-full bg-black/20 border border-white/5 rounded-full py-4 px-7 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400/50 transition-all font-body text-sm shadow-inner"
-                                    placeholder="navigator@voyage.com"
-                                    type="email"
-                                    value={formData.email}
+                                    placeholder="Username"
+                                    type="text"
+                                    value={formData.username}
                                     onChange={handleChange}
                                 />
                             </div>
