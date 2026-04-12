@@ -57,7 +57,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="fixed w-full z-50 top-0 left-0 px-6 pt-4 pointer-events-none transition-all duration-500">
+    <div className="fixed w-full z-[100] top-0 left-0 px-6 pt-4 pointer-events-none transition-all duration-500">
       <header className={`pointer-events-auto rounded-xl transition-all duration-500 ${isScrolled ? 'bg-surface/95 backdrop-blur-3xl shadow-[0_10px_40px_-10px_rgba(39,44,81,0.15)] translate-y-0' : 'bg-surface/60 backdrop-blur-md shadow-sm translate-y-2'}`}>
         <nav className={`container mx-auto px-6 flex items-center justify-between transition-all duration-500 ${isScrolled ? 'py-3' : 'py-5'}`}>
           <Link to="/" className="flex items-center gap-3">

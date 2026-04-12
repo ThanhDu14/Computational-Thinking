@@ -331,5 +331,20 @@
     "chip_creative": "Creative Mode",
     "chip_summary": "Text Summary",
     "chip_image": "Generate Image"
+  },
+  "footer": {
+    "desc": "Experience the world with \"The Ethereal Explorer\". Boundless, atmospheric landscapes waiting to be discovered.",
+    "company": "Company",
+    "resources": "Resources",
+    "legal": "Legal",
+    "about_us": "About Us",
+    "contact": "Contact",
+    "careers": "Careers",
+    "recommendations": "Recommendations",
+    "help_center": "Help Center",
+    "safety": "Safety",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "all_rights_reserved": "All rights reserved."
   }
 }

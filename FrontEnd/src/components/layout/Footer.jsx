@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-surface-container-low pt-20 pb-12 mt-auto text-on-surface-variant font-body">
       <div className="container mx-auto px-6">
@@ -14,31 +17,31 @@ const Footer = () => {
               <span className="text-2xl font-display font-bold tracking-tight text-on-surface">SmartTravel</span>
             </div>
             <p className="text-sm leading-relaxed">
-              Experience the world with "The Ethereal Explorer". Boundless, atmospheric landscapes waiting to be discovered.
+              {t('footer.desc')}
             </p>
           </div>
           <div className="flex flex-wrap gap-x-12 gap-y-6 text-sm font-medium">
             <div className="flex flex-col gap-3">
-              <h4 className="text-on-surface font-display font-bold mb-1">Company</h4>
-              <Link to="/about" className="hover:text-primary transition-colors">About Us</Link>
-              <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
-              <a href="#" className="hover:text-primary transition-colors">Careers</a>
+              <h4 className="text-on-surface font-display font-bold mb-1">{t('footer.company')}</h4>
+              <Link to="/about" className="hover:text-primary transition-colors">{t('footer.about_us')}</Link>
+              <Link to="/contact" className="hover:text-primary transition-colors">{t('footer.contact')}</Link>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.careers')}</a>
             </div>
             <div className="flex flex-col gap-3">
-              <h4 className="text-on-surface font-display font-bold mb-1">Resources</h4>
-              <Link to="/recommendations" className="hover:text-primary transition-colors">Recommendations</Link>
-              <a href="#" className="hover:text-primary transition-colors">Help Center</a>
-              <a href="#" className="hover:text-primary transition-colors">Safety</a>
+              <h4 className="text-on-surface font-display font-bold mb-1">{t('footer.resources')}</h4>
+              <Link to="/recommendations" className="hover:text-primary transition-colors">{t('footer.recommendations')}</Link>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.help_center')}</a>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.safety')}</a>
             </div>
             <div className="flex flex-col gap-3">
-              <h4 className="text-on-surface font-display font-bold mb-1">Legal</h4>
-              <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+              <h4 className="text-on-surface font-display font-bold mb-1">{t('footer.legal')}</h4>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.privacy_policy')}</a>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.terms_of_service')}</a>
             </div>
           </div>
         </div>
         <div className="pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium tracking-wide">
-          <p>© {new Date().getFullYear()} SmartTravel Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} SmartTravel Inc. {t('footer.all_rights_reserved')}</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-primary transition-colors">Twitter</a>
             <a href="#" className="hover:text-primary transition-colors">Instagram</a>

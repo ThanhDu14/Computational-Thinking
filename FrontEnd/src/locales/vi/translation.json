@@ -331,5 +331,20 @@
     "chip_creative": "Chế độ Sáng tạo",
     "chip_summary": "Tóm tắt văn bản",
     "chip_image": "Tạo hình ảnh"
+  },
+  "footer": {
+    "desc": "Trải nghiệm thế giới với \"Kẻ Khám Phá Thanh Khiết\". Những cảnh quan bao la, đầy cảm xúc đang chờ bạn khám phá.",
+    "company": "Công ty",
+    "resources": "Tài nguyên",
+    "legal": "Pháp lý",
+    "about_us": "Giới thiệu",
+    "contact": "Liên hệ",
+    "careers": "Tuyển dụng",
+    "recommendations": "Gợi ý chuyến đi",
+    "help_center": "Trung tâm hỗ trợ",
+    "safety": "An toàn",
+    "privacy_policy": "Chính sách bảo mật",
+    "terms_of_service": "Điều khoản dịch vụ",
+    "all_rights_reserved": "Bảo lưu mọi quyền."
   }
 }

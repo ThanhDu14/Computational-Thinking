@@ -6,17 +6,10 @@ if (API_BASE_URL.endsWith('/')) {
 
 
 /**
- * Gửi Firebase ID Token lên backend để xác minh.
- * Backend dùng Firebase Admin SDK để verify token,
- * sau đó trả về thông tin user (hoặc tạo user mới).
- *
- * @param {string} idToken - Firebase ID Token lấy từ user.getIdToken()
- * @returns {Promise<Object>} - User data từ backend
+ * Gửi Firebase ID Token lên backend để xác minh Google Login.
  */
-export const verifyTokenWithBackend = async (idToken) => {
-
-  // Nhờ proxy của Vite trong vite.config.js chặn và gọi ra ngoài hộ
-  const response = await fetch('/api/auth/login', {
+export const loginWithGoogleBackend = async (idToken) => {
+  const response = await fetch('/api/auth/google', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -28,11 +21,72 @@ export const verifyTokenWithBackend = async (idToken) => {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    console.error("❌ Lỗi từ Backend:", errorData);
-    throw new Error(errorData.message || `Backend error: ${response.status}`);
+    throw new Error(errorData.message || `Google login error: ${response.status}`);
+  }
+  const json = await response.json();
+  return json.data || json;
+};
+
+/**
+ * Đăng nhập Local (Email/Password) trực tiếp với backend.
+ */
+export const loginLocalBackend = async (email, password) => {
+  const response = await fetch('/api/auth/local/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      "X-Pinggy-No-Screen": "true"
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Login error: ${response.status}`);
+  }
+  const json = await response.json();
+  return json.data || json;
+};
+
+/**
+ * Đăng ký tài khoản Local trực tiếp với backend.
+ */
+export const registerLocalBackend = async (userData) => {
+  const response = await fetch('/api/auth/local/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      "X-Pinggy-No-Screen": "true"
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Register error: ${response.status}`);
+  }
+  const json = await response.json();
+  return json.data || json;
+};
+
+/**
+ * Gọi backend để logout và revoke token.
+ */
+export const logoutBackend = async (idToken) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    "X-Pinggy-No-Screen": "true"
+  };
+  
+  if (idToken) {
+    headers['Authorization'] = `Bearer ${idToken}`;
   }
 
-  const json = await response.json();
+  const response = await fetch('/api/auth/logout', {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ idToken }),
+  });
 
-  return json.data || json;
+  return response.ok;
 };

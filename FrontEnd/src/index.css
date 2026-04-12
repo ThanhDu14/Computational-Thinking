@@ -2,7 +2,8 @@
 @import "tailwindcss";
 
 @layer base {
-  /* LIGHT MODE */
+
+  /* LIGHT MODE (Hiện tại) */
   :root {
     --bg-primary: #4f5b7d;
     --bg-on-primary: #ffffff;
@@ -24,32 +25,50 @@
     --text-on-surface-variant: #545981;
     --border-outline-variant: #a6aad7;
     --bg-glass: rgba(255, 255, 255, 0.7);
+
+    /* Gradients */
+    --gradient-hero-start: #cad6ff;
+    --gradient-hero-end: #f8f5ff;
+    --gradient-brand-start: #4f5b7d;
+    --gradient-brand-end: #cad6ff;
   }
 
-  /* DARK MODE */
+  /* DARK MODE Toggles */
   .dark {
-    --bg-primary: #b4c4ff;
-    --bg-on-primary: #1e2a5e;
-    --bg-primary-container: #364366;
+    --bg-primary: #8aa0ff;
+    /* Sát với brand nhạt hơn để pop trên nền đen */
+    --bg-on-primary: #050b2b;
+    --bg-primary-container: #1a2040;
     --bg-on-primary-container: #dce2ff;
     --bg-secondary: #85dfa0;
     --bg-on-secondary: #003919;
-    --bg-secondary-container: #005128;
+    --bg-secondary-container: #00321a;
     --bg-on-secondary-container: #a0f5b4;
-    --bg-tertiary: #7bd0fb;
-    --bg-background: #0f101f;
-    --bg-surface: #161729;
-    --bg-surface-container-low: #1d1e34;
-    --bg-surface-container: #262945;
-    --bg-surface-container-high: #2e3052;
-    --bg-surface-container-highest: #383b5f;
-    --bg-surface-lowest: #080811;
-    --text-on-surface: #e4e4f5;
+    --bg-tertiary: #5dc0f8;
+    --bg-background: #03040a;
+    /* Sâu hơn (Midnight Void) */
+    --bg-surface: #08091a;
+    /* Nổi bật hơn một chút so với background */
+    --bg-surface-container-low: #0f1025;
+    --bg-surface-container: #171933;
+    --bg-surface-container-high: #1f2244;
+    --bg-surface-container-highest: #282c5a;
+    --bg-surface-lowest: #010105;
+    --text-on-surface: #f5f6fa;
+    /* Sáng hơn để tương phản tối đa */
     --text-on-surface-variant: #aeb1cf;
-    --border-outline-variant: #464a6b;
-    --bg-glass: rgba(38, 41, 69, 0.7);
+    --border-outline-variant: #34375a;
+    --bg-glass: rgba(15, 17, 33, 0.75);
+    /* Kính tối màu thay vì kính trắng */
+
+    /* Dark Gradients */
+    --gradient-hero-start: #0a0b1e;
+    --gradient-hero-end: #03040a;
+    --gradient-brand-start: #3a4770;
+    --gradient-brand-end: #576694;
   }
 
+  /* Reset màu nền chung để Tailwind app dụng màu mới */
   body {
     background-color: var(--bg-background);
     color: var(--text-on-surface);
@@ -57,7 +76,7 @@
   }
 }
 
-/* Ánh xạ CSS variables vào Tailwind Theme */
+/* Ánh xạ css variables vào Tailwind Theme */
 @theme {
   --color-primary: var(--bg-primary);
   --color-on-primary: var(--bg-on-primary);
