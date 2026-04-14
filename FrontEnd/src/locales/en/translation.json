@@ -1,0 +1,323 @@
+{
+  "nav": {
+    "home": "Home",
+    "destinations": "Destinations",
+    "search": "Search Trips",
+    "recommendations": "Recommendations",
+    "blog": "Blog",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "home": {
+    "hero": {
+      "title_1": "Discover your next",
+      "title_2": "unforgettable journey",
+      "subtitle": "AI-powered suggestions for destinations you'll love, crafted for the modern wanderer.",
+      "explore_btn": "Explore destinations",
+      "popular_btn": "View popular places",
+      "search_placeholder": "Where do you want to go?",
+      "search_btn": "Search",
+      "tag_beach": "Beach",
+      "tag_mountain": "Mountain",
+      "tag_culture": "Culture"
+    },
+    "trending": {
+      "subtitle": "Inspiration",
+      "title": "Trending Destinations",
+      "view_all": "View all",
+      "card1": {
+        "tag": "Nature",
+        "title": "Azure Coastlines of the Mediterranean",
+        "desc": "Experience the hidden coves and sapphire waters of the Amalfi Coast's best kept secrets."
+      },
+      "card2": {
+        "tag": "Culture",
+        "title": "Ancient Markets of the Silk Road",
+        "desc": "A sensory journey through the spices, silks, and stories of historical Uzbekistan."
+      },
+      "card3": {
+        "tag": "Nature",
+        "title": "Glacial Peaks and Silent Valleys",
+        "desc": "Escape to the serenity of the high Alps, where time moves as slowly as the glaciers."
+      },
+      "view_details": "View details"
+    },
+    "ai": {
+      "subtitle": "Smart Assistant",
+      "title": "Tailored for your taste",
+      "desc": "Our AI learns from your preferences to curate the perfect escape.",
+      "card1": {
+        "title": "The Solo Adventurer's Path",
+        "desc": "Safety-focused, high-engagement solo itineraries in safe urban hubs."
+      },
+      "card2": {
+        "title": "Eco-Conscious Escapes",
+        "desc": "Sustainable stays and low-carbon transport journeys through lush rainforests."
+      },
+      "btn": "Generate plan"
+    },
+    "stats": {
+      "destinations": "Destinations",
+      "countries": "Countries",
+      "happy": "Happy Travelers"
+    },
+    "blog": {
+      "title": "Traveler Stories",
+      "card1": {
+        "title": "The Art of Minimalist Packing: 10 Days in One Bag",
+        "desc": "Learn how to traverse the globe with only the essentials without sacrificing style or comfort."
+      },
+      "card2": {
+        "title": "Hidden Tokyo: Beyond the Neon and Crowds",
+        "desc": "Discover the quiet temples and artisanal coffee shops tucked away in the world's busiest city."
+      },
+      "read_more": "Read more"
+    }
+  },
+  "about": {
+    "hero_title_1": "Engineering the",
+    "hero_title_2": "Future of Travel",
+    "hero_subtitle": "We're not just a booking platform. We're your digital gateway to the stratosphere of luxury exploration, powered by the most sophisticated AI on the planet.",
+    "stats": {
+      "trips": "Trips Curated",
+      "countries": "Countries",
+      "accuracy": "AI Accuracy",
+      "rating": "User Rating"
+    },
+    "mission": {
+      "title": "Our Purpose",
+      "heading_1": "Personalization at the",
+      "heading_2": "Speed of Thought.",
+      "p1": "In an era of endless options, the true luxury is relevance. SmartTravel was founded on the belief that travel shouldn't be about scrolling through generic listings—it should be about discovering experiences that resonate with your soul.",
+      "p2": "Our proprietary AI engines process millions of data points, from real-time climate patterns to local cultural festivals, ensuring that every itinerary we generate is as unique as a fingerprint. We bridge the gap between human intuition and machine precision.",
+      "p3": "Whether you're seeking a silent retreat in the Andes or a high-energy culinary tour through Tokyo, our Digital Concierge understands the nuance of your desires before you even voice them."
+    },
+    "team": {
+      "title": "The Team",
+      "heading": "The Architects of Journey",
+      "subtitle": "Meet the visionaries blending aerospace engineering with hospitality to redefine your transit.",
+      "members": {
+        "du": {
+          "role": "Front-End Developer",
+          "desc": "Passionate about creating seamless experiences with every click. Designs interfaces with the motto: Beautiful, intuitive, and bug-free."
+        },
+        "dat": {
+          "role": "Leader-AI Engineer",
+          "desc": "Guiding the team through endless deadlines. Spends most of his time teaching AI to understand human nuances better than code."
+        },
+        "duy": {
+          "role": "BackEnd Developer",
+          "desc": "The wizard behind the curtain, managing the entire backend architecture to ensure the app always runs lightning fast."
+        },
+        "hien": {
+          "role": "FrontEnd Developer",
+          "desc": "Addicted to CSS and smooth animations. The one responsible for turning wild design ideas into living, breathing UI."
+        },
+        "hung": {
+          "role": "BackEnd Developer",
+          "desc": "Loves solving complex logic puzzles. Transforms messy raw data into clean, stable, and efficient APIs."
+        },
+        "anh": {
+          "role": "Data Scientist",
+          "desc": "In love with numbers and charts. Discovers hidden patterns in massive datasets to recommend your perfect trip."
+        },
+        "hieu": {
+          "role": "Product Manager",
+          "desc": "The orchestrator of the team, perfectly balancing the developer's wildest ideas with actual project requirements."
+        },
+        "nguyen": {
+          "role": "Quality Assurance",
+          "desc": "The team's bug hunter, living by the rule that it's better to break things locally than let a single bug reach the user."
+        }
+      }
+    },
+    "cta": {
+      "heading": "Ready to transcend the ordinary?",
+      "subtitle": "Our concierge is standing by to build your next stratosphere journey. Reach out to our global support team or start your exploration today.",
+      "start": "Start Planning",
+      "contact": "Contact Us"
+    }
+  },
+  "destinations": {
+    "header": {
+      "label": "Global Discovery",
+      "title_1": "Where to ",
+      "title_2": "next?",
+      "desc": "Explore our curated selection of breathtaking landscapes, cultural hubs, and hidden gems designed for the weightless voyage."
+    },
+    "filter": {
+      "price_range": "Price Range",
+      "price_free": "Free Attractions",
+      "price_paid": "Paid Tours",
+      "weather": "Weather",
+      "weather_sunny": "Sunny",
+      "weather_moderate": "Moderate",
+      "weather_tropical": "Tropical",
+      "region": "Region",
+      "region_all": "All Regions"
+    },
+    "card": {
+      "price": "Price",
+      "free": "Free",
+      "opening": "Opening",
+      "varies": "Varies",
+      "view_details": "View details"
+    },
+    "pagination": {
+      "page": "Page {{current}} of {{total}}"
+    },
+    "cta": {
+      "title": "Join the weightless voyage.",
+      "desc": "Subscribe to receive exclusive itineraries and early access to ethereal destinations curated for our community.",
+      "placeholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
+  "contact": {
+    "header": {
+      "title": "Get in Touch",
+      "subtitle": "We're here for you",
+      "desc": "Whether you have a question about our itineraries, pricing, or anything else, our team is ready to answer all your questions."
+    },
+    "info": {
+      "email_title": "Email Us",
+      "email_desc": "Our friendly team is here to help.",
+      "office_title": "Office",
+      "office_desc": "Come say hello at our HQ.",
+      "phone_title": "Phone",
+      "phone_desc": "Mon-Fri from 8am to 5pm."
+    },
+    "form": {
+      "title": "Send us a message",
+      "first_name": "First Name",
+      "first_name_ph": "Jane",
+      "last_name": "Last Name",
+      "last_name_ph": "Doe",
+      "email": "Email",
+      "email_ph": "jane@example.com",
+      "message": "Message",
+      "message_ph": "How can we help you?",
+      "submit": "Send Message"
+    }
+  },
+  "recommendations": {
+    "step1": "Step 1 of 3",
+    "step2": "Step 2 of 3",
+    "step3": "Step 3 of 3",
+    "vibe_selection": "Vibe Selection",
+    "companion_selection": "Travel Companions",
+    "budget_selection": "Budget Planning",
+    "title": "What's your vibe?",
+    "subtitle": "Tell us how you want to feel on this journey. We'll curate destinations that match your frequency.",
+    "title_step2": "Who's travelling with you?",
+    "subtitle_step2": "The best journeys are shared with the right people.",
+    "title_step3": "What's your trip budget?",
+    "subtitle_step3": "We'll find experiences that perfectly match your wallet.",
+    "chilling": {
+      "title": "chilling",
+      "desc": "Slow living, sunsets, and serene horizons."
+    },
+    "adventure": {
+      "title": "adventure",
+      "desc": "Thrill-seeking and off-the-beaten-path."
+    },
+    "culture": {
+      "title": "culture",
+      "desc": "History, art, and local traditions."
+    },
+    "food": {
+      "title": "food",
+      "desc": "Culinary journeys and hidden flavors."
+    },
+    "solo": {
+      "title": "Solo Adventure",
+      "desc": "Just me, myself, and I."
+    },
+    "couple": {
+      "title": "Couple",
+      "desc": "A romantic getaway for two."
+    },
+    "family": {
+      "title": "Family",
+      "desc": "Fun and safe for all ages."
+    },
+    "friends": {
+      "title": "Friends",
+      "desc": "Making memories with the squad."
+    },
+    "budget_eco": {
+      "title": "Budget-friendly",
+      "desc": "Backpacking and affordable finds."
+    },
+    "budget_mid": {
+      "title": "Mid-range",
+      "desc": "Comfortable and balanced."
+    },
+    "budget_lux": {
+      "title": "Luxury",
+      "desc": "Premium experiences and stays."
+    },
+    "btn_next": "Next Step",
+    "btn_generate": "Generate my perfect journey",
+    "btn_skip": "Skip for now",
+    "btn_view_itinerary": "View Full Itinerary",
+    "btn_restart": "Start Over",
+    "loading_ai": "AI is crafting your perfect itinerary...",
+    "mock_result": {
+      "title": "Your Curated Journey",
+      "dest_name": "Hoi An, Vietnam",
+      "summary": "Based on your choices, we recommend a 3-day healing journey to Hoi An. Experience the ancient town's slow pace, rich culture, and incredible local cuisine."
+    }
+  },
+  "blog": {
+    "header_title": "Traveler Stories",
+    "header_subtitle": "Our Blog",
+    "card1_title": "The Art of Minimalist Packing: 10 Days in One Bag",
+    "card1_desc": "Discover how to travel light without sacrificing style or comfort on your next global adventure.",
+    "card2_title": "Hidden Tokyo: Beyond the Neon and Crowds",
+    "card2_desc": "Step off the beaten path and explore the quiet, ancient neighborhoods tucked behind the skyscrapers.",
+    "read_story": "Read Story"
+  },
+  "search_page": {
+    "hero_title": "Where to next?",
+    "search_placeholder": "Search destinations, cities, or activities...",
+    "search_btn": "Search",
+    "popular": "Popular:",
+    "results_title": "Search Results",
+    "places_count": "places"
+  },
+  "place_detail": {
+    "not_found": "Destination not found",
+    "reviews": "reviews",
+    "about": "About this place",
+    "anonymous": "Anonymous Voyager",
+    "experience_price": "Experience Price",
+    "free": "Free",
+    "opening_hours": "Opening Hours",
+    "varies": "Varies",
+    "check_availability": "Check Availability",
+    "save_wishlist": "Save to Wishlist",
+    "no_charge_yet": "You won't be charged yet."
+  },
+  "aiconcierge": {
+    "greeting": "Hello! I am your AI Concierge. I can help you plan your next trip, find information, or just have a chat. How can I assist you today?",
+    "user_msg_1": "Suggest a 3-day itinerary in Da Lat this November. I want quiet places with beautiful architecture.",
+    "bot_msg_1": "Da Lat in November is wonderful with pink grass and wild sunflowers, and the air is perfectly chilly. Here's a \"Slow & Artsy\" itinerary for you:",
+    "bento_1_title": "Day 1: Demesnes & Mists",
+    "bento_1_desc": "Explore **Bao Dai Palace III** and the French colonial villas on Tran Hung Dao street. In the afternoon, visit **Ana Mandara Villas** for tea.",
+    "bento_2_title": "Day 2: Art & Coffee",
+    "bento_2_desc": "Morning visit to **Stop and Go Art Space**. Afternoon relaxation at hidden alley cafes like **Tung Coffee** or **Thong Oi**.",
+    "bot_msg_2": "I understand! That's a great idea. Would you like me to go into more detail for each location?",
+    "nav_chat": "Chat",
+    "nav_history": "History",
+    "nav_explore": "Explore",
+    "nav_settings": "Settings",
+    "premium_member": "Premium Member",
+    "online": "Online",
+    "thinking": "AI Concierge is thinking...",
+    "input_placeholder": "Ask AI Concierge anything...",
+    "chip_creative": "Creative Mode",
+    "chip_summary": "Text Summary",
+    "chip_image": "Generate Image"
+  }
+}

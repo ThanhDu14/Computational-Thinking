@@ -1,10 +1,7 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import LoginPage from './UI/Login'
-import RegisterPage from './UI/Register'
+import AuthPage from './UI/AuthPage'
 import Layout from './components/layout/Layout'
 
-// Existing Pages
 import HomePage from './pages/Home/HomePage'
 import PlaceDetailPage from './pages/PlaceDetail/PlaceDetailPage'
 import RecommendationsPage from './pages/Recommendations/RecommendationsPage'
@@ -13,6 +10,7 @@ import AboutPage from './pages/About/AboutPage'
 import DestinationsPage from './pages/Destinations/DestinationsPage'
 import ContactPage from './pages/Contact/ContactPage'
 import BlogPage from './pages/Blog/BlogPage'
+import AiConciergePage from './pages/AiConcierge/AiConciergePage'
 
 import './App.css'
 
@@ -20,7 +18,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Protected/Main Routes wi  th Layout (Navbar & Footer) */}
         <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<HomePage />} />
@@ -32,8 +29,9 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
         </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/ai-concierge" element={<AiConciergePage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </Router>
