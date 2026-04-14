@@ -4,7 +4,7 @@ import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { Sun, Moon, LogOut, ChevronDown, User, Heart } from 'lucide-react';
+import { Sun, Moon, LogOut, ChevronDown, User, Heart, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import WishlistDrawer from '../common/WishlistDrawer';
 
@@ -176,6 +176,13 @@ const Navbar = () => {
                     >
                       <Heart size={15} />
                       {t('nav.wishlist', 'Wishlist')} ({wishlist.length})
+                    </button>
+                    <button
+                      onClick={() => { setShowUserMenu(false); navigate('/settings'); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <Settings size={15} />
+                      {t('nav.settings', 'Settings')}
                     </button>
                     <button
                       onClick={handleLogout}

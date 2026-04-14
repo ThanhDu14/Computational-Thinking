@@ -12,7 +12,8 @@
     "login": "Login",
     "register": "Register",
     "get_recommendations": "Get recommendations",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "settings": "Settings"
   },
   "home": {
     "hero": {
@@ -346,5 +347,50 @@
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
     "all_rights_reserved": "All rights reserved."
+  },
+  "settings": {
+    "header": {
+      "title": "Settings",
+      "subtitle": "Manage your account details and preferences"
+    },
+    "tabs": {
+      "profile": "Profile Information",
+      "preferences": "Travel Preferences",
+      "appearance": "Appearance & Settings",
+      "security": "Security"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "upload_btn": "Upload new picture",
+      "display_name": "Display Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "bio": "Short Bio",
+      "bio_ph": "Tell us about your travel style..."
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "dark_mode": "Dark Mode",
+      "dark_mode_desc": "Switch between light and dark themes",
+      "language": "Language",
+      "language_desc": "Choose your preferred language"
+    },
+    "preferences": {
+      "title": "Travel Preferences",
+      "desc": "Select your preferred travel vibes to help our AI curate better destinations for you.",
+      "tags": {
+        "adventure": "Adventure",
+        "beach": "Beach",
+        "culture": "Culture",
+        "food": "Food",
+        "nature": "Nature",
+        "city": "City"
+      }
+    },
+    "security": {
+      "title": "Security",
+      "desc": "Feature coming soon."
+    },
+    "save_changes": "Save Changes"
   }
 }
