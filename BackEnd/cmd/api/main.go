@@ -7,7 +7,8 @@ import (
 	"os"
 	"os/signal"
 	"smart-travel-backend/config"
-	"smart-travel-backend/routes"
+	"smart-travel-backend/features/auth"
+	"smart-travel-backend/features/contact"
 	"syscall"
 	"time"
 
@@ -41,12 +42,12 @@ func main() {
 	// 4. Đăng ký Routes
 	authGroup := router.Group("/api/auth")
 	{
-		routes.SetupAuthRoutes(authGroup, authClient, db)
+		auth.SetupAuthRoutes(authGroup, authClient, db)
 	}
 
 	contactGroup := router.Group("/api/contact")
 	{
-		routes.SetupContactRoutes(contactGroup)
+		contact.SetupContactRoutes(contactGroup)
 	}
 
 	// 5. Khởi tạo Http Server

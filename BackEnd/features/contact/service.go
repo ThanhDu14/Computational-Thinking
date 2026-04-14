@@ -1,4 +1,4 @@
-package services
+package contact
 
 import (
 	"crypto/tls"
@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/smtp"
 	"os"
-	"smart-travel-backend/models"
 )
 
 // Gửi email qua SMTP SSL (port 465)
@@ -76,7 +75,7 @@ func sendRawEmail(to, subject, htmlBody string) error {
 }
 
 // SendContactEmail gửi email từ form liên hệ đến địa chỉ admin.
-func SendContactEmail(form models.ContactForm) error {
+func SendContactEmail(form ContactForm) error {
 	mailTo := os.Getenv("MAIL_TO")
 	if mailTo == "" {
 		mailTo = "travel36.contact@gmail.com"

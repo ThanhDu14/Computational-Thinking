@@ -1,19 +1,18 @@
-package services
+package auth
 
 import (
 	"context"
 	"errors"
 	"log"
-	"smart-travel-backend/models"
 	"smart-travel-backend/utils"
 	"time"
 
-	"firebase.google.com/go/v4/auth"
+	fbauth "firebase.google.com/go/v4/auth"
 	"gorm.io/gorm"
 )
 
-func ProcessRegister(db *gorm.DB, uid string, email string, name string, provider string) (*models.User, error) {
-	var user models.User
+func ProcessRegister(db *gorm.DB, uid string, email string, name string, provider string) (*User, error) {
+	var user User
 
 	err := db.Where("email = ? OR firebase_uid = ?", email, uid).First(&user).Error
 
@@ -27,7 +26,7 @@ func ProcessRegister(db *gorm.DB, uid string, email string, name string, provide
 			emailPtr = &email
 		}
 
-		newUser := models.User{
+		newUser := User{
 			FirebaseUID: &uid,
 			Email:       emailPtr,
 			Name:        name,
@@ -46,8 +45,8 @@ func ProcessRegister(db *gorm.DB, uid string, email string, name string, provide
 	return nil, err
 }
 
-func ProcessLogin(db *gorm.DB, uid, email, name, provider string) (*models.User, error) {
-	var user models.User
+func ProcessLogin(db *gorm.DB, uid, email, name, provider string) (*User, error) {
+	var user User
 	err := db.Where("firebase_uid = ?", uid).First(&user).Error
 
 	if err != nil {
@@ -57,7 +56,7 @@ func ProcessLogin(db *gorm.DB, uid, email, name, provider string) (*models.User,
 			if email != "" {
 				emailPtr = &email
 			}
-			newUser := models.User{
+			newUser := User{
 				FirebaseUID: &uid,
 				Email:       emailPtr,
 				Name:        name,
@@ -89,7 +88,7 @@ func ProcessLogin(db *gorm.DB, uid, email, name, provider string) (*models.User,
 	return &user, nil
 }
 
-func ProcessLogout(ctx context.Context, authClient *auth.Client, uid string) error {
+func ProcessLogout(ctx context.Context, authClient *fbauth.Client, uid string) error {
 	err := authClient.RevokeRefreshTokens(ctx, uid)
 	if err != nil {
 		log.Printf("Lỗi khi thu hồi token của user %s: %v\n", uid, err)
@@ -100,8 +99,8 @@ func ProcessLogout(ctx context.Context, authClient *auth.Client, uid string) err
 	return nil
 }
 
-func ProcessLocalRegister(db *gorm.DB, username, password string) (*models.User, error) {
-	var user models.User
+func ProcessLocalRegister(db *gorm.DB, username, password string) (*User, error) {
+	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
 	if err == nil {
@@ -114,7 +113,7 @@ func ProcessLocalRegister(db *gorm.DB, username, password string) (*models.User,
 			return nil, errors.New("cannot_hash_password")
 		}
 
-		newUser := models.User{
+		newUser := User{
 			Username:  &username,
 			Password:  &hashedPassword,
 			Name:      username,
@@ -133,8 +132,8 @@ func ProcessLocalRegister(db *gorm.DB, username, password string) (*models.User,
 	return nil, err
 }
 
-func ProcessLocalLogin(db *gorm.DB, username, password string) (*models.User, string, error) {
-	var user models.User
+func ProcessLocalLogin(db *gorm.DB, username, password string) (*User, string, error) {
+	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
 	if err != nil {

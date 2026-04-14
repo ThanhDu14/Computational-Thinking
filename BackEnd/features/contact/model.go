@@ -1,4 +1,4 @@
-package models
+package contact
 
 type ContactForm struct {
 	Ho      string `json:"ho" binding:"required"`

@@ -1,18 +1,16 @@
-package controllers
+package contact
 
 import (
 	"log"
 	"net/http"
-	"smart-travel-backend/models"
-	"smart-travel-backend/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-// SendContactEmail xử lý yêu cầu gửi email từ form liên hệ.
-func SendContactEmail() gin.HandlerFunc {
+// SendContactEmailHandler xử lý yêu cầu gửi email từ form liên hệ.
+func SendContactEmailHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var form models.ContactForm
+		var form ContactForm
 
 		if err := c.ShouldBindJSON(&form); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -22,7 +20,7 @@ func SendContactEmail() gin.HandlerFunc {
 			return
 		}
 
-		if err := services.SendContactEmail(form); err != nil {
+		if err := SendContactEmail(form); err != nil {
 			log.Printf("[CONTACT] ❌ Gửi email liên hệ thất bại: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"success": false,

@@ -1,11 +1,10 @@
-package controllers
+package auth
 
 import (
 	"net/http"
-	"smart-travel-backend/services"
 	"strings"
 
-	"firebase.google.com/go/v4/auth"
+	fbauth "firebase.google.com/go/v4/auth"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -20,7 +19,7 @@ func extractProvider(claims map[string]interface{}) string {
 	return "unknown"
 }
 
-func GoogleAuth(authClient *auth.Client, db *gorm.DB) gin.HandlerFunc {
+func GoogleAuth(authClient *fbauth.Client, db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
@@ -44,7 +43,7 @@ func GoogleAuth(authClient *auth.Client, db *gorm.DB) gin.HandlerFunc {
 			name = strings.Split(email, "@")[0]
 		}
 
-		userData, err := services.ProcessLogin(db, uid, email, name, provider)
+		userData, err := ProcessLogin(db, uid, email, name, provider)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -68,7 +67,7 @@ func GoogleAuth(authClient *auth.Client, db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func Logout(authClient *auth.Client) gin.HandlerFunc {
+func Logout(authClient *fbauth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authProvider, _ := c.Get("auth_provider")
 
@@ -90,7 +89,7 @@ func Logout(authClient *auth.Client) gin.HandlerFunc {
 			}
 			uid := uidValue.(string)
 
-			err := services.ProcessLogout(c.Request.Context(), authClient, uid)
+			err := ProcessLogout(c.Request.Context(), authClient, uid)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"status":  "error",
@@ -128,7 +127,7 @@ func LocalRegister(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		userData, err := services.ProcessLocalRegister(db, input.Username, input.Password)
+		userData, err := ProcessLocalRegister(db, input.Username, input.Password)
 		if err != nil {
 			if err.Error() == "username_already_exists" {
 				c.JSON(http.StatusConflict, gin.H{"status": "error", "message": "Tên đăng nhập đã tồn tại"})
@@ -164,7 +163,7 @@ func LocalLogin(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		userData, token, err := services.ProcessLocalLogin(db, input.Username, input.Password)
+		userData, token, err := ProcessLocalLogin(db, input.Username, input.Password)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Sai tên đăng nhập hoặc mật khẩu"})
 			return
