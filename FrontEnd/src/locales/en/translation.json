@@ -6,7 +6,14 @@
     "recommendations": "Recommendations",
     "blog": "Blog",
     "contact": "Contact",
-    "about": "About"
+    "about": "About",
+    "explore": "Explore",
+    "ai_concierge": "AI Concierge",
+    "login": "Login",
+    "register": "Register",
+    "get_recommendations": "Get recommendations",
+    "wishlist": "Wishlist",
+    "settings": "Settings"
   },
   "home": {
     "hero": {
@@ -284,7 +291,13 @@
     "search_btn": "Search",
     "popular": "Popular:",
     "results_title": "Search Results",
-    "places_count": "places"
+    "places_count": "places",
+    "results_for": "Results for: ",
+    "no_results_title": "No results found",
+    "no_results_desc": "Try entering a different keyword or check out the suggestions above.",
+    "tag_dalat": "Da Lat",
+    "tag_hoian": "Hoi An",
+    "tag_thanhhoa": "Thanh Hoa"
   },
   "place_detail": {
     "not_found": "Destination not found",
@@ -319,5 +332,65 @@
     "chip_creative": "Creative Mode",
     "chip_summary": "Text Summary",
     "chip_image": "Generate Image"
+  },
+  "footer": {
+    "desc": "Experience the world with \"The Ethereal Explorer\". Boundless, atmospheric landscapes waiting to be discovered.",
+    "company": "Company",
+    "resources": "Resources",
+    "legal": "Legal",
+    "about_us": "About Us",
+    "contact": "Contact",
+    "careers": "Careers",
+    "recommendations": "Recommendations",
+    "help_center": "Help Center",
+    "safety": "Safety",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "all_rights_reserved": "All rights reserved."
+  },
+  "settings": {
+    "header": {
+      "title": "Settings",
+      "subtitle": "Manage your account details and preferences"
+    },
+    "tabs": {
+      "profile": "Profile Information",
+      "preferences": "Travel Preferences",
+      "appearance": "Appearance & Settings",
+      "security": "Security"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "upload_btn": "Upload new picture",
+      "display_name": "Display Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "bio": "Short Bio",
+      "bio_ph": "Tell us about your travel style..."
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "dark_mode": "Dark Mode",
+      "dark_mode_desc": "Switch between light and dark themes",
+      "language": "Language",
+      "language_desc": "Choose your preferred language"
+    },
+    "preferences": {
+      "title": "Travel Preferences",
+      "desc": "Select your preferred travel vibes to help our AI curate better destinations for you.",
+      "tags": {
+        "adventure": "Adventure",
+        "beach": "Beach",
+        "culture": "Culture",
+        "food": "Food",
+        "nature": "Nature",
+        "city": "City"
+      }
+    },
+    "security": {
+      "title": "Security",
+      "desc": "Feature coming soon."
+    },
+    "save_changes": "Save Changes"
   }
 }

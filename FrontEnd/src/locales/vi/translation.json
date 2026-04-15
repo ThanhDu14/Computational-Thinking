@@ -6,7 +6,14 @@
     "recommendations": "Gợi Ý Chuyến Đi",
     "blog": "Bài Viết",
     "contact": "Liên Hệ",
-    "about": "Giới Thiệu"
+    "about": "Giới Thiệu",
+    "explore": "Khám phá",
+    "ai_concierge": "Trợ lý AI",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "get_recommendations": "Nhận gợi ý",
+    "wishlist": "Yêu thích",
+    "settings": "Cài đặt"
   },
   "home": {
     "hero": {
@@ -284,7 +291,13 @@
     "search_btn": "Tìm Kiếm",
     "popular": "Phổ biến:",
     "results_title": "Kết quả tìm kiếm",
-    "places_count": "địa điểm"
+    "places_count": "địa điểm",
+    "results_for": "Kết quả cho: ",
+    "no_results_title": "Không tìm thấy kết quả",
+    "no_results_desc": "Thử nhập từ khóa khác hoặc tham khảo các thẻ gợi ý phía trên.",
+    "tag_dalat": "Đà Lạt",
+    "tag_hoian": "Hội An",
+    "tag_thanhhoa": "Thanh Hóa"
   },
   "place_detail": {
     "not_found": "Không tìm thấy điểm đến",
@@ -319,5 +332,65 @@
     "chip_creative": "Chế độ Sáng tạo",
     "chip_summary": "Tóm tắt văn bản",
     "chip_image": "Tạo hình ảnh"
+  },
+  "footer": {
+    "desc": "Trải nghiệm thế giới với \"Kẻ Khám Phá Thanh Khiết\". Những cảnh quan bao la, đầy cảm xúc đang chờ bạn khám phá.",
+    "company": "Công ty",
+    "resources": "Tài nguyên",
+    "legal": "Pháp lý",
+    "about_us": "Giới thiệu",
+    "contact": "Liên hệ",
+    "careers": "Tuyển dụng",
+    "recommendations": "Gợi ý chuyến đi",
+    "help_center": "Trung tâm hỗ trợ",
+    "safety": "An toàn",
+    "privacy_policy": "Chính sách bảo mật",
+    "terms_of_service": "Điều khoản dịch vụ",
+    "all_rights_reserved": "Bảo lưu mọi quyền."
+  },
+  "settings": {
+    "header": {
+      "title": "Cài đặt",
+      "subtitle": "Quản lý thông tin và tùy chọn tài khoản"
+    },
+    "tabs": {
+      "profile": "Thông tin cá nhân",
+      "preferences": "Sở thích du lịch",
+      "appearance": "Giao diện hiển thị",
+      "security": "Bảo mật"
+    },
+    "profile": {
+      "title": "Thông tin cá nhân",
+      "upload_btn": "Tải ảnh mới",
+      "display_name": "Tên hiển thị",
+      "email": "Thư điện tử",
+      "phone": "Số điện thoại",
+      "bio": "Tiểu sử",
+      "bio_ph": "Chia sẻ đôi điều về gu du lịch của bạn..."
+    },
+    "appearance": {
+      "title": "Cài đặt Giao diện",
+      "dark_mode": "Giao diện tối",
+      "dark_mode_desc": "Chuyển đổi giữa chế độ sáng và chế độ tối",
+      "language": "Ngôn ngữ",
+      "language_desc": "Chọn ngôn ngữ hiển thị ưa thích"
+    },
+    "preferences": {
+      "title": "Sở thích du lịch",
+      "desc": "Chọn các phong cách du lịch để hệ thống có thể gợi ý tốt hơn cho bạn.",
+      "tags": {
+        "adventure": "Phiêu lưu",
+        "beach": "Biển đảo",
+        "culture": "Văn hóa",
+        "food": "Ẩm thực",
+        "nature": "Thiên nhiên",
+        "city": "Thành thị"
+      }
+    },
+    "security": {
+      "title": "Bảo mật",
+      "desc": "Tính năng đang được cập nhật."
+    },
+    "save_changes": "Lưu Thay Đổi"
   }
 }

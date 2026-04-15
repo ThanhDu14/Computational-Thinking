@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+      # Biến VITE_ được đọc từ file .env.docker (chạy: docker compose --env-file .env.docker up)
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY}
+        VITE_FIREBASE_AUTH_DOMAIN: ${VITE_FIREBASE_AUTH_DOMAIN}
+        VITE_FIREBASE_PROJECT_ID: ${VITE_FIREBASE_PROJECT_ID}
+        VITE_FIREBASE_STORAGE_BUCKET: ${VITE_FIREBASE_STORAGE_BUCKET}
+        VITE_FIREBASE_MESSAGING_SENDER_ID: ${VITE_FIREBASE_MESSAGING_SENDER_ID}
+        VITE_FIREBASE_APP_ID: ${VITE_FIREBASE_APP_ID}
+    image: hethonggoiythamquan-frontend:latest
+    container_name: frontend
+    ports:
+      - "5173:80" # Truy cập tại http://localhost:5173
+    restart: unless-stopped

@@ -1,0 +1,54 @@
+name: 🚀 Build & Push Frontend Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "FrontEnd/**"           # Chỉ chạy khi có thay đổi trong FrontEnd/
+      - ".github/workflows/deploy-frontend.yml"
+
+jobs:
+  build-and-push:
+    name: 🔨 Build & Push Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: ⚙️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🏗️ Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FrontEnd
+          file: ./FrontEnd/Dockerfile
+          push: true
+          # Tag bằng cả :latest và SHA commit → dễ rollback về commit cụ thể
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/hethonggoiythamquan-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/hethonggoiythamquan-frontend:${{ github.sha }}
+          # Biến VITE_ của Vite được nhúng vào bundle lúc build, không phải runtime
+          build-args: |
+            VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+            VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
+            VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+            VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+            VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+            VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+            VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
+          # Cache build layers → lần sau nhanh hơn đáng kể
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # TODO: Thêm job deploy khi có server
+  # deploy:
+  #   needs: build-and-push
+  #   ...SSH vào server, docker pull & restart...

@@ -2,42 +2,72 @@
 @import "tailwindcss";
 
 @layer base {
+
   /* LIGHT MODE (Hiện tại) */
   :root {
     --bg-primary: #4f5b7d;
+    --bg-on-primary: #ffffff;
     --bg-primary-container: #cad6ff;
+    --bg-on-primary-container: #001257;
     --bg-secondary: #0a6a37;
+    --bg-on-secondary: #ffffff;
     --bg-secondary-container: #a0f5b4;
+    --bg-on-secondary-container: #002110;
     --bg-tertiary: #006385;
     --bg-background: #f8f5ff;
     --bg-surface: #f8f5ff;
     --bg-surface-container-low: #f1efff;
     --bg-surface-container: #e6e6ff;
+    --bg-surface-container-high: #d8d8f0;
+    --bg-surface-container-highest: #c9c9e0;
     --bg-surface-lowest: #ffffff;
     --text-on-surface: #272c51;
     --text-on-surface-variant: #545981;
     --border-outline-variant: #a6aad7;
     --bg-glass: rgba(255, 255, 255, 0.7);
+
+    /* Gradients */
+    --gradient-hero-start: #cad6ff;
+    --gradient-hero-end: #f8f5ff;
+    --gradient-brand-start: #4f5b7d;
+    --gradient-brand-end: #cad6ff;
   }
 
   /* DARK MODE Toggles */
   .dark {
-    --bg-primary: #b4c4ff;
-    --bg-primary-container: #364366;
+    --bg-primary: #8aa0ff;
+    /* Sát với brand nhạt hơn để pop trên nền đen */
+    --bg-on-primary: #050b2b;
+    --bg-primary-container: #1a2040;
+    --bg-on-primary-container: #dce2ff;
     --bg-secondary: #85dfa0;
-    --bg-secondary-container: #005128;
-    --bg-tertiary: #7bd0fb;
-    --bg-background: #0f101f;
-    --bg-surface: #161729;
-    --bg-surface-container-low: #1d1e34;
-    --bg-surface-container: #262945;
-    --bg-surface-lowest: #080811;
-    --text-on-surface: #e4e4f5;
+    --bg-on-secondary: #003919;
+    --bg-secondary-container: #00321a;
+    --bg-on-secondary-container: #a0f5b4;
+    --bg-tertiary: #5dc0f8;
+    --bg-background: #03040a;
+    /* Sâu hơn (Midnight Void) */
+    --bg-surface: #08091a;
+    /* Nổi bật hơn một chút so với background */
+    --bg-surface-container-low: #0f1025;
+    --bg-surface-container: #171933;
+    --bg-surface-container-high: #1f2244;
+    --bg-surface-container-highest: #282c5a;
+    --bg-surface-lowest: #010105;
+    --text-on-surface: #f5f6fa;
+    /* Sáng hơn để tương phản tối đa */
     --text-on-surface-variant: #aeb1cf;
-    --border-outline-variant: #464a6b;
-    --bg-glass: rgba(38, 41, 69, 0.7);
+    --border-outline-variant: #34375a;
+    --bg-glass: rgba(15, 17, 33, 0.75);
+    /* Kính tối màu thay vì kính trắng */
+
+    /* Dark Gradients */
+    --gradient-hero-start: #0a0b1e;
+    --gradient-hero-end: #03040a;
+    --gradient-brand-start: #3a4770;
+    --gradient-brand-end: #576694;
   }
-  
+
   /* Reset màu nền chung để Tailwind app dụng màu mới */
   body {
     background-color: var(--bg-background);
@@ -49,14 +79,20 @@
 /* Ánh xạ css variables vào Tailwind Theme */
 @theme {
   --color-primary: var(--bg-primary);
+  --color-on-primary: var(--bg-on-primary);
   --color-primary-container: var(--bg-primary-container);
+  --color-on-primary-container: var(--bg-on-primary-container);
   --color-secondary: var(--bg-secondary);
+  --color-on-secondary: var(--bg-on-secondary);
   --color-secondary-container: var(--bg-secondary-container);
+  --color-on-secondary-container: var(--bg-on-secondary-container);
   --color-tertiary: var(--bg-tertiary);
   --color-background: var(--bg-background);
   --color-surface: var(--bg-surface);
   --color-surface-container-low: var(--bg-surface-container-low);
   --color-surface-container: var(--bg-surface-container);
+  --color-surface-container-high: var(--bg-surface-container-high);
+  --color-surface-container-highest: var(--bg-surface-container-highest);
   --color-surface-container-lowest: var(--bg-surface-lowest);
   --color-on-surface: var(--text-on-surface);
   --color-on-surface-variant: var(--text-on-surface-variant);
