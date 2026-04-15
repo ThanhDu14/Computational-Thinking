@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { User, Heart, Settings as SettingsIcon, Shield, Camera, Globe, Moon, Sun, Check } from 'lucide-react';
+import { changePasswordBackend } from '../../services/authService';
+import { User, Heart, Settings as SettingsIcon, Shield, Camera, Globe, Moon, Sun, Check, Eye, EyeOff, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SettingsPage = () => {
@@ -19,6 +20,41 @@ const SettingsPage = () => {
   });
 
   const [preferences, setPreferences] = useState(['adventure', 'culture']);
+
+  // --- Change Password State ---
+  const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
+  const [pwShow, setPwShow] = useState({ current: false, newPw: false, confirm: false });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwStatus, setPwStatus] = useState(null); // { type: 'success'|'error', message: string }
+
+  const handlePwChange = (e) => setPwForm({ ...pwForm, [e.target.name]: e.target.value });
+  const togglePwShow = (field) => setPwShow((prev) => ({ ...prev, [field]: !prev[field] }));
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPwStatus(null);
+
+    if (pwForm.newPw !== pwForm.confirm) {
+      setPwStatus({ type: 'error', message: t('settings.security.pw_mismatch', 'New passwords do not match.') });
+      return;
+    }
+    if (pwForm.newPw.length < 6) {
+      setPwStatus({ type: 'error', message: t('settings.security.pw_too_short', 'New password must be at least 6 characters.') });
+      return;
+    }
+
+    setPwLoading(true);
+    try {
+      const token = user?.access_token || user?.token || '';
+      await changePasswordBackend(token, pwForm.current, pwForm.newPw);
+      setPwForm({ current: '', newPw: '', confirm: '' });
+      setPwStatus({ type: 'success', message: t('settings.security.pw_success', 'Password changed successfully!') });
+    } catch (err) {
+      setPwStatus({ type: 'error', message: err.message || t('settings.security.pw_error', 'Failed to change password.') });
+    } finally {
+      setPwLoading(false);
+    }
+  };
 
   const tabs = [
     { id: 'profile', icon: User, label: t('settings.tabs.profile', 'Profile Information') },
@@ -276,10 +312,97 @@ const SettingsPage = () => {
                   className="space-y-6"
                 >
                   <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
-                    <h2 className="text-xl font-display font-bold mb-6">{t('settings.security.title', 'Security')}</h2>
-                    <p className="text-sm text-on-surface-variant mb-6">
-                      {t('settings.security.desc', 'Feature coming soon.')}
-                    </p>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Lock size={20} />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-display font-bold">{t('settings.security.title', 'Security')}</h2>
+                        <p className="text-xs text-on-surface-variant">{t('settings.security.subtitle', 'Manage your password and account security')}</p>
+                      </div>
+                    </div>
+
+                    {/* Google user — cannot change password */}
+                    {user?.authType === 'google' ? (
+                      <div className="flex items-start gap-4 p-5 bg-blue-500/8 border border-blue-500/20 rounded-2xl">
+                        <AlertCircle size={20} className="text-blue-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-bold text-on-surface text-sm">{t('settings.security.google_title', 'Google Account')}</p>
+                          <p className="text-sm text-on-surface-variant mt-1">
+                            {t('settings.security.google_desc', 'Your account uses Google Sign-In. Password management is handled by Google.')}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleChangePassword} className="space-y-5">
+                        {/* Status Banner */}
+                        <AnimatePresence>
+                          {pwStatus && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -8 }}
+                              className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-semibold ${
+                                pwStatus.type === 'success'
+                                  ? 'bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400'
+                                  : 'bg-red-500/10 border border-red-500/25 text-red-600 dark:text-red-400'
+                              }`}
+                            >
+                              {pwStatus.type === 'success'
+                                ? <CheckCircle2 size={18} className="flex-shrink-0" />
+                                : <AlertCircle size={18} className="flex-shrink-0" />}
+                              {pwStatus.message}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {/* Current Password */}
+                        {[{ name: 'current',  label: t('settings.security.current_pw', 'Current Password'),  placeholder: '••••••••' },
+                          { name: 'newPw',    label: t('settings.security.new_pw', 'New Password'),         placeholder: t('settings.security.new_pw_ph', 'Min. 6 characters') },
+                          { name: 'confirm',  label: t('settings.security.confirm_pw', 'Confirm New Password'), placeholder: '••••••••' },
+                        ].map(({ name, label, placeholder }) => (
+                          <div key={name} className="space-y-2">
+                            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{label}</label>
+                            <div className="relative">
+                              <input
+                                type={pwShow[name] ? 'text' : 'password'}
+                                name={name}
+                                value={pwForm[name]}
+                                onChange={handlePwChange}
+                                placeholder={placeholder}
+                                required
+                                className="w-full bg-surface-container-low focus:bg-surface-lowest border border-transparent focus:border-outline-variant/40 text-on-surface rounded-2xl px-4 py-3 pr-12 outline-none transition-all"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => togglePwShow(name)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
+                              >
+                                {pwShow[name] ? <EyeOff size={17} /> : <Eye size={17} />}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className="flex justify-end pt-2">
+                          <button
+                            type="submit"
+                            disabled={pwLoading}
+                            className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center gap-2"
+                          >
+                            {pwLoading && (
+                              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                              </svg>
+                            )}
+                            {pwLoading
+                              ? t('settings.security.saving', 'Saving...')
+                              : t('settings.security.save_pw', 'Update Password')}
+                          </button>
+                        </div>
+                      </form>
+                    )}
                   </div>
                 </motion.div>
               )}

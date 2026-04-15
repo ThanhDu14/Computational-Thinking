@@ -70,6 +70,28 @@ export const registerLocalBackend = async (userData) => {
 };
 
 /**
+ * Đổi mật khẩu cho tài khoản Local.
+ */
+export const changePasswordBackend = async (token, currentPassword, newPassword) => {
+  const response = await fetch('/api/user/change-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'X-Pinggy-No-Screen': 'true',
+    },
+    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Change password error: ${response.status}`);
+  }
+  const json = await response.json();
+  return json.data || json;
+};
+
+/**
  * Gọi backend để logout và revoke token.
  */
 export const logoutBackend = async (idToken) => {
