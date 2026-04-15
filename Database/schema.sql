@@ -128,3 +128,14 @@ CREATE TABLE Review (
     comment TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE Users 
+ADD COLUMN phone_number VARCHAR(20) UNIQUE,
+ADD COLUMN avatar_url TEXT,
+ADD COLUMN preferences JSONB DEFAULT '[]'::jsonb;
+
+ALTER TABLE Locations  
+ADD COLUMN description TEXT;
+
+ALTER TABLE Locations
+RENAME COLUMN information TO address; 
