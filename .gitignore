@@ -13,6 +13,7 @@ FrontEnd/dist
 # production builds
 /build
 /dist
+*.exe
 
 # misc
 .DS_Store
