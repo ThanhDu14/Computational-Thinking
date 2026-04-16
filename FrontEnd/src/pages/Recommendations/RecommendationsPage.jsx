@@ -1,8 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { SkeletonCard } from '../../components/common/Skeleton';
+import TripPlanner from '../../components/places/TripPlanner';
+
+import datadalat from '../../data/data_da_lat_final.json';
+import dataha from '../../data/data_HA_final.json';
+import datathanhhoa from '../../data/data_thanh_hoa_final.json';
 
 export default function RecommendationsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [plannerData, setPlannerData] = useState(null);
+
+  // User selections
+  const [selectedVibe, setSelectedVibe] = useState(null);
+  const [selectedCompanion, setSelectedCompanion] = useState(null);
+  const [selectedBudget, setSelectedBudget] = useState(null);
+
+  // Helper functions for styling
+  const getItemClasses = (isSelected) => {
+      return `group flex flex-col items-center p-8 bg-surface-container-lowest rounded-2xl transition-all duration-300 text-center cursor-pointer ${
+          isSelected 
+            ? 'border-2 border-primary/40 ring-4 ring-primary/5 shadow-lg -translate-y-3' 
+            : 'border border-surface-variant/50 hover:-translate-y-1 hover:shadow-md'
+      }`;
+  };
+
+  const getIconClasses = (isSelected) => {
+      return `w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-colors ${
+          isSelected ? 'bg-primary-container shadow-inner' : 'bg-surface-container-low group-hover:bg-primary-container'
+      }`;
+  };
+
+  const generateItinerary = () => {
+      const allData = [...datadalat, ...dataha, ...datathanhhoa];
+      const randomItems = [];
+      const dataCopy = [...allData];
+      for (let i = 0; i < 9; i++) {
+          if(dataCopy.length === 0) break;
+          const randomIndex = Math.floor(Math.random() * dataCopy.length);
+          randomItems.push(dataCopy.splice(randomIndex, 1)[0]);
+      }
+      
+      const columns = {
+          'day-1': { title: 'Day 1', items: randomItems.slice(0, 3) },
+          'day-2': { title: 'Day 2', items: randomItems.slice(3, 6) },
+          'day-3': { title: 'Day 3', items: randomItems.slice(6, 9) }
+      };
+      setPlannerData(columns);
+  };
+
+  const handleNext = () => {
+    if (step < 3) {
+      setStep(step + 1);
+    } else {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        generateItinerary();
+        setShowResult(true);
+      }, 2000);
+    }
+  };
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col font-body">
@@ -13,6 +76,11 @@ export default function RecommendationsPage() {
             border: 1.5px solid rgba(217, 221, 224, 0.3);
             box-shadow: 0 20px 40px rgba(79, 91, 125, 0.06);
         }
+        .dark .glass-container-recom {
+            background: rgba(28, 31, 54, 0.75);
+            border: 1.5px solid rgba(70, 74, 107, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
 
         .primary-gradient-recom {
             background: linear-gradient(135deg, #909CC2 0%, #C7D2FE 100%);
@@ -20,6 +88,9 @@ export default function RecommendationsPage() {
 
         .hero-gradient-bg-recom {
             background: radial-gradient(circle at top left, #cad6ff 0%, #f5f7f9 40%, #dee5fd 80%);
+        }
+        .dark .hero-gradient-bg-recom {
+            background: radial-gradient(circle at top left, #1a2040 0%, #0f101f 40%, #13162e 80%);
         }
 
         .step-node-active-recom {
@@ -39,80 +110,180 @@ export default function RecommendationsPage() {
             {/* Signature Stepper */}
             <div className="mb-14">
                 <div className="flex justify-between items-center mb-4">
-                    <span className="font-display text-[0.75rem] uppercase tracking-[0.05em] text-on-surface-variant font-semibold">Step 1 of 3</span>
-                    <span className="font-display text-[0.75rem] uppercase tracking-[0.05em] text-primary font-bold">Vibe Selection</span>
+                    <span className="font-display text-[0.75rem] uppercase tracking-[0.05em] text-on-surface-variant font-semibold">
+                        {step === 1 ? t('recommendations.step1') : step === 2 ? t('recommendations.step2') : t('recommendations.step3')}
+                    </span>
+                    <span className="font-display text-[0.75rem] uppercase tracking-[0.05em] text-primary font-bold">
+                        {step === 1 ? t('recommendations.vibe_selection') : step === 2 ? t('recommendations.companion_selection') : t('recommendations.budget_selection')}
+                    </span>
                 </div>
                 <div className="relative w-full h-[0.35rem] bg-surface-container-high rounded-full overflow-hidden">
-                    <div className="absolute top-0 left-0 h-full primary-gradient-recom w-1/3 rounded-full"></div>
+                    <div className="absolute top-0 left-0 h-full primary-gradient-recom rounded-full transition-all duration-500" style={{ width: step === 1 ? '33.33%' : step === 2 ? '66.66%' : '100%' }}></div>
                 </div>
                 <div className="flex justify-between mt-3 px-1">
-                    <div className="w-3 h-3 rounded-full bg-surface-container-lowest border-2 border-primary step-node-active-recom">
-                    </div>
-                    <div className="w-3 h-3 rounded-full bg-surface-container-high"></div>
-                    <div className="w-3 h-3 rounded-full bg-surface-container-high"></div>
+                    <div className={`w-3 h-3 rounded-full border-2 border-primary ${step >= 1 ? 'bg-surface-container-lowest step-node-active-recom' : 'bg-surface-container-high'}`}></div>
+                    <div className={`w-3 h-3 rounded-full border-2 ${step >= 2 ? 'border-primary bg-surface-container-lowest step-node-active-recom' : 'border-transparent bg-surface-container-high'}`}></div>
+                    <div className={`w-3 h-3 rounded-full border-2 ${step >= 3 ? 'border-primary bg-surface-container-lowest step-node-active-recom' : 'border-transparent bg-surface-container-high'}`}></div>
                 </div>
             </div>
 
-            {/* Content Area: Step 1 (Active) */}
-            <div className="space-y-10">
+            {isLoading && (
+               <div className="flex flex-col items-center py-16 space-y-6 w-full max-w-2xl mx-auto">
+                 <h2 className="text-2xl font-display font-bold text-on-surface text-center animate-pulse mb-8">
+                   {t('recommendations.loading_ai')}
+                 </h2>
+                 <div className="w-full space-y-4">
+                   <SkeletonCard />
+                   <SkeletonCard />
+                 </div>
+               </div>
+            )}
+
+            {showResult && !isLoading && (
+               <div className="flex flex-col items-center w-full space-y-8 animate-fade-in-up pb-8 mt-6">
+                   <div className="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center shadow-lg shadow-primary-container/40">
+                     <span className="material-symbols-outlined text-4xl text-primary font-bold">auto_awesome</span>
+                   </div>
+                   <div className="text-center max-w-2xl px-4">
+                     <h2 className="text-3xl font-display font-bold text-on-surface mb-4">Lịch trình đề xuất 3 Ngày</h2>
+                     <p className="text-on-surface-variant font-body leading-relaxed">Chúng tôi đã thiết kế một chuyến đi dựa trên sở thích của bạn. Bạn có thể tự do <strong className="text-primary font-bold">KÉO & THẢ</strong> để thay đổi vị trí các điểm đến giữa các ngày theo ý muốn nhé!</p>
+                   </div>
+
+                   <div className="w-full mt-6 px-4 md:px-10 z-20">
+                      {plannerData && <TripPlanner initialData={plannerData} />}
+                   </div>
+                   
+                   <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                     <button onClick={() => {setStep(1); setShowResult(false);}} className="text-on-surface-variant font-bold hover:text-primary transition-colors flex items-center justify-center gap-2 font-body px-8 py-3.5 bg-surface-container rounded-full border border-outline-variant/30 hover:border-primary/50 shadow-sm">
+                       <span className="material-symbols-outlined text-[18px]">refresh</span>
+                       Tạo lại lịch trình khác
+                     </button>
+                     <button className="bg-primary text-white font-bold hover:bg-primary-dim transition-colors flex items-center justify-center gap-2 font-body px-8 py-3.5 rounded-full shadow-lg shadow-primary/20 hover:-translate-y-1">
+                       <span className="material-symbols-outlined text-[18px]">favorite</span>
+                       Lưu My Itinerary
+                     </button>
+                   </div>
+               </div>
+            )}
+
+            {!isLoading && !showResult && (
+            <div className="space-y-10 animate-fade-in-up">
                 <div className="text-center max-w-2xl mx-auto">
                     <h1 className="text-[2.5rem] md:text-[3.5rem] leading-tight font-display font-bold tracking-tight text-on-surface mb-4">
-                        What's your vibe?
+                        {step === 1 ? t('recommendations.title') : step === 2 ? t('recommendations.title_step2') : t('recommendations.title_step3')}
                     </h1>
-                    <p className="text-lg text-on-surface-variant font-body">Tell us how you want to feel on this journey.
-                        We'll curate destinations that match your frequency.</p>
+                    <p className="text-lg text-on-surface-variant font-body">
+                        {step === 1 ? t('recommendations.subtitle') : step === 2 ? t('recommendations.subtitle_step2') : t('recommendations.subtitle_step3')}
+                    </p>
                 </div>
 
                 {/* Selection Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* Option 1 */}
-                    <button className="group flex flex-col items-center p-8 bg-surface-container-lowest rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center border border-surface-variant/50">
-                        <div className="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors">
-                            <span className="material-symbols-outlined text-primary text-3xl">beach_access</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">chilling</h3>
-                        <p className="text-sm text-on-surface-variant font-body">Slow living, sunsets, and serene horizons.</p>
-                    </button>
+                <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${step === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+                    {step === 1 && (
+                        <>
+                            <button onClick={() => setSelectedVibe('chilling')} className={getItemClasses(selectedVibe === 'chilling')}>
+                                <div className={getIconClasses(selectedVibe === 'chilling')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedVibe === 'chilling' ? {fontVariationSettings: "'FILL' 1"} : {}}>beach_access</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.chilling.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.chilling.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedVibe('adventure')} className={getItemClasses(selectedVibe === 'adventure')}>
+                                <div className={getIconClasses(selectedVibe === 'adventure')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedVibe === 'adventure' ? {fontVariationSettings: "'FILL' 1"} : {}}>explore</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.adventure.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.adventure.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedVibe('culture')} className={getItemClasses(selectedVibe === 'culture')}>
+                                <div className={getIconClasses(selectedVibe === 'culture')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedVibe === 'culture' ? {fontVariationSettings: "'FILL' 1"} : {}}>museum</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.culture.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.culture.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedVibe('food')} className={getItemClasses(selectedVibe === 'food')}>
+                                <div className={getIconClasses(selectedVibe === 'food')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedVibe === 'food' ? {fontVariationSettings: "'FILL' 1"} : {}}>restaurant</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.food.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.food.desc')}</p>
+                            </button>
+                        </>
+                    )}
+                    
+                    {step === 2 && (
+                        <>
+                            <button onClick={() => setSelectedCompanion('solo')} className={getItemClasses(selectedCompanion === 'solo')}>
+                                <div className={getIconClasses(selectedCompanion === 'solo')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedCompanion === 'solo' ? {fontVariationSettings: "'FILL' 1"} : {}}>person</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.solo.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.solo.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedCompanion('couple')} className={getItemClasses(selectedCompanion === 'couple')}>
+                                <div className={getIconClasses(selectedCompanion === 'couple')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedCompanion === 'couple' ? {fontVariationSettings: "'FILL' 1"} : {}}>favorite</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.couple.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.couple.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedCompanion('family')} className={getItemClasses(selectedCompanion === 'family')}>
+                                <div className={getIconClasses(selectedCompanion === 'family')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedCompanion === 'family' ? {fontVariationSettings: "'FILL' 1"} : {}}>home</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.family.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.family.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedCompanion('friends')} className={getItemClasses(selectedCompanion === 'friends')}>
+                                <div className={getIconClasses(selectedCompanion === 'friends')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedCompanion === 'friends' ? {fontVariationSettings: "'FILL' 1"} : {}}>groups</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.friends.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.friends.desc')}</p>
+                            </button>
+                        </>
+                    )}
 
-                    {/* Option 2 (Active Demo) */}
-                    <button className="group flex flex-col items-center p-8 bg-surface-container-lowest rounded-2xl border-2 border-primary/40 ring-4 ring-primary/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center">
-                        <div className="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center mb-6 shadow-inner">
-                            <span className="material-symbols-outlined text-primary text-3xl" style={{fontVariationSettings: "'FILL' 1"}}>explore</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">adventure</h3>
-                        <p className="text-sm text-on-surface-variant font-body">Thrill-seeking and off-the-beaten-path.</p>
-                    </button>
-
-                    {/* Option 3 */}
-                    <button className="group flex flex-col items-center p-8 bg-surface-container-lowest rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center border border-surface-variant/50">
-                        <div className="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors">
-                            <span className="material-symbols-outlined text-primary text-3xl">museum</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">culture</h3>
-                        <p className="text-sm text-on-surface-variant font-body">History, art, and local traditions.</p>
-                    </button>
-
-                    {/* Option 4 */}
-                    <button className="group flex flex-col items-center p-8 bg-surface-container-lowest rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center border border-surface-variant/50">
-                        <div className="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors">
-                            <span className="material-symbols-outlined text-primary text-3xl">restaurant</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">food</h3>
-                        <p className="text-sm text-on-surface-variant font-body">Culinary journeys and hidden flavors.</p>
-                    </button>
+                    {step === 3 && (
+                        <>
+                            <button onClick={() => setSelectedBudget('eco')} className={getItemClasses(selectedBudget === 'eco')}>
+                                <div className={getIconClasses(selectedBudget === 'eco')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedBudget === 'eco' ? {fontVariationSettings: "'FILL' 1"} : {}}>savings</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.budget_eco.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.budget_eco.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedBudget('mid')} className={getItemClasses(selectedBudget === 'mid')}>
+                                <div className={getIconClasses(selectedBudget === 'mid')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedBudget === 'mid' ? {fontVariationSettings: "'FILL' 1"} : {}}>account_balance_wallet</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.budget_mid.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.budget_mid.desc')}</p>
+                            </button>
+                            <button onClick={() => setSelectedBudget('lux')} className={getItemClasses(selectedBudget === 'lux')}>
+                                <div className={getIconClasses(selectedBudget === 'lux')}>
+                                    <span className="material-symbols-outlined text-primary text-3xl" style={selectedBudget === 'lux' ? {fontVariationSettings: "'FILL' 1"} : {}}>diamond</span>
+                                </div>
+                                <h3 className="text-xl font-semibold text-on-surface mb-2 font-display">{t('recommendations.budget_lux.title')}</h3>
+                                <p className="text-sm text-on-surface-variant font-body">{t('recommendations.budget_lux.desc')}</p>
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Action Footer */}
                 <div className="pt-10 flex flex-col items-center">
-                    <button onClick={() => navigate('/search')} className="primary-gradient-recom text-on-primary px-10 py-5 rounded-full text-lg font-semibold shadow-xl shadow-primary/20 hover:scale-[1.03] active:scale-95 transition-all duration-300 w-full md:w-auto min-w-[300px] font-body">
-                        Generate my perfect journey
+                    <button onClick={handleNext} className="primary-gradient-recom text-on-primary px-10 py-5 rounded-full text-lg font-semibold shadow-xl shadow-primary/20 hover:scale-[1.03] active:scale-95 transition-all duration-300 w-full md:w-auto min-w-[300px] font-body">
+                        {step < 3 ? t('recommendations.btn_next') : t('recommendations.btn_generate')}
                     </button>
                     <button onClick={() => navigate('/destinations')} className="mt-6 text-on-surface-variant font-medium hover:text-primary transition-colors flex items-center gap-2 font-body group">
-                        Skip for now
+                        {t('recommendations.btn_skip')}
                         <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </button>
                 </div>
             </div>
+            )}
         </div>
 
         {/* Decorative Floating Image (Asymmetric Layout) */}

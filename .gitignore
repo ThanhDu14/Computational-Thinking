@@ -6,6 +6,7 @@ FrontEnd/node_modules/
 /node_modules
 /.pnp
 .pnp.js
+FrontEnd/dist
 
 # testing
 /coverage
@@ -13,6 +14,7 @@ FrontEnd/node_modules/
 # production builds
 /build
 /dist
+*.exe
 
 # misc
 .DS_Store
@@ -24,6 +26,7 @@ FrontEnd/node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.docker
 
 # logs
 npm-debug.log*
@@ -40,4 +43,7 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-__pycache__
+# python
+__pycache__/
+*.py[cod]
+*$py.class
