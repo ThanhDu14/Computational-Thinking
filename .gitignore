@@ -47,3 +47,6 @@ pnpm-debug.log*
 __pycache__/
 *.py[cod]
 *$py.class
+
+# local data
+CrawlData/
