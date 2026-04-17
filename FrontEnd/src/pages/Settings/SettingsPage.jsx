@@ -1,23 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { changePasswordBackend } from '../../services/authService';
+import { useProfile } from '../../context/ProfileContext';
 import { User, Heart, Settings as SettingsIcon, Shield, Camera, Globe, Moon, Sun, Check, Eye, EyeOff, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SettingsPage = () => {
   const { t, i18n } = useTranslation();
-  const { user } = useAuth();
+  const { user, changePasswordUser } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { updateProfile, updateLoading, updateStatus, clearUpdateStatus } = useProfile();
 
   const [activeTab, setActiveTab] = useState('profile');
   const [formData, setFormData] = useState({
     displayName: user?.name || '',
     email: user?.email || '',
     phone: '',
-    bio: ''
+    bio: '',
+    avatar: user?.avatar || ''
   });
+
+  const fileInputRef = useRef(null);
+
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, avatar: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const [preferences, setPreferences] = useState(['adventure', 'culture']);
 
@@ -45,8 +66,16 @@ const SettingsPage = () => {
 
     setPwLoading(true);
     try {
-      const token = user?.access_token || user?.token || '';
-      await changePasswordBackend(token, pwForm.current, pwForm.newPw);
+      const payload = {
+        old_password: pwForm.current,
+        new_password: pwForm.newPw,
+        confirm_password: pwForm.confirm
+      };
+      
+      console.log("=== THÔNG TIN GỬI LÊN BACKEND ===");
+      console.log(payload);
+
+      await changePasswordUser(payload);
       setPwForm({ current: '', newPw: '', confirm: '' });
       setPwStatus({ type: 'success', message: t('settings.security.pw_success', 'Password changed successfully!') });
     } catch (err) {
@@ -106,12 +135,15 @@ const SettingsPage = () => {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl whitespace-nowrap transition-all duration-300 font-semibold text-sm ${
-                      isActive 
-                        ? 'bg-surface-lowest shadow-sm text-primary ring-1 ring-outline-variant/20' 
-                        : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
-                    }`}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      if (clearUpdateStatus) clearUpdateStatus();
+                      setPwStatus(null);
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl whitespace-nowrap transition-all duration-300 font-semibold text-sm ${isActive
+                      ? 'bg-surface-lowest shadow-sm text-primary ring-1 ring-outline-variant/20'
+                      : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
+                      }`}
                   >
                     <Icon size={18} className={isActive ? 'text-primary' : 'text-on-surface-variant'} />
                     {tab.label}
@@ -135,30 +167,60 @@ const SettingsPage = () => {
                 >
                   <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
                     <h2 className="text-xl font-display font-bold mb-6">{t('settings.profile.title', 'Profile Information')}</h2>
-                    
+
                     {/* Avatar */}
                     <div className="flex items-center gap-6 mb-8">
                       <div className="relative">
-                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-3xl font-display font-bold shadow-lg shadow-primary/20">
-                          {avatarLetter}
+                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-3xl font-display font-bold shadow-lg shadow-primary/20 overflow-hidden">
+                          {formData.avatar ? (
+                            <img src={formData.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            avatarLetter
+                          )}
                         </div>
-                        <button className="absolute bottom-0 right-0 p-2 bg-surface-lowest text-on-surface rounded-full shadow-md border border-outline-variant/20 hover:text-primary transition-colors">
+                        <button
+                          onClick={handleAvatarClick}
+                          className="absolute bottom-0 right-0 p-2 bg-surface-lowest text-on-surface rounded-full shadow-md border border-outline-variant/20 hover:text-primary transition-colors"
+                        >
                           <Camera size={16} />
                         </button>
                       </div>
                       <div>
-                        <button className="px-5 py-2.5 bg-surface-container-low hover:bg-surface-container text-on-surface font-semibold text-sm rounded-full transition-colors border border-outline-variant/20">
+                        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleAvatarChange} className="hidden" />
+                        <button
+                          onClick={handleAvatarClick}
+                          className="px-5 py-2.5 bg-surface-container-low hover:bg-surface-container text-on-surface font-semibold text-sm rounded-full transition-colors border border-outline-variant/20"
+                        >
                           {t('settings.profile.upload_btn', 'Upload new picture')}
                         </button>
                       </div>
                     </div>
 
+                    <AnimatePresence>
+                      {updateStatus && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          className={`flex items-center gap-3 mb-6 px-5 py-4 rounded-2xl text-sm font-semibold ${updateStatus.type === 'success'
+                            ? 'bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400'
+                            : 'bg-red-500/10 border border-red-500/25 text-red-600 dark:text-red-400'
+                            }`}
+                        >
+                          {updateStatus.type === 'success'
+                            ? <CheckCircle2 size={18} className="flex-shrink-0" />
+                            : <AlertCircle size={18} className="flex-shrink-0" />}
+                          {updateStatus.message}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     {/* Forms */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('settings.profile.display_name', 'Display Name')}</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           name="displayName"
                           value={formData.displayName}
                           onChange={handleInputChange}
@@ -167,8 +229,8 @@ const SettingsPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('settings.profile.email', 'Email Address')}</label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           name="email"
                           value={formData.email}
                           disabled
@@ -177,8 +239,8 @@ const SettingsPage = () => {
                       </div>
                       <div className="space-y-2 md:col-span-2">
                         <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('settings.profile.phone', 'Phone Number')}</label>
-                        <input 
-                          type="tel" 
+                        <input
+                          type="tel"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
@@ -187,7 +249,7 @@ const SettingsPage = () => {
                       </div>
                       <div className="space-y-2 md:col-span-2">
                         <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('settings.profile.bio', 'Short Bio')}</label>
-                        <textarea 
+                        <textarea
                           name="bio"
                           value={formData.bio}
                           onChange={handleInputChange}
@@ -200,8 +262,18 @@ const SettingsPage = () => {
                   </div>
 
                   <div className="flex justify-end">
-                    <button className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all">
-                      {t('settings.save_changes', 'Save Changes')}
+                    <button
+                      onClick={() => updateProfile(formData)}
+                      disabled={updateLoading}
+                      className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      {updateLoading && (
+                        <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                        </svg>
+                      )}
+                      {updateLoading ? t('settings.security.saving', 'Saving...') : t('settings.save_changes', 'Save Changes')}
                     </button>
                   </div>
                 </motion.div>
@@ -218,7 +290,7 @@ const SettingsPage = () => {
                 >
                   <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
                     <h2 className="text-xl font-display font-bold mb-6">{t('settings.appearance.title', 'Appearance Settings')}</h2>
-                    
+
                     <div className="space-y-6">
                       <div className="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl">
                         <div className="flex items-center gap-4">
@@ -230,7 +302,7 @@ const SettingsPage = () => {
                             <p className="text-xs text-on-surface-variant">{t('settings.appearance.dark_mode_desc', 'Switch between light and dark themes')}</p>
                           </div>
                         </div>
-                        <button 
+                        <button
                           onClick={toggleTheme}
                           className={`w-12 h-6 rounded-full relative transition-colors ${isDarkMode ? 'bg-primary' : 'bg-outline-variant/30'}`}
                         >
@@ -248,8 +320,8 @@ const SettingsPage = () => {
                             <p className="text-xs text-on-surface-variant">{t('settings.appearance.language_desc', 'Choose your preferred language')}</p>
                           </div>
                         </div>
-                        <select 
-                          value={(i18n.language || '').startsWith('vi') ? 'vi' : 'en'} 
+                        <select
+                          value={(i18n.language || '').startsWith('vi') ? 'vi' : 'en'}
                           onChange={toggleLanguage}
                           className="px-4 py-2 bg-surface-lowest border border-outline-variant/20 rounded-xl text-sm font-semibold text-on-surface outline-none cursor-pointer"
                         >
@@ -282,11 +354,10 @@ const SettingsPage = () => {
                         <button
                           key={pref}
                           onClick={() => togglePreference(pref)}
-                          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${
-                            preferences.includes(pref) 
-                              ? 'bg-secondary-container border-transparent text-on-secondary-container' 
-                              : 'bg-surface border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low hover:border-outline-variant/50'
-                          }`}
+                          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${preferences.includes(pref)
+                            ? 'bg-secondary-container border-transparent text-on-secondary-container'
+                            : 'bg-surface border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low hover:border-outline-variant/50'
+                            }`}
                         >
                           {preferences.includes(pref) && <Check size={14} className="text-on-secondary-container" />}
                           {t(`settings.preferences.tags.${pref}`, pref.charAt(0).toUpperCase() + pref.slice(1))}
@@ -342,11 +413,10 @@ const SettingsPage = () => {
                               initial={{ opacity: 0, y: -8 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -8 }}
-                              className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-semibold ${
-                                pwStatus.type === 'success'
-                                  ? 'bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400'
-                                  : 'bg-red-500/10 border border-red-500/25 text-red-600 dark:text-red-400'
-                              }`}
+                              className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-semibold ${pwStatus.type === 'success'
+                                ? 'bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400'
+                                : 'bg-red-500/10 border border-red-500/25 text-red-600 dark:text-red-400'
+                                }`}
                             >
                               {pwStatus.type === 'success'
                                 ? <CheckCircle2 size={18} className="flex-shrink-0" />
@@ -357,9 +427,9 @@ const SettingsPage = () => {
                         </AnimatePresence>
 
                         {/* Current Password */}
-                        {[{ name: 'current',  label: t('settings.security.current_pw', 'Current Password'),  placeholder: '••••••••' },
-                          { name: 'newPw',    label: t('settings.security.new_pw', 'New Password'),         placeholder: t('settings.security.new_pw_ph', 'Min. 6 characters') },
-                          { name: 'confirm',  label: t('settings.security.confirm_pw', 'Confirm New Password'), placeholder: '••••••••' },
+                        {[{ name: 'current', label: t('settings.security.current_pw', 'Current Password'), placeholder: '••••••••' },
+                        { name: 'newPw', label: t('settings.security.new_pw', 'New Password'), placeholder: t('settings.security.new_pw_ph', 'Min. 6 characters') },
+                        { name: 'confirm', label: t('settings.security.confirm_pw', 'Confirm New Password'), placeholder: '••••••••' },
                         ].map(({ name, label, placeholder }) => (
                           <div key={name} className="space-y-2">
                             <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{label}</label>

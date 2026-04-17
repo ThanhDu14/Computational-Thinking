@@ -108,14 +108,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Đổi mật khẩu
+  const changePasswordUser = useCallback(async (payload) => {
+    try {
+      const token = user?.access_token || user?.token || '';
+      console.log("Token: ", token);
+      const response = await authService.changePassword(token, payload);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }, [user]);
+
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated, login, register, loginWithGoogle, logout, changePasswordUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
