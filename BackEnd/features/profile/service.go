@@ -19,11 +19,11 @@ type UpdateProfileInput struct {
 	Email             string   `json:"email"`
 }
 
-func UpdateUserProfileService(db *gorm.DB, userID string, input UpdateProfileInput) error {
+func UpdateUserProfileService(db *gorm.DB, lookupField string, lookupValue string, input UpdateProfileInput) error {
 	var user User
 
-	// Tìm user theo ID (sửa lại thành user_id cho khớp DB)
-	if err := db.Where("user_id = ?", userID).First(&user).Error; err != nil {
+	// Tìm user theo field tương ứng (user_id hoặc firebase_uid)
+	if err := db.Where(lookupField+" = ?", lookupValue).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("không tìm thấy người dùng này")
 		}
@@ -64,7 +64,7 @@ func UpdateUserProfileService(db *gorm.DB, userID string, input UpdateProfileInp
 		if user.Email == nil || *user.Email != input.Email {
 			var otherUser User
 			// Tìm xem có user KHÁC mang email này không
-			err := db.Where("email = ? AND user_id <> ?", input.Email, userID).First(&otherUser).Error
+			err := db.Where("email = ? AND user_id <> ?", input.Email, user.ID).First(&otherUser).Error
 			if err == nil {
 				return errors.New("email_already_used_by_another")
 			}

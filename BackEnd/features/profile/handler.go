@@ -56,16 +56,29 @@ func UploadAvatarHandler() gin.HandlerFunc {
 // UpdateProfileHandler xử lý request
 func UpdateProfileHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 1. Xác thực người dùng (từ token)
+		// 1. Xác định ID (Có thể là user_id cho Local hoặc firebase_uid cho Google)
 		userID, exists := c.Get("user_id")
-		if !exists {
-			utils.RespondError(c, http.StatusUnauthorized, "Không xác định được danh tính người dùng", nil)
-			return
-		}
+		firebaseUID, fbExists := c.Get("firebase_uid")
 
-		uidStr, ok := userID.(string)
-		if !ok {
-			utils.RespondError(c, http.StatusInternalServerError, "Lỗi định dạng userID trong hệ thống", nil)
+		var lookupField, lookupValue string
+		if exists {
+			uidStr, ok := userID.(string)
+			if !ok {
+				utils.RespondError(c, http.StatusInternalServerError, "Lỗi định dạng userID trong hệ thống", nil)
+				return
+			}
+			lookupField = "user_id"
+			lookupValue = uidStr
+		} else if fbExists {
+			fbStr, ok := firebaseUID.(string)
+			if !ok {
+				utils.RespondError(c, http.StatusInternalServerError, "Lỗi định dạng firebaseUID trong hệ thống", nil)
+				return
+			}
+			lookupField = "firebase_uid"
+			lookupValue = fbStr
+		} else {
+			utils.RespondError(c, http.StatusUnauthorized, "Không xác định được danh tính người dùng", nil)
 			return
 		}
 
@@ -77,7 +90,7 @@ func UpdateProfileHandler(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		// 3. Gọi Service để xử lý
-		if err := UpdateUserProfileService(db, uidStr, input); err != nil {
+		if err := UpdateUserProfileService(db, lookupField, lookupValue, input); err != nil {
 			if err.Error() == "không tìm thấy người dùng này" {
 				utils.RespondError(c, http.StatusNotFound, err.Error(), nil)
 				return
