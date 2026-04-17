@@ -9,10 +9,8 @@ import (
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/contact"
-<<<<<<< HEAD
-=======
+	"smart-travel-backend/features/destination"
 	"smart-travel-backend/features/profile"
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	"syscall"
 	"time"
 
@@ -25,11 +23,11 @@ func main() {
 
 	// 1. Khởi tạo Database
 	db := config.InitDatabase()
-<<<<<<< HEAD
-	log.Println("Đang đồng bộ hóa cấu trúc Database...")
-=======
 	log.Println("Đã kết nối Database thành công!")
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
+
+	// Tự động Migrate các bảng mới
+	log.Println("Đang kiểm tra và cập nhật cấu trúc Database...")
+	db.AutoMigrate(&destination.Destination{})
 
 	// 2. Khởi tạo Firebase
 	authClient := config.InitFirebase()
@@ -39,37 +37,15 @@ func main() {
 
 	// Cấu hình CORS - Chỉ cho phép Frontend được khai báo gọi API
 	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
-<<<<<<< HEAD
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{frontendURL},
-		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization"},
-=======
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:  []string{frontendURL, "http://localhost:3000"},
 		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 		ExposeHeaders: []string{"Content-Length"},
 		MaxAge:        12 * time.Hour,
 	}))
 
-<<<<<<< HEAD
-=======
-	/*
-		// Cấu hình CORS - Bắt buộc phải thêm các Header của Pinggy thì trình duyệt mới cho phép Preflight OPTIONS
-		frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
-		router.Use(cors.New(cors.Config{
-			AllowOrigins:  []string{frontendURL, "http://localhost:5173", "http://localhost:3000"},
-			AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-			AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
-			ExposeHeaders: []string{"Content-Length"},
-			MaxAge:        12 * time.Hour,
-		}))
-	*/
-
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	// 4. Đăng ký Routes
 	authGroup := router.Group("/api/auth")
 	{
@@ -81,14 +57,14 @@ func main() {
 		contact.SetupContactRoutes(contactGroup)
 	}
 
-<<<<<<< HEAD
-=======
 	profileGroup := router.Group("/api/profile")
 	{
 		profile.SetupProfileRoutes(profileGroup, authClient, db)
 	}
 
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
+	// Đăng ký Destination Routes
+	destination.SetupDestinationRoutes(router.Group("/api"), db)
+
 	// 5. Khởi tạo Http Server
 	port := config.GetEnv("SERVER_PORT", "8080")
 	srv := &http.Server{
@@ -98,11 +74,7 @@ func main() {
 
 	// Chạy server trên một luồng lùi (Goroutine)
 	go func() {
-<<<<<<< HEAD
 		log.Printf("Server đang chạy tại: http://localhost:%s", port)
-=======
-		log.Printf("Server đang chạy tại: http://13.229:155:181:%s", port)
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Lỗi khi chạy server: %v", err)
 		}

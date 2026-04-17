@@ -99,33 +99,21 @@ func ProcessLogout(ctx context.Context, authClient *fbauth.Client, uid string) e
 	return nil
 }
 
-<<<<<<< HEAD
-func ProcessLocalRegister(db *gorm.DB, username, password string) (*User, error) {
-=======
 func ProcessLocalRegister(db *gorm.DB, input LocalRegisterInput) (*User, string, error) {
 	username := input.Username
 	password := input.Password
 	
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
 	if err == nil {
-<<<<<<< HEAD
-		return nil, errors.New("username_already_exists")
-=======
 		return nil, "", errors.New("username_already_exists")
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		hashedPassword, errHash := utils.HashPassword(password)
 		if errHash != nil {
-<<<<<<< HEAD
-			return nil, errors.New("cannot_hash_password")
-=======
 			return nil, "", errors.New("cannot_hash_password")
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 		}
 
 		newUser := User{
@@ -139,17 +127,6 @@ func ProcessLocalRegister(db *gorm.DB, input LocalRegisterInput) (*User, string,
 
 		if err := db.Create(&newUser).Error; err != nil {
 			log.Println("Lỗi khi tạo Local User trong DB:", err)
-<<<<<<< HEAD
-			return nil, err
-		}
-		return &newUser, nil
-	}
-
-	return nil, err
-}
-
-func ProcessLocalLogin(db *gorm.DB, username, password string) (*User, string, error) {
-=======
 			return nil, "", err
 		}
 
@@ -169,7 +146,6 @@ func ProcessLocalLogin(db *gorm.DB, input LocalLoginInput) (*User, string, error
 	username := input.Username
 	password := input.Password
 
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
@@ -192,9 +168,6 @@ func ProcessLocalLogin(db *gorm.DB, input LocalLoginInput) (*User, string, error
 
 	return &user, token, nil
 }
-<<<<<<< HEAD
-=======
-
 // ProcessChangePassword đổi mật khẩu cho user Local
 
 func ProcessChangePassword(db *gorm.DB, userID string, input ChangePasswordInput) error {
@@ -245,4 +218,3 @@ func ProcessChangePassword(db *gorm.DB, userID string, input ChangePasswordInput
 
 	return nil
 }
->>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51

@@ -42,3 +42,12 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# local data
+CrawlData/
+serviceAccountKey.json
