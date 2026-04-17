@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Ignore dataset folder
+**/__pycache__/
+model_ai/landmark_recognizer/weights/
+
 # dependencies
 node_modules/
 FrontEnd/node_modules/
