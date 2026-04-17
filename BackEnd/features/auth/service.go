@@ -99,18 +99,33 @@ func ProcessLogout(ctx context.Context, authClient *fbauth.Client, uid string) e
 	return nil
 }
 
+<<<<<<< HEAD
 func ProcessLocalRegister(db *gorm.DB, username, password string) (*User, error) {
+=======
+func ProcessLocalRegister(db *gorm.DB, input LocalRegisterInput) (*User, string, error) {
+	username := input.Username
+	password := input.Password
+	
+>>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
 	if err == nil {
+<<<<<<< HEAD
 		return nil, errors.New("username_already_exists")
+=======
+		return nil, "", errors.New("username_already_exists")
+>>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		hashedPassword, errHash := utils.HashPassword(password)
 		if errHash != nil {
+<<<<<<< HEAD
 			return nil, errors.New("cannot_hash_password")
+=======
+			return nil, "", errors.New("cannot_hash_password")
+>>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 		}
 
 		newUser := User{
@@ -124,6 +139,7 @@ func ProcessLocalRegister(db *gorm.DB, username, password string) (*User, error)
 
 		if err := db.Create(&newUser).Error; err != nil {
 			log.Println("Lỗi khi tạo Local User trong DB:", err)
+<<<<<<< HEAD
 			return nil, err
 		}
 		return &newUser, nil
@@ -133,6 +149,27 @@ func ProcessLocalRegister(db *gorm.DB, username, password string) (*User, error)
 }
 
 func ProcessLocalLogin(db *gorm.DB, username, password string) (*User, string, error) {
+=======
+			return nil, "", err
+		}
+
+		// Tạo JWT token ngay sau khi đăng ký thành công
+		token, err := utils.GenerateJWT(newUser.ID.String(), *newUser.Username)
+		if err != nil {
+			return nil, "", errors.New("cannot_generate_token")
+		}
+
+		return &newUser, token, nil
+	}
+
+	return nil, "", err
+}
+
+func ProcessLocalLogin(db *gorm.DB, input LocalLoginInput) (*User, string, error) {
+	username := input.Username
+	password := input.Password
+
+>>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
 	var user User
 	err := db.Where("username = ?", username).First(&user).Error
 
@@ -155,3 +192,57 @@ func ProcessLocalLogin(db *gorm.DB, username, password string) (*User, string, e
 
 	return &user, token, nil
 }
+<<<<<<< HEAD
+=======
+
+// ProcessChangePassword đổi mật khẩu cho user Local
+
+func ProcessChangePassword(db *gorm.DB, userID string, input ChangePasswordInput) error {
+	oldPassword := input.OldPassword
+	newPassword := input.NewPassword
+	confirmPassword := input.ConfirmPassword
+	// Step 1: Lấy user từ DB theo user_id
+	var user User
+	err := db.Where("user_id = ?", userID).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("user_not_found")
+		}
+		return err
+	}
+
+	// Step 2: Kiểm tra user có password không (user Google sẽ không có)
+	if user.Password == nil {
+		return errors.New("no_password_set")
+	}
+
+	// Step 3: Xác nhận mật khẩu cũ có đúng không
+	if !utils.CheckPasswordHash(oldPassword, *user.Password) {
+		return errors.New("wrong_old_password")
+	}
+
+	// Step 4: Kiểm tra new password và confirm password có khớp không
+	if newPassword != confirmPassword {
+		return errors.New("password_mismatch")
+	}
+
+	// Step 5: Không cho đặt lại password giống cũ
+	if utils.CheckPasswordHash(newPassword, *user.Password) {
+		return errors.New("same_password")
+	}
+
+	// Step 6: Hash password mới
+	newHash, err := utils.HashPassword(newPassword)
+	if err != nil {
+		return errors.New("cannot_hash_password")
+	}
+
+	// Step 7: Update vào DB
+	result := db.Model(&User{}).Where("user_id = ?", userID).Update("password", newHash)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+>>>>>>> 848b307b5f2059651cbc4b70072229e34580bb51
