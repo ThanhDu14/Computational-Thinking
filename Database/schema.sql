@@ -132,3 +132,6 @@ ALTER TABLE Users
 ADD COLUMN phone_number VARCHAR(20) UNIQUE,
 ADD COLUMN avatar_url TEXT,
 ADD COLUMN preferences JSONB DEFAULT '[]'::jsonb; -- (Hoặc dùng JSONB thay cho TEXT nếu bạn muốn lưu dạng mảng/object)
+-- Add the city attribute to locations.
+ALTER TABLE Locations 
+ADD COLUMN City VARCHAR(100);
