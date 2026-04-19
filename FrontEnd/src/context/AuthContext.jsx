@@ -108,22 +108,35 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Lấy Token linh hoạt — phải định nghĩa TRƯỚC khi dùng trong các hàm khác
+  const getToken = useCallback(async () => {
+    await auth.authStateReady(); // Đợi Firebase khởi tạo xong
+
+    // Nếu Firebase có user đang đăng nhập (Google) => lấy token mới nhất từ Firebase
+    if (auth.currentUser) {
+      return await auth.currentUser.getIdToken();
+    }
+
+    // Nếu không có Firebase user (Local account) => dùng token từ backend
+    return user?.access_token || user?.token || '';
+  }, [user]);
+
   // Đổi mật khẩu
   const changePasswordUser = useCallback(async (payload) => {
     try {
-      const token = user?.access_token || user?.token || '';
+      const token = await getToken();
       console.log("Token: ", token);
       const response = await authService.changePassword(token, payload);
       return response;
     } catch (error) {
       throw error;
     }
-  }, [user]);
+  }, [getToken]);
 
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isAuthenticated, login, register, loginWithGoogle, logout, changePasswordUser }}>
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated, login, register, loginWithGoogle, logout, changePasswordUser, getToken }}>
       {children}
     </AuthContext.Provider>
   );

@@ -21,7 +21,8 @@ export default defineConfig(({ mode }) => {
           headers: {
             'ngrok-skip-browser-warning': 'true',
             'bypass-tunnel-reminder': 'true',
-            'User-Agent': 'PostmanRuntime/7.32.3'
+            'User-Agent': 'PostmanRuntime/7.32.3',
+            'X-Pinggy-No-Screen': 'true'
           }
         }
       }

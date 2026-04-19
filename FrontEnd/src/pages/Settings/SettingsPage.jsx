@@ -1,14 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useProfile } from '../../context/ProfileContext';
 import { User, Heart, Settings as SettingsIcon, Shield, Camera, Globe, Moon, Sun, Check, Eye, EyeOff, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getInfo, uploadAvatar } from '../../services/profileService';
 
 const SettingsPage = () => {
   const { t, i18n } = useTranslation();
-  const { user, changePasswordUser } = useAuth();
+  const { user, changePasswordUser, getToken } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { updateProfile, updateLoading, updateStatus, clearUpdateStatus } = useProfile();
 
@@ -21,6 +22,8 @@ const SettingsPage = () => {
     avatar: user?.avatar || ''
   });
 
+  const [previewAvatar, setPreviewAvatar] = useState(null);
+
   const fileInputRef = useRef(null);
 
   const handleAvatarClick = () => {
@@ -29,18 +32,57 @@ const SettingsPage = () => {
     }
   };
 
-  const handleAvatarChange = (e) => {
+  const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, avatar: reader.result }));
+        setPreviewAvatar(reader.result);
       };
       reader.readAsDataURL(file);
+
+      const token = await getToken();
+      if (token) {
+        try {
+          const data = await uploadAvatar(token, file);
+          if (data && data.avatar_url) {
+            setFormData(prev => ({ ...prev, avatar: data.avatar_url }));
+            setPreviewAvatar(null); // Clear preview to use the real URL
+          }
+        } catch (error) {
+          console.error("Failed to upload avatar", error);
+        }
+      }
     }
   };
 
   const [preferences, setPreferences] = useState(['adventure', 'culture']);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const token = await getToken();
+      if (!token) return;
+      try {
+        const data = await getInfo(token);
+        if (data) {
+          setFormData(prev => ({
+            ...prev,
+            displayName: data.display_name || prev.displayName,
+            email: data.email || prev.email,
+            phone: data.phone_number || prev.phone,
+            bio: data.bio || prev.bio,
+            avatar: data.avatar || prev.avatar
+          }));
+          if (data.travel_preferences && Array.isArray(data.travel_preferences)) {
+            setPreferences(data.travel_preferences);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load profile details", err);
+      }
+    };
+    fetchProfileData();
+  }, [user, getToken]);
 
   // --- Change Password State ---
   const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
@@ -71,7 +113,7 @@ const SettingsPage = () => {
         new_password: pwForm.newPw,
         confirm_password: pwForm.confirm
       };
-      
+
       console.log("=== THÔNG TIN GỬI LÊN BACKEND ===");
       console.log(payload);
 
@@ -87,7 +129,6 @@ const SettingsPage = () => {
 
   const tabs = [
     { id: 'profile', icon: User, label: t('settings.tabs.profile', 'Profile Information') },
-    { id: 'preferences', icon: Heart, label: t('settings.tabs.preferences', 'Travel Preferences') },
     { id: 'appearance', icon: SettingsIcon, label: t('settings.tabs.appearance', 'Appearance & Settings') },
     { id: 'security', icon: Shield, label: t('settings.tabs.security', 'Security') },
   ];
@@ -172,8 +213,8 @@ const SettingsPage = () => {
                     <div className="flex items-center gap-6 mb-8">
                       <div className="relative">
                         <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-3xl font-display font-bold shadow-lg shadow-primary/20 overflow-hidden">
-                          {formData.avatar ? (
-                            <img src={formData.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                          {previewAvatar || formData.avatar ? (
+                            <img src={previewAvatar || formData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                           ) : (
                             avatarLetter
                           )}
@@ -233,7 +274,8 @@ const SettingsPage = () => {
                           type="email"
                           name="email"
                           value={formData.email}
-                          disabled
+                          disabled={user?.authType === 'google'}
+                          onChange={handleInputChange}
                           className="w-full bg-surface-container/50 border border-transparent text-on-surface-variant rounded-2xl px-4 py-3 outline-none opacity-70 cursor-not-allowed"
                         />
                       </div>
@@ -261,9 +303,32 @@ const SettingsPage = () => {
                     </div>
                   </div>
 
+                  <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
+                    <h2 className="text-xl font-display font-bold mb-6">{t('settings.preferences.title', 'Travel Preferences')}</h2>
+                    <p className="text-sm text-on-surface-variant mb-6">
+                      {t('settings.preferences.desc', 'Select your preferred travel vibes to help our AI curate better destinations for you.')}
+                    </p>
+
+                    <div className="flex flex-wrap gap-3 mb-8">
+                      {['adventure', 'beach', 'culture', 'food', 'nature', 'city'].map(pref => (
+                        <button
+                          key={pref}
+                          onClick={() => togglePreference(pref)}
+                          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${preferences.includes(pref)
+                            ? 'bg-secondary-container border-transparent text-on-secondary-container'
+                            : 'bg-surface border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low hover:border-outline-variant/50'
+                            }`}
+                        >
+                          {preferences.includes(pref) && <Check size={14} className="text-on-secondary-container" />}
+                          {t(`settings.preferences.tags.${pref}`, pref.charAt(0).toUpperCase() + pref.slice(1))}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="flex justify-end">
                     <button
-                      onClick={() => updateProfile(formData)}
+                      onClick={() => updateProfile({...formData, preferences})}
                       disabled={updateLoading}
                       className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
                     >
@@ -334,44 +399,7 @@ const SettingsPage = () => {
                 </motion.div>
               )}
 
-              {activeTab === 'preferences' && (
-                <motion.div
-                  key="preferences"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
-                  <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
-                    <h2 className="text-xl font-display font-bold mb-6">{t('settings.preferences.title', 'Travel Preferences')}</h2>
-                    <p className="text-sm text-on-surface-variant mb-6">
-                      {t('settings.preferences.desc', 'Select your preferred travel vibes to help our AI curate better destinations for you.')}
-                    </p>
 
-                    <div className="flex flex-wrap gap-3 mb-8">
-                      {['adventure', 'beach', 'culture', 'food', 'nature', 'city'].map(pref => (
-                        <button
-                          key={pref}
-                          onClick={() => togglePreference(pref)}
-                          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${preferences.includes(pref)
-                            ? 'bg-secondary-container border-transparent text-on-secondary-container'
-                            : 'bg-surface border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low hover:border-outline-variant/50'
-                            }`}
-                        >
-                          {preferences.includes(pref) && <Check size={14} className="text-on-secondary-container" />}
-                          {t(`settings.preferences.tags.${pref}`, pref.charAt(0).toUpperCase() + pref.slice(1))}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <button className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all">
-                      {t('settings.save_changes', 'Save Changes')}
-                    </button>
-                  </div>
-                </motion.div>
-              )}
 
               {activeTab === 'security' && (
                 <motion.div
