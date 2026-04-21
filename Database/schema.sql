@@ -139,3 +139,22 @@ ADD COLUMN description TEXT;
 
 ALTER TABLE Locations
 RENAME COLUMN information TO address; 
+
+-- 1. Thêm 2 cột còn thiết
+ALTER TABLE Users 
+ADD COLUMN display_name VARCHAR(100) DEFAULT '',
+ADD COLUMN bio TEXT DEFAULT '';
+
+-- 2. Đổi tên 2 cột bị lệch để Gorm tìm thấy
+ALTER TABLE Users 
+RENAME COLUMN avatar_url TO avatar;
+
+ALTER TABLE Users 
+RENAME COLUMN preferences TO travel_preferences;
+
+-- 3. Fix lỗi Bug tạo acc mới bị chặn vì trùng số điện thoại ảo ""
+ALTER TABLE Users 
+DROP CONSTRAINT IF EXISTS users_phone_number_key;
+
+ALTER TABLE Locations 
+ADD COLUMN City VARCHAR(100);
