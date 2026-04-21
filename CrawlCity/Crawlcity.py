@@ -22,7 +22,7 @@ if hasattr(uc.Chrome, '__del__'):
 # CẤU HÌNH HỆ THỐNG
 
 # 1. Cấu hình API Keys
-GEMINI_API_KEY = "AIzaSyBBhfUTejf7aM2ON8oF0Nla1mKk1QuKap8" 
+GEMINI_API_KEY = "API" 
 
 # 2. Cấu hình cào dữ liệu (Scraping)
 LIST_PAGE_URL = "https://www.tripadvisor.com.vn/Attractions-g293928-Activities-c47-Nha_Trang_Khanh_Hoa_Province.html"
