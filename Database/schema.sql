@@ -158,3 +158,9 @@ DROP CONSTRAINT IF EXISTS users_phone_number_key;
 
 ALTER TABLE Locations 
 ADD COLUMN City VARCHAR(100);
+
+CREATE TABLE LocationImage (
+    location_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE, 
+    image TEXT,
+    PRIMARY KEY (location_id, image)
+);
