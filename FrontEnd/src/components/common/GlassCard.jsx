@@ -7,7 +7,7 @@ const GlassCard = ({ children, className = '', hoverEffect = false, ...props }) 
 
   return (
     <div 
-      className={`bg-surface-container-lowest/70 backdrop-blur-3xl rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/40 ${hoverClasses} ${className}`}
+      className={`bg-surface-container-lowest/70 backdrop-blur-3xl rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-outline-variant/30 ${hoverClasses} ${className}`}
       {...props}
     >
       {children}

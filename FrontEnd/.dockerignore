@@ -1,0 +1,21 @@
+# Dependencies — được cài lại trong container
+node_modules
+
+# Build output — sẽ được tạo trong container
+dist
+
+# Biến môi trường thật — KHÔNG đưa vào image
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# Editor
+.vscode
+*.log
+
+# Docs
+README.md
