@@ -1,5 +1,5 @@
 from langchain_core.documents import Document
-from src.data_pipeline.cleaner import Cleaner
+from model_ai.chatbot.src.data_pipeline.cleaner import Cleaner
 class TextSplitter:
     def __init__(self):
         pass
