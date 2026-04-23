@@ -6,14 +6,17 @@ import App from './App.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { WishlistProvider } from './context/WishlistContext.jsx'
+import { ProfileProvider } from './context/ProfileContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <WishlistProvider>
-          <App />
-        </WishlistProvider>
+        <ProfileProvider>
+          <WishlistProvider>
+            <App />
+          </WishlistProvider>
+        </ProfileProvider>
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,
