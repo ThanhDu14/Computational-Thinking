@@ -1,166 +1,175 @@
 -- Kích hoạt extension để tự động sinh UUID (thay cho NEWID() của SQL Server)
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+create extension IF not exists "uuid-ossp";
 
--- 1. User Management
-CREATE TABLE Users (
-    -- Dữ liệu định danh (Giữ nguyên UUID để bảo vệ các bảng con)
-    user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    
-    -- Dữ liệu từ Firebase (Cửa 1) - Có thể NULL
-    firebase_uid VARCHAR(255) UNIQUE,
-    email VARCHAR(100) UNIQUE,
-    
-    -- Dữ liệu Tự code Auth Local (Cửa 2) - Có thể NULL
-    username VARCHAR(50) UNIQUE,
-    password VARCHAR(255),
-    
-    -- Dữ liệu dùng chung (Bắt buộc phải có theo struct Go)
-    name VARCHAR(255) NOT NULL,
-    provider VARCHAR(50) NOT NULL,
-    role VARCHAR(50) DEFAULT 'tourist',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
--- 2. Location Data
-CREATE TABLE Locations (
-    location_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    name VARCHAR(255) NOT NULL, 
-    latitude DECIMAL(9,6), 
-    longitude DECIMAL(9,6), 
-    duration_minutes INT,
-    opening_hours_json TEXT,
-    information TEXT,
-    rating FLOAT,
-    count_rating INT
+create table Users (
+  user_id UUID primary key default uuid_generate_v4 (),
+
+  firebase_uid VARCHAR(255) unique,
+
+  email VARCHAR(100) unique,
+  username VARCHAR(50) unique,
+  password VARCHAR(255),
+
+  name VARCHAR(255) not null,
+  provider VARCHAR(50) not null,
+  role VARCHAR(50) default 'tourist',
+
+  created_at timestamp with time zone default NOW(),
+  updated_at timestamp with time zone default NOW()
 );
 
-CREATE TABLE Categories (
-    category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    category_name VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL
+create table Locations (
+  location_id UUID primary key default uuid_generate_v4 (),
+
+  name VARCHAR(255) not null,
+  description TEXT,
+  address TEXT,
+  city VARCHAR(100),
+
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6),
+
+  duration_minutes INT,
+  opening_hours_json TEXT,
+
+  rating FLOAT,
+  count_rating INT
 );
 
-CREATE TABLE LocationCategories(
-    location_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE, 
-    category_id UUID REFERENCES Categories(category_id) ON DELETE CASCADE, 
-    PRIMARY KEY(location_id, category_id)
+
+create table LocationImages (
+  location_id UUID not null references Locations (location_id) on delete CASCADE,
+  image TEXT not null,
+  primary key (location_id, image)
 );
 
--- 3. Distance Matrix
-CREATE TABLE LocationDistanceMatrix (
-    origin_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE, 
-    destination_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE, 
-    travel_by VARCHAR(50), 
-    distance_m INT, 
-    duration_min INT, 
-    PRIMARY KEY (origin_id, destination_id, travel_by) 
+create table Categories (
+  category_id UUID primary key default uuid_generate_v4 (),
+  category_name VARCHAR(255) not null,
+  description VARCHAR(255) not nullf
 );
 
--- 4. Planning Tables
-CREATE TABLE Plans (
-    plan_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES Users(user_id) ON DELETE CASCADE, 
-    start_date DATE,
-    end_date DATE, 
-    generation_source VARCHAR(50) 
+create table LocationCategories (
+  location_id UUID references Locations (location_id) on delete CASCADE,
+  category_id UUID references Categories (category_id) on delete CASCADE,
+  primary key (location_id, category_id)
 );
 
-CREATE TABLE PlanDay (
-    plan_day_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    plan_id UUID REFERENCES Plans(plan_id) ON DELETE CASCADE, 
-    day_seq INT, 
-    date DATE 
+create table LocationDistanceMatrix (
+  origin_id UUID references Locations (location_id) on delete CASCADE,
+  destination_id UUID references Locations (location_id) on delete CASCADE,
+
+  travel_by VARCHAR(50),
+  distance_m INT,
+  duration_min INT,
+
+  primary key (origin_id, destination_id, travel_by)
 );
 
-CREATE TABLE PlanItem (
-    item_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    day_id UUID REFERENCES PlanDay(plan_day_id) ON DELETE CASCADE, 
-    location_id UUID REFERENCES Locations(location_id),
-    start_time TIME, 
-    end_time TIME, 
-    order_index INT 
+create table Wishlist (
+  user_id UUID not null references Users (user_id) on delete CASCADE,
+  location_id UUID not null references Locations (location_id) on delete CASCADE,
+  primary key (user_id, location_id)
 );
 
--- 5. Templates
-CREATE TABLE PlanTemplate (
-    template_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    theme VARCHAR(255), 
-    target_audience VARCHAR(255),
-    total_days INT, 
-    content_json TEXT 
+create table Plans (
+  plan_id UUID primary key default uuid_generate_v4 (),
+  user_id UUID references Users (user_id) on delete CASCADE,
+  start_date DATE,
+  end_date DATE,
+  generation_source VARCHAR(50)
 );
 
--- 6. Image Processing
-CREATE TABLE ImageUpload (
-    image_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    user_id UUID REFERENCES Users(user_id) ON DELETE CASCADE,
-    image_url VARCHAR(500),
-    status VARCHAR(50), 
-    raw_exif_data TEXT, 
-    raw_ml_response TEXT, 
-    created_at TIMESTAMP DEFAULT NOW() 
+create table PlanDay (
+  plan_day_id UUID primary key default uuid_generate_v4 (),
+  plan_id UUID references Plans (plan_id) on delete CASCADE,
+  day_seq INT,
+  date DATE
 );
 
-CREATE TABLE ImageIdentifiedLocation (
-    identification_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    image_id UUID REFERENCES ImageUpload(image_id) ON DELETE CASCADE, 
-    detected_landmark_name VARCHAR(255), 
-    location_id UUID REFERENCES Locations(location_id),
-    confidence_score FLOAT, 
-    detected_by VARCHAR(50), 
-    is_training_data BOOLEAN DEFAULT FALSE 
+create table PlanItem (
+  item_id UUID primary key default uuid_generate_v4 (),
+  day_id UUID references PlanDay (plan_day_id) on delete CASCADE,
+  location_id UUID references Locations (location_id),
+  start_time TIME,
+  end_time TIME,
+  order_index INT
+);
+drop table PlanItem
+
+create table PlanTemplate (
+  template_id UUID primary key default uuid_generate_v4 (),
+  theme VARCHAR(255),
+  target_audience VARCHAR(255),
+  total_days INT,
+  content_json TEXT
 );
 
--- 7. Manual Requests
-CREATE TABLE UserTripRequest (
-    request_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    user_id UUID REFERENCES Users(user_id) ON DELETE CASCADE, 
-    destination_text TEXT, 
-    parameters_json TEXT, 
-    created_at TIMESTAMP DEFAULT NOW() 
+create table ImageUpload (
+  image_id UUID primary key default uuid_generate_v4 (),
+  user_id UUID references Users (user_id) on delete CASCADE,
+  image_url VARCHAR(500),
+  status VARCHAR(50),
+  raw_exif_data TEXT,
+  raw_ml_response TEXT,
+  created_at TIMESTAMP default NOW()
 );
 
-CREATE TABLE Review (
-    review_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
-    user_id UUID REFERENCES Users(user_id) ON DELETE CASCADE, 
-    location_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE,
-    rating FLOAT,
-    comment TEXT,
-    created_at TIMESTAMP DEFAULT NOW()
+create table ImageIdentifiedLocation (
+  identification_id UUID primary key default uuid_generate_v4 (),
+  image_id UUID references ImageUpload (image_id) on delete CASCADE,
+
+  detected_landmark_name VARCHAR(255),
+  location_id UUID references Locations (location_id),
+  
+  confidence_score FLOAT,
+  detected_by VARCHAR(50),
+  is_training_data BOOLEAN default false
 );
 
-ALTER TABLE Users 
-ADD COLUMN phone_number VARCHAR(20) UNIQUE,
-ADD COLUMN avatar_url TEXT,
-ADD COLUMN preferences JSONB DEFAULT '[]'::jsonb;
+create table UserTripRequest (
+  request_id UUID primary key default uuid_generate_v4 (),
+  user_id UUID references Users (user_id) on delete CASCADE,
 
-ALTER TABLE Locations  
-ADD COLUMN description TEXT;
+  destination_text TEXT,
+  parameters_json TEXT,
 
-ALTER TABLE Locations
-RENAME COLUMN information TO address; 
+  created_at TIMESTAMP default NOW()
+);
+
+create table Review (
+  review_id UUID primary key default uuid_generate_v4 (),
+  user_id UUID references Users (user_id) on delete CASCADE,
+  location_id UUID references Locations (location_id) on delete CASCADE,
+
+  rating FLOAT,
+  comment TEXT,
+  created_at TIMESTAMP default NOW()
+);
+
+create table ReviewImages (
+  review_id UUID not null references Review (review_id) on delete CASCADE,
+  image TEXT not null,
+  primary key (review_id, image)
+);
+
+alter table Users
+add column phone_number VARCHAR(20) unique,
+add column avatar_url TEXT,
+add column preferences JSONB default '[]'::jsonb;
 
 -- 1. Thêm 2 cột còn thiết
-ALTER TABLE Users 
-ADD COLUMN display_name VARCHAR(100) DEFAULT '',
-ADD COLUMN bio TEXT DEFAULT '';
+alter table Users
+add column display_name VARCHAR(100) default '',
+add column bio TEXT default '';
 
 -- 2. Đổi tên 2 cột bị lệch để Gorm tìm thấy
-ALTER TABLE Users 
-RENAME COLUMN avatar_url TO avatar;
+alter table Users
+rename column avatar_url to avatar;
 
-ALTER TABLE Users 
-RENAME COLUMN preferences TO travel_preferences;
+alter table Users
+rename column preferences to travel_preferences;
 
 -- 3. Fix lỗi Bug tạo acc mới bị chặn vì trùng số điện thoại ảo ""
-ALTER TABLE Users 
-DROP CONSTRAINT IF EXISTS users_phone_number_key;
-
-ALTER TABLE Locations 
-ADD COLUMN City VARCHAR(100);
-
-CREATE TABLE LocationImage (
-    location_id UUID REFERENCES Locations(location_id) ON DELETE CASCADE, 
-    image TEXT,
-    PRIMARY KEY (location_id, image)
-);
+alter table Users
+drop constraint IF exists users_phone_number_key;
