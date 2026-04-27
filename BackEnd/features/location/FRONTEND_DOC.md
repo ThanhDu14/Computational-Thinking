@@ -1,19 +1,19 @@
-# Hướng dẫn tích hợp API Destination cho Frontend
+# Hướng dẫn tích hợp API Location cho Frontend
 
-Tài liệu này hướng dẫn cách kết nối Frontend (React/Vite/Next.js) với API Destination mới.
+Tài liệu này hướng dẫn cách kết nối Frontend (React/Vite/Next.js) với API Location mới.
 
 ## 1. Thông tin API
 *   **Base URL:** `http://localhost:8080/api` (Tùy cấu hình môi trường)
-*   **Endpoint:** `/destination/filter/:city`
+*   **Endpoint:** `/location/filter/:city`
 *   **Method:** `GET`
 
 ## 2. Cách gọi API (Ví dụ dùng Axios)
 
 ### Lấy danh sách địa điểm theo thành phố
 ```javascript
-const getDestinations = async (city) => {
+const getLocations = async (city) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/destination/filter/${city}`);
+    const response = await axios.get(`${API_BASE_URL}/location/filter/${city}`);
     return response.data; // Dữ liệu sẽ nằm trong response.data.data
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
@@ -24,8 +24,8 @@ const getDestinations = async (city) => {
 ### Lọc theo cả thành phố và thể loại
 Sử dụng query parameter `category` để lọc chi tiết hơn:
 ```javascript
-const filterDestinations = async (city, category) => {
-  const response = await axios.get(`${API_BASE_URL}/destination/filter/${city}`, {
+const filterLocations = async (city, category) => {
+  const response = await axios.get(`${API_BASE_URL}/location/filter/${city}`, {
     params: { category: category }
   });
   return response.data.data;

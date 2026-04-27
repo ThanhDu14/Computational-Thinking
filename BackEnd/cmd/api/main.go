@@ -9,7 +9,7 @@ import (
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/contact"
-	"smart-travel-backend/features/destination"
+	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
 	"syscall"
 	"time"
@@ -25,9 +25,12 @@ func main() {
 	db := config.InitDatabase()
 	log.Println("Đã kết nối Database thành công!")
 
+	// Kích hoạt extension unaccent dùng cho việc tìm kiếm không dấu
+	db.Exec("CREATE EXTENSION IF NOT EXISTS unaccent;")
+
 	// Tự động Migrate các bảng mới
 	log.Println("Đang kiểm tra và cập nhật cấu trúc Database...")
-	db.AutoMigrate(&destination.Destination{})
+	db.AutoMigrate(&location.Location{}, &location.Category{}, &location.LocationCategory{})
 
 	// 2. Khởi tạo Firebase
 	authClient := config.InitFirebase()
@@ -62,8 +65,8 @@ func main() {
 		profile.SetupProfileRoutes(profileGroup, authClient, db)
 	}
 
-	// Đăng ký Destination Routes
-	destination.SetupDestinationRoutes(router.Group("/api"), db)
+	// Đăng ký Location Routes
+	location.SetupLocationRoutes(router.Group("/api"), db)
 
 	// 5. Khởi tạo Http Server
 	port := config.GetEnv("SERVER_PORT", "8080")
