@@ -35,3 +35,24 @@ func UploadAvatarToCloudinary(file multipart.File, filename string) (string, err
 	//Trả về đường bảo mật
 	return resp.SecureURL, nil
 }
+
+// UploadReviewImageToCloudinary upload ảnh review lên Cloudinary (folder riêng cho review)
+func UploadReviewImageToCloudinary(file multipart.File, filename string) (string, error) {
+	cld, err := cloudinary.New()
+	if err != nil {
+		return "", err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	uploadParams := uploader.UploadParams{
+		Folder:   "smart_travel_reviews",
+		PublicID: filename,
+		Format:   "jpg",
+	}
+	resp, err := cld.Upload.Upload(ctx, file, uploadParams)
+	if err != nil {
+		return "", err
+	}
+	return resp.SecureURL, nil
+}

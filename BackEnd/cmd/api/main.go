@@ -9,7 +9,9 @@ import (
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/contact"
+	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
+	"smart-travel-backend/features/review"
 	"syscall"
 	"time"
 
@@ -68,6 +70,14 @@ func main() {
 	{
 		profile.SetupProfileRoutes(profileGroup, authClient, db)
 	}
+
+	reviewGroup := router.Group("/api/review")
+	{
+		review.SetupReviewRoutes(reviewGroup, authClient, db)
+	}
+
+	// Đăng ký Location Routes
+	location.SetupLocationRoutes(router.Group("/api"), db)
 
 	// 5. Khởi tạo Http Server
 	port := config.GetEnv("SERVER_PORT", "8080")
