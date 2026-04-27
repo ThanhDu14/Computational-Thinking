@@ -46,7 +46,7 @@ create table LocationImages (
 create table Categories (
   category_id UUID primary key default uuid_generate_v4 (),
   category_name VARCHAR(255) not null,
-  description VARCHAR(255) not nullf
+  description VARCHAR(255) not null
 );
 
 create table LocationCategories (
