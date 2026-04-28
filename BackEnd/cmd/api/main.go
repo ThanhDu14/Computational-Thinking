@@ -76,8 +76,10 @@ func main() {
 		review.SetupReviewRoutes(reviewGroup, authClient, db)
 	}
 
-	// Đăng ký Location Routes
-	location.SetupLocationRoutes(router.Group("/api"), db)
+	locationGroup := router.Group("/api/location")
+	{
+		location.SetupLocationRoutes(locationGroup, db)
+	}
 
 	// 5. Khởi tạo Http Server
 	port := config.GetEnv("SERVER_PORT", "8080")
@@ -88,7 +90,7 @@ func main() {
 
 	// Chạy server trên một luồng lùi (Goroutine)
 	go func() {
-		log.Printf("Server đang chạy tại: http://13.229:155:181:%s", port)
+		log.Printf("Server đang chạy tại: http://13.229.155.181:%s", port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Lỗi khi chạy server: %v", err)
 		}

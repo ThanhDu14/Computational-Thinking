@@ -26,11 +26,26 @@ type Location struct {
 
 	// Quan hệ Nhiều-Nhiều với Category
 	Categories []Category `gorm:"many2many:locationcategories;foreignKey:ID;joinForeignKey:location_id;References:ID;joinReferences:category_id" json:"categories"`
+	
+	// Quan hệ Một-Nhiều với LocationImage
+	Images     []LocationImage `gorm:"foreignKey:LocationID;references:ID" json:"images"`
 }
 
 func (Location) TableName() string {
 	return "locations"
 }
+
+// LocationImage đại diện cho bảng 'locationimages' chứa danh sách URL ảnh cho địa điểm
+type LocationImage struct {
+	LocationID uuid.UUID `gorm:"column:location_id;type:uuid;not null;index" json:"-"`
+	ImageURL   string    `gorm:"column:image;type:text;not null" json:"image"`
+}
+
+func (LocationImage) TableName() string {
+	return "locationimages"
+}
+
+
 
 // Category đại diện cho bảng 'categories'
 type Category struct {
