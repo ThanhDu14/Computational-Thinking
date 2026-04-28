@@ -4,48 +4,64 @@ Tài liệu này hướng dẫn cách kết nối Frontend (React/Vite/Next.js) 
 
 ## 1. Thông tin API
 *   **Base URL:** `http://localhost:8080/api` (Tùy cấu hình môi trường)
-*   **Endpoint:** `/location/filter/:city`
+*   **Endpoint Filter:** `/location/filter`
+*   **Endpoint Detail:** `/location/:id`
 *   **Method:** `GET`
 
 ## 2. Cách gọi API (Ví dụ dùng Axios)
 
-### Lấy danh sách địa điểm theo thành phố
-```javascript
-const getLocations = async (city) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/location/filter/${city}`);
-    return response.data; // Dữ liệu sẽ nằm trong response.data.data
-  } catch (error) {
-    console.error("Lỗi khi lấy dữ liệu:", error);
-  }
-};
-```
-
-### Lọc theo cả thành phố và thể loại
-Sử dụng query parameter `category` để lọc chi tiết hơn:
+### Lấy danh sách địa điểm theo thành phố và thể loại
+Sử dụng query parameter `city` và `category` để lọc:
 ```javascript
 const filterLocations = async (city, category) => {
-  const response = await axios.get(`${API_BASE_URL}/location/filter/${city}`, {
-    params: { category: category }
+  const response = await axios.get(`${API_BASE_URL}/location/filter`, {
+    params: { city: city, category: category }
   });
   return response.data.data;
 };
 ```
 
+### Lấy chi tiết một địa điểm cụ thể
+Chuyển hướng người dùng khi click vào một địa điểm và gọi API này với `id` của địa điểm đó:
+```javascript
+const getLocationDetail = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/location/${id}`);
+  return response.data.data;
+};
+```
+
 ## 3. Cấu trúc dữ liệu trả về (Data Schema)
-Mỗi item trong danh sách trả về sẽ có cấu trúc như sau:
+Mỗi item trong danh sách trả về (và cả lúc lấy chi tiết) sẽ có cấu trúc như sau:
 ```json
 {
   "id": "uuid-string",
-  "location_name": "Tên địa điểm",
-  "address": "Địa chỉ chi tiết",
-  "overall_rating": "4.5/5",
-  "rating_count": "1000",
+  "name": "Tên địa điểm",
+  "latitude": 10.776656,
+  "longitude": 106.700853,
+  "duration_minutes": 120,
   "opening_hours": "08:00 - 22:00",
+  "address": "Địa chỉ chi tiết",
+  "rating": 4.5,
+  "count_rating": 1000,
   "description": "Mô tả ngắn gọn về địa điểm",
-  "images": ["url1", "url2"],
-  "category": ["Văn hóa", "Ẩm thực"],
-  "city": "Hanoi"
+  "city": "Thành phố Hồ Chí Minh",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "categories": [
+    {
+      "id": "uuid-string",
+      "category_name": "Văn hóa",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "images": [
+    {
+      "image": "https://url-anh-1.com/img.jpg"
+    },
+    {
+      "image": "https://url-anh-2.com/img.jpg"
+    }
+  ]
 }
 ```
 

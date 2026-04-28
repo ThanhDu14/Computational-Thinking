@@ -11,7 +11,7 @@ func FilterLocations(ctx context.Context, db *gorm.DB, city string, categoryName
 	var locations []Location
 	var total int64
 
-	query := db.WithContext(ctx).Model(&Location{}).Preload("Categories")
+	query := db.WithContext(ctx).Model(&Location{}).Preload("Categories").Preload("Images")
 
 	if city != "" {
 		cityNoSpace := strings.ReplaceAll(city, " ", "")
@@ -34,9 +34,18 @@ func GetAllLocations(ctx context.Context, db *gorm.DB, limit int, offset int) ([
 	var locations []Location
 	var total int64
 
-	query := db.WithContext(ctx).Model(&Location{}).Preload("Categories")
+	query := db.WithContext(ctx).Model(&Location{}).Preload("Categories").Preload("Images")
 	query.Count(&total)
 
 	err := query.Limit(limit).Offset(offset).Find(&locations).Error
 	return locations, total, err
+}
+
+func GetLocationByID(ctx context.Context, db *gorm.DB, id string) (*Location, error) {
+	var location Location
+	err := db.WithContext(ctx).Model(&Location{}).Preload("Categories").Preload("Images").Where("location_id = ?", id).First(&location).Error
+	if err != nil {
+		return nil, err
+	}
+	return &location, nil
 }

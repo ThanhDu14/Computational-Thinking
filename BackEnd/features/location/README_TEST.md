@@ -31,6 +31,12 @@ curl -X GET "http://localhost:8080/api/location/filter?city=hanoi&category=Văn+
 curl -X GET "http://localhost:8080/api/location/all?page=1&limit=20"
 ```
 
+### Lấy chi tiết một địa điểm cụ thể (Bao gồm ảnh và thể loại)
+Copy ID của bất kỳ địa điểm nào từ kết quả phía trên (ví dụ: `01886c54-de94-4a46-8a80-058cc9b7b746`) và chạy:
+```bash
+curl -X GET "http://localhost:8080/api/location/01886c54-de94-4a46-8a80-058cc9b7b746"
+```
+
 ## 3. Cấu trúc Response
 Tất cả API đều trả về response có phân trang:
 ```json

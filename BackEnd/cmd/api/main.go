@@ -30,7 +30,7 @@ func main() {
 
 	// Tự động Migrate các bảng mới
 	log.Println("Đang kiểm tra và cập nhật cấu trúc Database...")
-	db.AutoMigrate(&location.Location{}, &location.Category{}, &location.LocationCategory{})
+	db.AutoMigrate(&location.Location{}, &location.Category{}, &location.LocationCategory{}, &location.LocationImage{})
 
 	// 2. Khởi tạo Firebase
 	authClient := config.InitFirebase()

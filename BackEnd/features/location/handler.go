@@ -62,6 +62,21 @@ func GetAllLocationsHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+func GetLocationDetailHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+
+		location, err := GetLocationByID(c.Request.Context(), db, id)
+		if err != nil {
+			log.Printf("[ERROR] GetLocationByID: %v", err)
+			utils.RespondError(c, http.StatusNotFound, "Không tìm thấy thông tin địa điểm", nil)
+			return
+		}
+
+		utils.RespondSuccess(c, http.StatusOK, "Lấy thông tin địa điểm thành công", location)
+	}
+}
+
 func parsePagination(c *gin.Context) (int, int) {
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "20"))
 	if err != nil || limit <= 0 || limit > 100 {
