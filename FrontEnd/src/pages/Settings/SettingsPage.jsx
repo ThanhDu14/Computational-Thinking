@@ -129,6 +129,7 @@ const SettingsPage = () => {
 
   const tabs = [
     { id: 'profile', icon: User, label: t('settings.tabs.profile', 'Profile Information') },
+    { id: 'preferences', icon: Heart, label: t('settings.tabs.preferences', 'Travel Preferences') },
     { id: 'appearance', icon: SettingsIcon, label: t('settings.tabs.appearance', 'Appearance & Settings') },
     { id: 'security', icon: Shield, label: t('settings.tabs.security', 'Security') },
   ];
@@ -328,7 +329,7 @@ const SettingsPage = () => {
 
                   <div className="flex justify-end">
                     <button
-                      onClick={() => updateProfile({...formData, preferences})}
+                      onClick={() => updateProfile({ ...formData, preferences })}
                       disabled={updateLoading}
                       className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
                     >
@@ -399,7 +400,44 @@ const SettingsPage = () => {
                 </motion.div>
               )}
 
+              {activeTab === 'preferences' && (
+                <motion.div
+                  key="preferences"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-surface-lowest rounded-3xl p-6 lg:p-8 shadow-[0_20px_40px_-20px_rgba(39,44,81,0.06)] border border-outline-variant/10">
+                    <h2 className="text-xl font-display font-bold mb-6">{t('settings.preferences.title', 'Travel Preferences')}</h2>
+                    <p className="text-sm text-on-surface-variant mb-6">
+                      {t('settings.preferences.desc', 'Select your preferred travel vibes to help our AI curate better destinations for you.')}
+                    </p>
 
+                    <div className="flex flex-wrap gap-3 mb-8">
+                      {['adventure', 'beach', 'culture', 'food', 'nature', 'city'].map(pref => (
+                        <button
+                          key={pref}
+                          onClick={() => togglePreference(pref)}
+                          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${preferences.includes(pref)
+                            ? 'bg-secondary-container border-transparent text-on-secondary-container'
+                            : 'bg-surface border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low hover:border-outline-variant/50'
+                            }`}
+                        >
+                          {preferences.includes(pref) && <Check size={14} className="text-on-secondary-container" />}
+                          {t(`settings.preferences.tags.${pref}`, pref.charAt(0).toUpperCase() + pref.slice(1))}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button className="px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all">
+                      {t('settings.save_changes', 'Save Changes')}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
               {activeTab === 'security' && (
                 <motion.div

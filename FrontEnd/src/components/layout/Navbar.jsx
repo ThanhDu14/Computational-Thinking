@@ -145,8 +145,12 @@ const Navbar = () => {
                   className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-primary/5 transition-colors group"
                 >
                   {/* Avatar circle */}
-                  <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm shadow-md shadow-primary/20">
-                    {avatarLetter}
+                  <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm shadow-md shadow-primary/20 overflow-hidden">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      avatarLetter
+                    )}
                   </div>
                   <span className="text-sm font-semibold text-on-surface hidden md:block max-w-[100px] truncate">
                     {user?.name}

@@ -4,15 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { LogIn, AlertCircle } from 'lucide-react';
 
 const FIREBASE_ERRORS = {
-  'auth/user-not-found':        'Không tìm thấy tài khoản với email này.',
-  'auth/wrong-password':        'Mật khẩu không đúng. Vui lòng thử lại.',
-  'auth/email-already-in-use':  'Email này đã được đăng ký. Hãy đăng nhập.',
-  'auth/invalid-email':         'Địa chỉ email không hợp lệ.',
-  'auth/weak-password':         'Mật khẩu quá yếu. Dùng ít nhất 6 ký tự.',
-  'auth/popup-closed-by-user':  'Cửa sổ đăng nhập đã bị đóng.',
-  'auth/network-request-failed':'Lỗi mạng. Vui lòng kiểm tra kết nối.',
-  'auth/too-many-requests':     'Quá nhiều lần thử. Vui lòng thử lại sau.',
-  'auth/invalid-credential':    'Email hoặc mật khẩu không đúng.',
+    'auth/user-not-found': 'Không tìm thấy tài khoản với email này.',
+    'auth/wrong-password': 'Mật khẩu không đúng. Vui lòng thử lại.',
+    'auth/email-already-in-use': 'Email này đã được đăng ký. Hãy đăng nhập.',
+    'auth/invalid-email': 'Địa chỉ email không hợp lệ.',
+    'auth/weak-password': 'Mật khẩu quá yếu. Dùng ít nhất 6 ký tự.',
+    'auth/popup-closed-by-user': 'Cửa sổ đăng nhập đã bị đóng.',
+    'auth/network-request-failed': 'Lỗi mạng. Vui lòng kiểm tra kết nối.',
+    'auth/too-many-requests': 'Quá nhiều lần thử. Vui lòng thử lại sau.',
+    'auth/invalid-credential': 'Email hoặc mật khẩu không đúng.',
 };
 
 const AuthPage = () => {
@@ -105,9 +105,9 @@ const AuthPage = () => {
         <div className="min-h-screen w-full relative overflow-hidden font-display selection:bg-purple-500/30 flex items-center justify-center lg:items-stretch">
             {/* Background Image with Dark Overlay */}
             <div className="absolute inset-0 z-0">
-                <img 
-                    src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=2600&auto=format&fit=crop" 
-                    alt="Maldives Night Resort" 
+                <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8gcSWc3q6rIcFEeMi2K_Sz77gtvB6PI9uTdLEmtEz-8ZjalhW0XUNIFZq3g3B0RaFOpMOwRwYGOS9Ib-pbqwqbbeOxomatybdkj_904_qOwt7GQWdKhh5WNZW4yv0uq1xSHhUR7fNnJFm_xXgDxbrg8Lygv54J6la3pO91s6hI6mvSLGQNEuP_Ml70ZYTg_9hsQr_pK_NqlIvlQt6V7G_7ERXwya_ot0R3BJv91d9sYhtozSXpkPYlW-6fR360lvd1q4gkxoXWrI"
+                    alt="Maldives Night Resort"
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
@@ -116,7 +116,7 @@ const AuthPage = () => {
 
             {/* Split Content Container */}
             <div className="relative z-10 w-full max-w-[1440px] px-6 py-12 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0">
-                
+
                 {/* Left Section: Branding & Marketing */}
                 <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left animate-in fade-in slide-in-from-left-8 duration-700">
                     <div className="mb-8 cursor-pointer group" onClick={() => navigate('/')}>
@@ -148,7 +148,7 @@ const AuthPage = () => {
                 {/* Right Section: Auth Card */}
                 <div className="w-full max-w-[480px] lg:ml-auto animate-in fade-in slide-in-from-right-8 duration-700 delay-150">
                     <div className="bg-[#1c1f2e]/60 backdrop-blur-[24px] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] rounded-[40px] p-8 md:p-12 flex flex-col">
-                        
+
                         {/* Redirect Notice */}
                         {redirectMessage && (
                             <div className="mb-6 flex items-center gap-3 bg-blue-500/10 border border-blue-400/20 rounded-2xl px-4 py-3">
@@ -175,17 +175,17 @@ const AuthPage = () => {
 
                         {/* Toggle Pill */}
                         <div className="w-full bg-black/40 p-1 rounded-full mb-8 border border-white/5 relative flex items-center h-12">
-                            <div 
+                            <div
                                 className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-gradient-to-r from-blue-400/80 to-purple-500/80 rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-lg shadow-purple-600/20 ${isLogin ? 'left-1' : 'left-[calc(50%+1px)]'}`}
                             ></div>
-                            <button 
+                            <button
                                 type="button"
                                 className={`flex-1 relative z-10 text-[11px] font-black tracking-[0.1em] transition-colors duration-300 ${isLogin ? 'text-white' : 'text-white/30 hover:text-white/50'}`}
                                 onClick={() => handleToggle('login')}
                             >
                                 LOGIN
                             </button>
-                            <button 
+                            <button
                                 type="button"
                                 className={`flex-1 relative z-10 text-[11px] font-black tracking-[0.1em] transition-colors duration-300 ${!isLogin ? 'text-white' : 'text-white/30 hover:text-white/50'}`}
                                 onClick={() => handleToggle('register')}
@@ -270,10 +270,10 @@ const AuthPage = () => {
                             >
                                 {/* Official Google Logo SVG */}
                                 <svg className="w-5 h-5 shrink-0" viewBox="0 0 48 48">
-                                    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-                                    <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-                                    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-                                    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+                                    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
+                                    <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z" />
+                                    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z" />
+                                    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z" />
                                 </svg>
                                 <span className="text-white/50 text-xs font-semibold group-hover:text-white transition-colors">Google</span>
                             </button>
@@ -285,15 +285,15 @@ const AuthPage = () => {
                             >
                                 {/* Official Facebook Logo SVG */}
                                 <svg className="w-5 h-5 shrink-0" viewBox="0 0 48 48">
-                                    <path fill="#1877F2" d="M48 24C48 10.745 37.255 0 24 0S0 10.745 0 24c0 11.979 8.776 21.908 20.25 23.708V30.938h-6.094V24h6.094v-5.291c0-6.018 3.584-9.34 9.066-9.34 2.625 0 5.372.469 5.372.469v5.906h-3.026c-2.981 0-3.912 1.85-3.912 3.75V24h6.656l-1.064 6.938H27.75v16.77C39.224 45.908 48 35.979 48 24z"/>
-                                    <path fill="#fff" d="m33.342 30.938 1.064-6.938H27.75v-4.506c0-1.898.931-3.75 3.912-3.75h3.026v-5.906s-2.747-.469-5.372-.469c-5.482 0-9.066 3.322-9.066 9.34V24h-6.094v6.938h6.094v16.77a24.2 24.2 0 0 0 3.75.292c1.274 0 2.528-.1 3.75-.292V30.938h5.592z"/>
+                                    <path fill="#1877F2" d="M48 24C48 10.745 37.255 0 24 0S0 10.745 0 24c0 11.979 8.776 21.908 20.25 23.708V30.938h-6.094V24h6.094v-5.291c0-6.018 3.584-9.34 9.066-9.34 2.625 0 5.372.469 5.372.469v5.906h-3.026c-2.981 0-3.912 1.85-3.912 3.75V24h6.656l-1.064 6.938H27.75v16.77C39.224 45.908 48 35.979 48 24z" />
+                                    <path fill="#fff" d="m33.342 30.938 1.064-6.938H27.75v-4.506c0-1.898.931-3.75 3.912-3.75h3.026v-5.906s-2.747-.469-5.372-.469c-5.482 0-9.066 3.322-9.066 9.34V24h-6.094v6.938h6.094v16.77a24.2 24.2 0 0 0 3.75.292c1.274 0 2.528-.1 3.75-.292V30.938h5.592z" />
                                 </svg>
                                 <span className="text-white/50 text-xs font-semibold group-hover:text-[#1877F2] transition-colors">Facebook</span>
                             </button>
                         </div>
 
                         <p className="mt-10 text-center">
-                            <button 
+                            <button
                                 type="button"
                                 className="text-white/30 text-[10px] font-bold hover:text-white/60 transition-colors tracking-wide uppercase"
                                 onClick={() => handleToggle(isLogin ? 'register' : 'login')}
