@@ -153,6 +153,22 @@ create table ReviewImages (
   primary key (review_id, image)
 );
 
+create table chatsessions (
+    id uuid primary key default gen_random_uuid(),
+    user_id uuid references Users(user_id) on delete cascade,
+    title text default 'New Chat',
+    summary text default '',
+    created_at timestamp default now()
+);
+
+create table chatmessages (
+    id uuid primary key default gen_random_uuid(),
+    session_id uuid references chatsessions(id) on delete cascade,
+    role text,
+    content text,
+    created_at timestamp default now()
+);
+
 alter table Users
 add column phone_number VARCHAR(20) unique,
 add column avatar_url TEXT,
