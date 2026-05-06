@@ -3,13 +3,13 @@ import os
 import faiss
 import numpy as np
 
-from src.embeddings.embedding_model import EmbeddingModel
+from model_ai.chatbot.src.embeddings.embedding_model import EmbeddingModel
 
 
 class Embedder:
     def __init__(self):
         self.data_path = "data"
-        self.vector_db_path = "embeddings/vector_db"
+        self.vector_db_path = "model_ai/chatbot/embeddings/vector_db"
 
         os.makedirs(self.vector_db_path, exist_ok=True)
 
@@ -57,7 +57,7 @@ class Embedder:
         # 🔥 save index
         faiss.write_index(
             index,
-            os.path.join(self.vector_db_path, "faiss.index")
+            os.path.join(self.vector_db_path, "index.faiss")
         )
 
         # 🔥 save metadata + content (quan trọng)

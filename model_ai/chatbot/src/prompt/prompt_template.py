@@ -28,66 +28,85 @@ Description: {description}
 Average Rating: {rating}
 URL: {url}
 """
-            processed_contexts.append(text.strip())  # ✅ QUAN TRỌNG
+            processed_contexts.append(f"[PLACE]\n{text.strip()}")  # ✅ QUAN TRỌNG
 
         # 🔥 FIX: tạo context_text
         context_text = "\n\n".join(processed_contexts)
 
         # ===== history =====
-        history_text = ""
+        history_summary = ""
+        history_recent = ""
+
         if history:
-            history_lines = []
-            for h in history:
-                role = h.get("role", "")
-                content = h.get("content", "")
-                history_lines.append(f"{role}: {content}")
-            history_text = "\n".join(history_lines)
+            history_summary = history.get("summary", "")
+            history_recent = history.get("recent", "")
+        # if history:
+        #     history_lines = []
+        #     for h in history:
+        #         role = h.get("role", "")
+        #         content = h.get("content", "")
+        #         history_lines.append(f"{role}: {content}")
+        #     history_text = "\n".join(history_lines)
 
         # ===== PROMPT (GIỮ NGUYÊN) =====
         prompt = f"""
 Bạn là một trợ lý AI du lịch thông minh.
 
-Nhiệm vụ của bạn là trả lời câu hỏi của người dùng CHỈ dựa trên thông tin trong phần Context được cung cấp.
-Tuyệt đối không tự bịa thêm thông tin ngoài Context.
-=====================
-QUY TẮC TRẢ LỜI:
-1. Hiểu đúng ý định câu hỏi của người dùng:
-   - Nếu người dùng hỏi gợi ý (ví dụ: "đi đâu", "có gì chơi") → trả về tối đa 3 địa điểm phù hợp nhất.
-   - Nếu hỏi về 1 địa điểm cụ thể → chỉ trả lời về địa điểm đó.
-   - Nếu hỏi so sánh → so sánh dựa trên các thông tin có trong Context.
-   - Nếu không đủ thông tin → trả lời "Tôi không biết".
-
-2. Khi trả về danh sách địa điểm:
-   - Chỉ chọn tối đa 3 địa điểm liên quan nhất.
-   - Không liệt kê lan man.
-
-3. Format khi mô tả địa điểm:
-   - Place Name: [Tên địa điểm]
-   - Address: [Địa chỉ nếu có]
-   - Description: [Mô tả chi tiết dựa trên Context]
-   - Average Rating: [Nếu có]
-   - URL: [Nếu có]
-
-4. Không được:
-   - Bịa thông tin
-   - Suy luận ngoài Context
-   - Thêm thông tin không tồn tại trong dữ liệu
-
-5. Nếu người dùng hỏi về địa chỉ chi tiết nhưng Context không có:
-   - Không bịa
-   - Thay vào đó mô tả vị trí dựa trên Description (nếu có)
+⚠️ NGUYÊN TẮC QUAN TRỌNG NHẤT:
+- CHỈ được sử dụng thông tin trong phần <CONTEXT>
+- KHÔNG được sử dụng kiến thức bên ngoài
+- KHÔNG suy đoán
+- Nếu không có thông tin → trả lời: "Tôi không biết"
 
 =====================
-Context:
+📌 QUY TẮC TRẢ LỜI:
+
+1. Hiểu đúng ý định:
+   - "đi đâu", "gợi ý" → tối đa 3 địa điểm
+   - hỏi 1 địa điểm → chỉ trả lời về nó
+   - so sánh → chỉ dùng dữ liệu có trong context
+   - thiếu dữ liệu → "Tôi không biết"
+
+2. Khi trả danh sách:
+   - trả về danh sách số địa điểm theo người dùng yêu cầu, nếu không có yêu cầu thì trả tối đa 3 địa điểm
+   - chọn relevant nhất
+   - không an man
+
+3. ⚠️ FORMAT BẮT BUỘC:
+
+Place Name: ...
+Address: ...
+Description: ...
+Average Rating: ...
+URL: ...
+
+4. KHÔNG ĐƯỢC:
+   - bịa thông tin
+   - dùng kiến thức ngoài context
+   - thêm thông tin không tồn tại
+
+=====================
+<CONTEXT>
 {context_text}
+</CONTEXT>
+
 =====================
+LƯU Ý VỀ HISTORY:
+- History chỉ để hiểu câu hỏi
+- KHÔNG phải nguồn dữ liệu
+- KHÔNG dùng history để tạo thông tin mới
 
-Chat History:
-{history_text}
+Chat Summary:
+{history_summary}
 
+Recent Conversation:
+{history_recent}
+
+=====================
 User Question:
 {query}
 
+=====================
 Answer:
 """
 
