@@ -23,46 +23,102 @@ Khởi tạo một phiên làm việc mới để bắt đầu lưu trữ lịch
 - **Endpoint:** `POST /chat/new`
 - **Body (JSON):** 
   ```json
-  { "user_id": "id_nguoi_dung" }
-  
-Phản hồi: Trả về session_id. Frontend cần lưu ID này vào LocalStorage hoặc State để dùng cho các bước sau.
+  { "user_id": "Test_User" }
+  ```
+- **Ví dụ Curl:**
+  ```bash
+  curl -X POST "http://localhost:8000/chat/new" -H "Content-Type: application/json" -d '{"user_id": "Test_User"}'
+  ```
+- **Phản hồi:** 
+  ```json
+  {
+    "status": "success",
+    "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7",
+    "title": "Cuộc hội thoại mới"
+  }
+  ```
+> Frontend cần lưu `session_id` này để dùng cho các bước chat tiếp theo.
 
-💬 2. Gửi tin nhắn (Chat)
-Gửi câu hỏi và nhận phản hồi từ AI.
+### 2. Gửi tin nhắn (Chat)
+Gửi câu hỏi và nhận phản hồi từ AI tích hợp dữ liệu RAG.
+- **Endpoint:** `POST /chat`
+- **Body (JSON):**
+  ```json
+  {
+    "message": "Nha Trang có món gì ngon?",
+    "user_id": "Test_User",
+    "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7"
+  }
+  ```
+- **Ví dụ Curl:**
+  ```bash
+  curl -X POST "http://localhost:8000/chat" \
+       -H "Content-Type: application/json" \
+       -d '{"message": "Nha Trang có món gì ngon?", "user_id": "Test_User", "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7"}'
+  ```
+- **Phản hồi:**
+  ```json
+  {
+    "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7",
+    "reply": "Nha Trang nổi tiếng với nhiều món ngon như: \n1. Nem nướng Đặng Văn Quyên...\n2. Bún cá sứa..."
+  }
+  ```
 
-Endpoint: POST /chat
 
-Body (JSON):
-
-JSON
-{
-  "message": "Nha Trang có món gì ngon?",
-  "user_id": "id_nguoi_dung",
-  "session_id": "uuid-vừa-lấy-ở-bước-1"
-}
-Phản hồi:
-
-JSON
-{
-  "session_id": "uuid",
-  "reply": "Nội dung câu trả lời từ AI..."
-}
-
-
-### 📜 3. Lấy lịch sử chat (History)
+### 3. Lấy lịch sử chat (History)
 Hiển thị lại nội dung tin nhắn cũ khi người dùng click vào một cuộc hội thoại.
-- **Endpoint:** `GET /chat/{session_id}/history`
-- **Phản hồi:** Danh sách các object chứa `role` (user/assistant) và `content`.
+- **Endpoint:** `GET /chat/{user_id}/{session_id}/history`
+- **Ví dụ Curl:**
+  ```bash
+  curl -X GET "http://localhost:8000/chat/Test_User/4ed2b013-a771-42e6-9b49-5b66a1aa93d7/history"
+  ```
+- **Phản hồi:** 
+  ```json
+  {
+    "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7",
+    "total_messages": 2,
+    "messages": [
+      { "role": "user", "content": "Nha Trang có món gì ngon?" },
+      { "role": "assistant", "content": "Nha Trang nổi tiếng với..." }
+    ]
+  }
+  ```
 
-### 🗂 4. Danh sách các phiên (Sidebar)
+### 4. Danh sách các phiên (Sidebar)
 Lấy danh sách các cuộc hội thoại cũ để hiển thị ở thanh bên (Sidebar).
 - **Endpoint:** `GET /sessions/{user_id}`
-- **Phản hồi:** Trả về danh sách các session bao gồm `id`, `title` (AI tự đặt tên), và thời gian tạo.
+- **Ví dụ Curl:**
+  ```bash
+  curl -X GET "http://localhost:8000/sessions/Test_User"
+  ```
+- **Phản hồi:** 
+  ```json
+  {
+    "user_id": "Test_User",
+    "sessions": [
+      {
+        "id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7",
+        "title": "Ẩm thực Nha Trang",
+        "created_at": "2024-05-06T13:45:00"
+      }
+    ]
+  }
+  ```
 
-### 🗑 5. Xóa hội thoại (Delete Session)
+### 5. Xóa hội thoại (Delete Session)
 Xóa vĩnh viễn một cuộc hội thoại.
-- **Endpoint:** `DELETE /chat/{session_id}`
-- **Phản hồi:** `{ "status": "success", "message": "..." }`
+- **Endpoint:** `DELETE /chat/{user_id}/{session_id}`
+- **Ví dụ Curl:**
+  ```bash
+  curl -X DELETE "http://localhost:8000/chat/Test_User/4ed2b013-a771-42e6-9b49-5b66a1aa93d7"
+  ```
+- **Phản hồi:** 
+  ```json
+  {
+    "status": "success", 
+    "message": "Đã xóa hội thoại 4ed2b013-a771-42e6-9b49-5b66a1aa93d7" 
+  }
+  ```
 
 ---
 

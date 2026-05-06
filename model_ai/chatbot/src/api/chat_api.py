@@ -121,10 +121,10 @@ async def get_chat_history(session_id: str):
 # =====================================================================
 # 4. API XÓA CUỘC HỘI THOẠI (DÀNH CHO NGƯỜI DÙNG)
 # =====================================================================
-@app.delete("/chat/{session_id}")
-async def delete_chat_session(session_id: str):
+@app.delete("/chat/{user_id}/{session_id}")
+async def delete_chat_session(user_id: str, session_id: str):
     try:
-        memory = ChatMemory(session_id=session_id)
+        memory = ChatMemory(user_id=user_id, session_id=session_id)
         memory.delete_session()
         return {"status": "success", "message": f"Đã xóa hội thoại {session_id}"}
     except Exception as e:
