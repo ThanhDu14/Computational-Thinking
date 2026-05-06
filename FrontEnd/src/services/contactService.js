@@ -10,7 +10,7 @@ export const sendContactEmail = async (formData) => {
     noiDung: formData.message
   };
 
-  let API_BASE_URL = import.meta.env.DEV ? "" : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000');
+  let API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
   if (API_BASE_URL.endsWith('/')) {
     API_BASE_URL = API_BASE_URL.slice(0, -1);
   }
