@@ -35,7 +35,7 @@ const CITIES = [
 
 const CATEGORIES = [
     { label: 'Tất cả', value: '' },
-    { label: 'Ẩm Thực', value: 'Vui chơi' },
+    { label: 'Ẩm Thực', value: 'Ẩm Thực' },
     { label: 'Văn Hóa', value: 'Văn Hóa' },
     { label: 'Khám Phá', value: 'Khám Phá' },
     { label: 'Thư Giãn', value: 'Thư Giãn' },
@@ -340,7 +340,7 @@ export default function DestinationsPage() {
                                         >
                                             <span className={`material-symbols-outlined ${isInWishlist(item) ? 'text-red-500' : ''}`} style={{ fontVariationSettings: isInWishlist(item) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                                         </button>
-                                        
+
                                         {item.rating > 4.5 && (
                                             <div className="absolute bottom-4 left-4 px-3 py-1 bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-tighter rounded-md flex items-center gap-1 shadow-xl">
                                                 <TrendingUp className="w-3 h-3" /> Xu hướng
