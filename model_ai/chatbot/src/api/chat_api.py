@@ -99,11 +99,11 @@ async def chat_text(req: ChatRequest):
 # =====================================================================
 # 3. API LẤY LỊCH SỬ TIN NHẮN (ĐỂ HIỂN THỊ)
 # =====================================================================
-@app.get("/chat/{session_id}/history")
-async def get_chat_history(session_id: str):
+@app.get("/chat/{user_id}/{session_id}/history")
+async def get_chat_history(user_id: str, session_id: str):
     try:
         # Khởi tạo memory với session_id từ URL
-        memory = ChatMemory(session_id=session_id)
+        memory = ChatMemory(user_id=user_id, session_id=session_id)
         
         # Gọi đúng tên hàm đã sửa ở trên
         history = memory.get_all_history() 
