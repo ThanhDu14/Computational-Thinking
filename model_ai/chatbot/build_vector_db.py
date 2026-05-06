@@ -1,13 +1,13 @@
 import os
 import json
 
-from src.data_pipeline.loader import Loader
-from src.data_pipeline.chunker import TextSplitter
-from src.embeddings.embedder import Embedder
+from model_ai.chatbot.src.data_pipeline.loader import Loader
+from model_ai.chatbot.src.data_pipeline.chunker import TextSplitter
+from model_ai.chatbot.src.embeddings.embedder import Embedder
 
 
-RAW_DATA_FOLDER = "data/raw"
-CHUNKS_PATH = "data/processed/chunks.json"
+RAW_DATA_FOLDER = "model_ai/chatbot/data/raw"
+CHUNKS_PATH = "model_ai/chatbot/data/processed/chunks.json"
 
 
 class VectorDBPipeline:

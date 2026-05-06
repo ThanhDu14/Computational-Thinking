@@ -8,7 +8,7 @@ class VectorDB:
         self.index = faiss.read_index(index_path)
 
         with open(texts_path, "r", encoding="utf-8") as f:
-            self.docs = json.load(f)   # 🔥 đổi tên cho rõ nghĩa
+            self.docs = json.load(f)   
 
     def search(self, query_vector, top_k=5):
         # 👉 đảm bảo đúng shape (1, dim)
