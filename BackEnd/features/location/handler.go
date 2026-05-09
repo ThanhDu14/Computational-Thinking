@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"smart-travel-backend/utils"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -74,6 +75,44 @@ func GetLocationDetailHandler(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		utils.RespondSuccess(c, http.StatusOK, "Lấy thông tin địa điểm thành công", location)
+	}
+}
+
+func SearchLocationHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		keyword := c.Query("q")
+		if strings.TrimSpace(keyword) == "" {
+			utils.RespondError(c, http.StatusBadRequest, "Vui lòng nhập từ khóa tìm kiếm", nil)
+			return
+		}
+
+		city := c.Query("city")
+		category := c.Query("category")
+		limit, offset := parsePagination(c)
+
+		locations, total, err := SearchLocations(c.Request.Context(), db, keyword, city, category, limit, offset)
+		if err != nil {
+			log.Printf("[ERROR] SearchLocations: %v", err)
+			utils.RespondError(c, http.StatusInternalServerError, "Lỗi khi tìm kiếm địa điểm", nil)
+			return
+		}
+
+		if len(locations) == 0 {
+			utils.RespondSuccess(c, http.StatusOK, "Không tìm thấy địa điểm nào phù hợp", gin.H{
+				"data":  []Location{},
+				"total": total,
+				"page":  (offset / limit) + 1,
+				"limit": limit,
+			})
+			return
+		}
+
+		utils.RespondSuccess(c, http.StatusOK, "Tìm kiếm thành công", gin.H{
+			"data":  locations,
+			"total": total,
+			"page":  (offset / limit) + 1,
+			"limit": limit,
+		})
 	}
 }
 

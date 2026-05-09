@@ -10,6 +10,9 @@ func SetupLocationRoutes(rg *gin.RouterGroup, db *gorm.DB) {
 	{
 		// API: api/location/filter?city=xxx&category=xxx&page=1&limit=20
 		locationGroup.GET("/filter", FilterLocationHandler(db))
+
+		// API: api/location/search?q=xxx&city=xxx&category=xxx&page=1&limit=20
+		locationGroup.GET("/search", SearchLocationHandler(db))
 		
 		locationGroup.GET("/all", GetAllLocationsHandler(db))
 
