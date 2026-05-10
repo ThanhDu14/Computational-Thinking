@@ -72,7 +72,7 @@ func main() {
 
 	locationGroup := router.Group("/api/location")
 	{
-		location.SetupLocationRoutes(locationGroup, authClient, db)
+		location.SetupLocationRoutes(locationGroup, db)
 	}
 
 	// 5. Khởi tạo Http Server
