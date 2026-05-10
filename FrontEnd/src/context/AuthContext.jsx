@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import * as authService from '../services/authService';
+import { getInfo } from '../services/profileService';
 
 const AuthContext = createContext(null);
 
@@ -37,7 +38,28 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (username, password) => {
     try {
       const userData = await authService.loginLocalBackend(username, password);
-      const userWithMeta = { ...userData, authType: 'local' };
+      let userWithMeta = { ...userData, authType: 'local' };
+      
+      // Lấy thông tin profile ngay sau khi login
+      try {
+        const token = userData.access_token || userData.token;
+        if (token) {
+           const profileData = await getInfo(token);
+           if (profileData) {
+               userWithMeta = {
+                   ...userWithMeta,
+                   name: profileData.display_name || userWithMeta.name || userWithMeta.username,
+                   avatar: profileData.avatar || userWithMeta.avatar,
+                   phone: profileData.phone_number || userWithMeta.phone,
+                   bio: profileData.bio || userWithMeta.bio,
+                   preferences: profileData.travel_preferences || userWithMeta.preferences
+               };
+           }
+        }
+      } catch (err) {
+         console.warn("Không thể lấy thông tin profile lúc đăng nhập:", err);
+      }
+
       localStorage.setItem('smart_travel_user', JSON.stringify(userWithMeta));
       setUser(userWithMeta);
       return userWithMeta;
@@ -66,7 +88,28 @@ export const AuthProvider = ({ children }) => {
       const idToken = await result.user.getIdToken();
       const userData = await authService.loginWithGoogleBackend(idToken);
 
-      const userWithMeta = { ...userData, authType: 'google', firebaseUid: result.user.uid };
+      let userWithMeta = { ...userData, authType: 'google', firebaseUid: result.user.uid };
+      
+      // Lấy thông tin profile ngay sau khi login
+      try {
+        const token = userData.access_token || userData.token || idToken;
+        if (token) {
+           const profileData = await getInfo(token);
+           if (profileData) {
+               userWithMeta = {
+                   ...userWithMeta,
+                   name: profileData.display_name || result.user.displayName || userWithMeta.name,
+                   avatar: profileData.avatar || result.user.photoURL || userWithMeta.avatar,
+                   phone: profileData.phone_number || userWithMeta.phone,
+                   bio: profileData.bio || userWithMeta.bio,
+                   preferences: profileData.travel_preferences || userWithMeta.preferences
+               };
+           }
+        }
+      } catch (err) {
+         console.warn("Không thể lấy thông tin profile lúc đăng nhập Google:", err);
+      }
+
       localStorage.setItem('smart_travel_user', JSON.stringify(userWithMeta));
       setUser(userWithMeta);
       return userWithMeta;
@@ -108,14 +151,40 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Lấy Token linh hoạt — phải định nghĩa TRƯỚC khi dùng trong các hàm khác
+  const getToken = useCallback(async () => {
+    await auth.authStateReady(); // Đợi Firebase khởi tạo xong
+
+    // Nếu Firebase có user đang đăng nhập (Google) => lấy token mới nhất từ Firebase
+    if (auth.currentUser) {
+      return await auth.currentUser.getIdToken();
+    }
+
+    // Nếu không có Firebase user (Local account) => dùng token từ backend
+    return user?.access_token || user?.token || '';
+  }, [user]);
+
+  // Đổi mật khẩu
+  const changePasswordUser = useCallback(async (payload) => {
+    try {
+      const token = await getToken();
+      console.log("Token: ", token);
+      const response = await authService.changePassword(token, payload);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }, [getToken]);
+
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated, login, register, loginWithGoogle, logout, changePasswordUser, getToken }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

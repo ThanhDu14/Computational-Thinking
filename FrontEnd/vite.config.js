@@ -16,16 +16,19 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           target: env.VITE_API_BASE_URL || 'http://localhost:5000',
-          changeOrigin: true,            // Cần thiết để đổi host header (Bắt buộc với Pinggy/Ngrok)
-          secure: false,                 // Bỏ qua lỗi chứng chỉ SSL
-          // Thêm các header cần thiết để đục thủng Pinggy
+          changeOrigin: true,
+          secure: false,
           headers: {
             'ngrok-skip-browser-warning': 'true',
             'bypass-tunnel-reminder': 'true',
-            'User-Agent': 'PostmanRuntime/7.32.3' // Mẹo: Các tool hầm (tunnel) hay tự cho qua nếu biết đây là Postman
+            'User-Agent': 'PostmanRuntime/7.32.3',
+            'X-Pinggy-No-Screen': 'true'
           }
         }
       }
+    },
+    define: {
+      'process.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL),
     }
   }
 })
