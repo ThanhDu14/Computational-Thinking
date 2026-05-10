@@ -1,15 +1,24 @@
+# ============================================================
+# embedder.py
+# [THAY ĐỔI] Import paths từ config thay vì hard-code
+# ============================================================
+
 import json
 import os
 import faiss
 import numpy as np
 
-from src.embeddings.embedding_model import EmbeddingModel
+from model_ai.chatbot.src.embeddings.embedding_model import EmbeddingModel
+
+# [THAY ĐỔI] Import từ config
+from model_ai.chatbot.src.config.config import DATA_DIR, VECTOR_DB_DIR
 
 
 class Embedder:
     def __init__(self):
-        self.data_path = "data"
-        self.vector_db_path = "embeddings/vector_db"
+        # [THAY ĐỔI] Dùng biến từ config thay vì string cứng
+        self.data_path = DATA_DIR
+        self.vector_db_path = VECTOR_DB_DIR
 
         os.makedirs(self.vector_db_path, exist_ok=True)
 
@@ -19,9 +28,10 @@ class Embedder:
 
     def load_chunks(self, path=None):
         """
-        👉 Load cả content + metadata
+        Load cả content + metadata từ chunks.json
         """
         if path is None:
+            # [THAY ĐỔI] Dùng DATA_DIR từ config
             path = os.path.join(self.data_path, "chunks.json")
 
         with open(path, "r", encoding="utf-8") as f:
@@ -41,32 +51,28 @@ class Embedder:
 
         print(f"Loaded {len(contents)} chunks")
 
-        # 🔥 embed content (name + address + category)
         embeddings = self.embedding_model.embed_docs(contents)
         embeddings = np.array(embeddings).astype("float32")
 
-        # 🔥 normalize để dùng cosine similarity
         faiss.normalize_L2(embeddings)
 
         dim = embeddings.shape[1]
-        print(dim)
+        print(f"Embedding dim: {dim}")
 
         index = faiss.IndexFlatIP(dim)
         index.add(embeddings)
 
-        # 🔥 save index
+        # [THAY ĐỔI] Dùng VECTOR_DB_DIR từ config
         faiss.write_index(
             index,
-            os.path.join(self.vector_db_path, "faiss.index")
+            os.path.join(self.vector_db_path, "index.faiss")
         )
 
-        # 🔥 save metadata + content (quan trọng)
         combined_data = []
-
         for content, metadata in zip(contents, metadatas):
             combined_data.append({
-                "content": content,    # embedding text
-                "metadata": metadata  # full info (no reviews)
+                "content": content,
+                "metadata": metadata
             })
 
         with open(
