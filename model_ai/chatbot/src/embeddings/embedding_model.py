@@ -1,12 +1,20 @@
+# ============================================================
+# embedding_model.py
+# [THAY ĐỔI] model_name, batch_size, max_length lấy từ config
+# ============================================================
+
 from transformers import AutoTokenizer, AutoModel
 import torch
 import numpy as np
 
+# [THAY ĐỔI] Import từ config
+from model_ai.chatbot.src.config.config import EMBEDDING_MODEL_NAME, EMBEDDING_BATCH_SIZE, EMBEDDING_MAX_LENGTH
+
 
 class EmbeddingModel:
-    def __init__(self, model_name: str = "intfloat/multilingual-e5-base"):
-        self.device = torch.device(
-            "cpu")
+    def __init__(self, model_name: str = EMBEDDING_MODEL_NAME):
+        # [THAY ĐỔI] model_name default lấy từ config
+        self.device = torch.device("cpu")
         print("Using device:", self.device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -16,13 +24,8 @@ class EmbeddingModel:
         self.model.eval()
 
     def mean_pooling(self, model_output, attention_mask):
-        """
-        🔥 Mean pooling chuẩn (quan trọng)
-        """
         token_embeddings = model_output.last_hidden_state
-
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-
         return torch.sum(token_embeddings * input_mask_expanded, dim=1) / \
                torch.clamp(input_mask_expanded.sum(dim=1), min=1e-9)
 
@@ -34,7 +37,7 @@ class EmbeddingModel:
             texts,
             padding=True,
             truncation=True,
-            max_length=256,
+            max_length=EMBEDDING_MAX_LENGTH,  # [THAY ĐỔI] từ config
             return_tensors="pt"
         )
 
@@ -44,18 +47,12 @@ class EmbeddingModel:
             outputs = self.model(**inputs)
 
         embeddings = self.mean_pooling(outputs, inputs["attention_mask"])
-
-        # 🔥 normalize (cực quan trọng cho cosine)
         embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
 
         return embeddings.cpu().numpy()
 
-    def embed_docs(self, docs, batch_size=16):
-        """
-        docs = List[str] (đã là name + address + category)
-        """
-
-        # 🔥 enforce prefix đúng chuẩn E5
+    def embed_docs(self, docs, batch_size: int = EMBEDDING_BATCH_SIZE):
+        # [THAY ĐỔI] batch_size default lấy từ config
         docs = [f"passage: {d}" for d in docs]
 
         all_embeddings = []
@@ -68,9 +65,5 @@ class EmbeddingModel:
         return np.vstack(all_embeddings)
 
     def embed_query(self, query):
-        """
-        query = string user input
-        """
-
         query = f"query: {query}"
         return self._encode(query)[0]
