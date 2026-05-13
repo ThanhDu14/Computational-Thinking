@@ -1,0 +1,63 @@
+# ============================================================
+# settings.yaml
+# Chứa toàn bộ hard-coded paths và cấu hình hệ thống
+# config.py sẽ đọc file này và export thành các biến Python
+# ============================================================
+
+paths:
+  # [DATA] Thư mục chứa dữ liệu thô (JSON gốc)
+  data_dir: "model_ai/chatbot/data/raw"
+
+  # [CHUNKS] File chunks sau khi qua pipeline xử lý
+  chunks_file: "model_ai/chatbot/data/processed/chunks.json"
+
+  # [VECTOR DB] Thư mục lưu FAISS index và docs.json
+  vector_db_dir: "model_ai/chatbot/embeddings/vector_db"
+
+  # [FAISS] Index file
+  faiss_index: "model_ai/chatbot/embeddings/vector_db/index.faiss"
+
+  # [DOCS] Metadata kèm theo vector
+  docs_json: "model_ai/chatbot/embeddings/vector_db/docs.json"
+
+  # [REGISTRY] File local registry session (legacy - nay thay bằng Supabase)
+  registry_file: "data/chat_history/registry.json"
+
+embedding:
+  # [MODEL] Tên model embedding từ HuggingFace
+  model_name: "intfloat/multilingual-e5-base"
+
+  # [BATCH] Số lượng docs mỗi batch khi embed
+  batch_size: 16
+
+  # [MAX LENGTH] Độ dài token tối đa
+  max_length: 256
+
+llm:
+  # [MODEL] Model Groq sử dụng
+  model_name: "llama-3.1-8b-instant"
+
+  # [TEMPERATURE] Độ ngẫu nhiên khi sinh câu trả lời
+  temperature: 0.2
+
+  # [MAX TOKENS] Số token tối đa trong response
+  max_tokens: 512
+
+vector_store:
+  # [HF REPO] HuggingFace repo chứa vector DB
+  hf_repo_id: "vngyyn/vector-db"
+
+  # [FILES] Tên các file cần download từ HF
+  hf_faiss_file: "index.faiss"
+  hf_docs_file: "docs.json"
+
+memory:
+  # [MAX RECENT] Số message gần nhất giữ trong context
+  max_recent: 6
+
+  # [DEFAULT USER] User mặc định nếu không truyền
+
+supabase:
+  # [TABLES] Tên bảng trong Supabase
+  sessions_table: "chatsessions"
+  messages_table: "chatmessages"

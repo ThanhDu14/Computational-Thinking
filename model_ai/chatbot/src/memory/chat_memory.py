@@ -1,166 +1,243 @@
-import json
+# ============================================================
+# chat_memory.py
+# [THAY ĐỔI] user_id: str nhưng giá trị phải là UUID string
+#            → bỏ default "guest"
+#            → thêm _validate_uuid() trước mọi thao tác DB
+#            → Supabase nhận UUID string trực tiếp (không cần cast)
+# ============================================================
+
+from supabase import create_client
 import os
-import uuid
-import datetime
+from typing import List, Dict, Optional
+from dotenv import load_dotenv
+from uuid import UUID
+
+load_dotenv()
+
+from model_ai.chatbot.src.config.config import (
+    SUPABASE_SESSIONS_TABLE,
+    SUPABASE_MESSAGES_TABLE,
+    MEMORY_MAX_RECENT,
+)
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise ValueError("Missing Supabase credentials in .env")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
+def _validate_uuid(value: str, field: str = "user_id"):
+    """Ném ValueError nếu value không phải UUID hợp lệ."""
+    try:
+        UUID(value)
+    except (ValueError, AttributeError):
+        raise ValueError(f"{field} '{value}' không phải UUID hợp lệ")
 
 REGISTRY_PATH = "data/chat_history/registry.json"
 
 class ChatMemory:
-    """
-    Manage chat history for RAG chatbot
-    """
 
-    def __init__(self, history_path=None, session_id=None, user_id=None, **kwargs):
-        self.user_id = user_id
-        
-        # Nếu có session_id, kiểm tra xem nó có hợp lệ không
-        if session_id:
-            if not self._is_valid_session(session_id, user_id):
-                raise ValueError(f"Session '{session_id}' không tồn tại hoặc không thuộc về user '{user_id}'")
-            self.session_id = session_id
-        else:
-            # Nếu chưa có session_id (tạo mới), sinh ra một UUID ngẫu nhiên
-            self.session_id = str(uuid.uuid4())
-            self._register_session(self.session_id, user_id)
-        
-        # Lưu file theo session_id
-        self.history_path = f"data/chat_history/{self.session_id}.json"
-        
-        self.history = self._load_history()
-
-    @classmethod
-    def _load_registry(cls):
-        if not os.path.exists(REGISTRY_PATH):
-            return {}
-        try:
-            with open(REGISTRY_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return {}
-
-    @classmethod
-    def _save_registry(cls, registry):
-        os.makedirs(os.path.dirname(REGISTRY_PATH), exist_ok=True)
-        with open(REGISTRY_PATH, "w", encoding="utf-8") as f:
-            json.dump(registry, f, ensure_ascii=False, indent=2)
-
-    def _is_valid_session(self, session_id, user_id):
-        registry = self._load_registry()
-        # Nếu user_id được truyền vào, bắt buộc session phải thuộc về user_id đó
-        if user_id:
-            user_sessions = registry.get(user_id, [])
-            for session in user_sessions:
-                if session.get("id") == session_id:
-                    return True
-            return False
-        # Nếu không truyền user_id (API get/delete), chỉ cần kiểm tra xem session_id có trong hệ thống không
-        else:
-            for uid, sessions in registry.items():
-                for session in sessions:
-                    if session.get("id") == session_id:
-                        return True
-            return False
-
-    def _register_session(self, session_id, user_id):
+    def __init__(
+        self,
+        session_id: Optional[str] = None,
+        user_id: str = None,            # [THAY ĐỔI] không còn default "guest"
+        max_recent: int = MEMORY_MAX_RECENT
+    ):
         if not user_id:
-            user_id = "guest" # mặc định
-        registry = self._load_registry()
-        if user_id not in registry:
-            registry[user_id] = []
-        
-        # Tạo thông tin session mới
-        session_info = {
-            "id": session_id,
-            "title": "Cuộc hội thoại mới",
-            "created_at": datetime.datetime.now().isoformat()
-        }
-        registry[user_id].append(session_info)
-        self._save_registry(registry)
+            raise ValueError("user_id là bắt buộc và phải là UUID hợp lệ")
 
+        # [THAY ĐỔI] Validate UUID trước khi làm bất cứ điều gì
+        _validate_uuid(user_id)
+
+        self.user_id = user_id
+        self.max_recent = max_recent
+
+        if session_id:
+            self.session_id = session_id
+            self.validate_session()
+        else:
+            self.session_id = self.create_session()
+
+    # =====================================================
+    # SUPABASE HELPER
+    # =====================================================
+    def _execute(self, query):
+        res = query.execute()
+        if res is None or not hasattr(res, "data"):
+            raise Exception("Supabase query failed")
+        return res
+
+    # =====================================================
+    # SESSION
+    # =====================================================
+    def validate_session(self):
+        res = self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .select("user_id")
+            .eq("id", self.session_id)
+        )
+
+        if not res.data:
+            raise Exception(f"Session '{self.session_id}' không tồn tại")
+
+        # [THAY ĐỔI] So sánh UUID string — Supabase trả về string dạng UUID
+        if res.data[0]["user_id"] != self.user_id:
+            raise Exception(
+                f"Session '{self.session_id}' không thuộc user '{self.user_id}'"
+            )
+
+    def create_session(self) -> str:
+        """
+        [THAY ĐỔI] Truyền user_id dạng UUID string thẳng vào Supabase.
+        Supabase tự cast string → uuid column.
+        """
+        print("Đang insert user_id:", self.user_id)
+        res = self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .insert({
+                "user_id": self.user_id,   # UUID string, Supabase tự cast
+                "title": "New Chat",
+                "summary": "",
+            })
+        )
+        return res.data[0]["id"]
+
+    # =====================================================
+    # MESSAGE
+    # =====================================================
+    def add_chat(self, user_message: str, assistant_message: str, llm=None):
+        data = [
+            {"session_id": self.session_id, "role": "user",      "content": user_message},
+            {"session_id": self.session_id, "role": "assistant",  "content": assistant_message},
+        ]
+        self._execute(supabase.table(SUPABASE_MESSAGES_TABLE).insert(data))
+
+        if llm:
+            self.update_summary(llm)
+            self.auto_title(llm)
+
+    def add_message(self, role: str, content: str):
+        self._execute(
+            supabase.table(SUPABASE_MESSAGES_TABLE).insert({
+                "session_id": self.session_id,
+                "role": role,
+                "content": content
+            })
+        )
+
+    # =====================================================
+    # HISTORY
+    # =====================================================
+    def get_all_history(self) -> List[Dict]:
+        res = self._execute(
+            supabase.table(SUPABASE_MESSAGES_TABLE)
+            .select("*")
+            .eq("session_id", self.session_id)
+            .order("created_at", desc=False)
+        )
+        return res.data or []
+
+    def get_messages(self):
+        return self.get_all_history()
+
+    # =====================================================
+    # SUMMARY
+    # =====================================================
+    def update_summary(self, llm):
+        messages = self.get_messages()
+        if len(messages) < self.max_recent:
+            return
+
+        old_messages = messages[:-self.max_recent]
+        text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
+        prompt = f"Summarize the conversation briefly but keep important context:\n\n{text}\n\nSummary:"
+        summary = llm.generate(prompt).strip()
+
+        self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .update({"summary": summary})
+            .eq("id", self.session_id)
+        )
+
+    # =====================================================
+    # AUTO TITLE
+    # =====================================================
+    def auto_title(self, llm):
+        res = self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .select("title")
+            .eq("id", self.session_id)
+            .single()
+        )
+
+        if res.data.get("title") != "New Chat":
+            return
+
+        messages = self.get_messages()
+        text = "\n".join([m["content"] for m in messages[:4]])
+        prompt = f"Generate a short title (max 8 words):\n\n{text}\n\nTitle:"
+        title = llm.generate(prompt).strip()
+
+        self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .update({"title": title})
+            .eq("id", self.session_id)
+        )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+    def get_context(self):
+        messages = self.get_messages()
+
+        res = self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .select("summary")
+            .eq("id", self.session_id)
+            .single()
+        )
+
+        summary = res.data.get("summary", "")
+        recent = messages[-self.max_recent:]
+        recent_text = "\n".join([f"{m['role']}: {m['content']}" for m in recent])
+
+        return {"summary": summary, "recent": recent_text}
+
+    # =====================================================
+    # SESSION LIST
+    # =====================================================
     @staticmethod
     def get_all_sessions(user_id: str):
-        registry = ChatMemory._load_registry()
-        return registry.get(user_id, [])
+        """
+        [THAY ĐỔI] Validate UUID trước khi query.
+        """
+        _validate_uuid(user_id)   # [THAY ĐỔI] guard ở static method
 
+        res = supabase.table(SUPABASE_SESSIONS_TABLE) \
+            .select("id, title, created_at, summary") \
+            .eq("user_id", user_id) \
+            .order("created_at", desc=True) \
+            .execute()
+
+        return res.data or []
+
+    # =====================================================
+    # DELETE
+    # =====================================================
     def delete_session(self):
-        # 1. Xóa file json history
-        if os.path.exists(self.history_path):
-            os.remove(self.history_path)
-            
-        # 2. Xóa khỏi registry
-        registry = self._load_registry()
-        for uid, sessions in registry.items():
-            registry[uid] = [s for s in sessions if s.get("id") != self.session_id]
-        self._save_registry(registry)
+        self.clear_messages()
+        self._execute(
+            supabase.table(SUPABASE_SESSIONS_TABLE)
+            .delete()
+            .eq("id", self.session_id)
+        )
 
-    def _load_history(self):
-        """
-        Load chat history from file
-        """
-        if not os.path.exists(self.history_path):
-            return []
-
-        try:
-            with open(self.history_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return []
-
-    def _save_history(self):
-        """
-        Save history to file
-        """
-        os.makedirs(os.path.dirname(self.history_path), exist_ok=True)
-
-        with open(self.history_path, "w", encoding="utf-8") as f:
-            json.dump(self.history, f, ensure_ascii=False, indent=2)
-
-    def add_chat(self, user_message: str, assistant_message: str, llm=None):
-        """
-        Add both user and assistant messages to history
-        """
-        self.history.append({
-            "role": "user",
-            "content": user_message
-        })
-        self.history.append({
-            "role": "assistant",
-            "content": assistant_message
-        })
-        self._save_history()
-
-    def get_context(self):
-        """
-        Return history formatted as a dict for PromptTemplate
-        """
-        history_lines = []
-        recent_history = self.history[-4:] if len(self.history) >= 4 else self.history
-        for h in recent_history:
-            role = h.get("role", "user")
-            content = h.get("content", "")
-            history_lines.append(f"{role.capitalize()}: {content}")
-            
-        return {
-            "summary": "",
-            "recent": "\n".join(history_lines)
-        }
-
-    def get_all_history(self):
-        """
-        Return all history for API endpoints
-        """
-        return self.history
-
-    def get_history(self, limit: int = 4):
-        """
-        Return chat history, limited to the last `limit` messages to prevent exceeding token limits.
-        Each question-answer pair consists of 2 messages, so limit=4 means the last 2 questions.
-        """
-        return self.history[-limit:] if limit > 0 else self.history
-
-    def clear(self):
-        """
-        Clear history
-        """
-        self.history = []
-        self._save_history()
+    def clear_messages(self):
+        self._execute(
+            supabase.table(SUPABASE_MESSAGES_TABLE)
+            .delete()
+            .eq("session_id", self.session_id)
+        )

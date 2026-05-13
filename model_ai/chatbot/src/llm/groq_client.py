@@ -1,36 +1,35 @@
+# ============================================================
+# groq_client.py
+# [THAY ĐỔI] model, temperature, max_tokens lấy từ config
+# ============================================================
+
 import os
 from groq import Groq
 from dotenv import load_dotenv
+
+# [THAY ĐỔI] Import từ config
+from model_ai.chatbot.src.config.config import LLM_MODEL_NAME, LLM_TEMPERATURE, LLM_MAX_TOKENS
 
 load_dotenv()
 
 
 class GroqClient:
-    """
-    Client wrapper for Groq LLM API
-    """
-
-    def __init__(self, model: str = "llama-3.1-8b-instant"):
-        """
-        Initialize Groq client
-
-        Args:
-            model: model name
-        """
-
+    def __init__(self, model: str = LLM_MODEL_NAME):
+        # [THAY ĐỔI] default model lấy từ config
         self.api_key = os.getenv("GROQ_API_KEY")
-        
+
         if not self.api_key:
             raise ValueError("GROQ_API_KEY not found in .env")
 
         self.client = Groq(api_key=self.api_key)
         self.model = model
 
-    def generate(self, prompt: str, temperature: float = 0.2, max_tokens: int = 512):
-        """
-        Generate response from LLM
-        """
-
+    def generate(
+        self,
+        prompt: str,
+        temperature: float = LLM_TEMPERATURE,   # [THAY ĐỔI] từ config
+        max_tokens: int = LLM_MAX_TOKENS         # [THAY ĐỔI] từ config
+    ):
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[

@@ -11,3 +11,5 @@ huggingface_hub
 python-dotenv
 pydantic
 python-multipart
+langchain-core
+pyyaml
