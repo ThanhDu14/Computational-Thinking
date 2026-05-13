@@ -41,7 +41,7 @@ llm:
   temperature: 0.2
 
   # [MAX TOKENS] Số token tối đa trong response
-  max_tokens: 512
+  max_tokens: 2000
 
 vector_store:
   # [HF REPO] HuggingFace repo chứa vector DB
