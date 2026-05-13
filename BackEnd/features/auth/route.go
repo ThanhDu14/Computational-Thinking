@@ -16,4 +16,7 @@ func SetupAuthRoutes(rg *gin.RouterGroup, authClient *fbauth.Client, db *gorm.DB
 	// Local Auth (Username/Password)
 	rg.POST("/local/register", LocalRegister(db))
 	rg.POST("/local/login", LocalLogin(db))
+
+	// Change Password (chỉ Local user, cần xác thực JWT)
+	rg.PUT("/change-password", middlewares.VerifyUserToken(authClient), ChangePassword(db))
 }

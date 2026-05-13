@@ -389,7 +389,19 @@
     },
     "security": {
       "title": "Bảo mật",
-      "desc": "Tính năng đang được cập nhật."
+      "subtitle": "Quản lý mật khẩu và bảo mật tài khoản",
+      "google_title": "Tài khoản Google",
+      "google_desc": "Tài khoản của bạn đăng nhập qua Google. Việc quản lý mật khẩu do Google xử lý.",
+      "current_pw": "Mật khẩu hiện tại",
+      "new_pw": "Mật khẩu mới",
+      "new_pw_ph": "Tối thiểu 6 ký tự",
+      "confirm_pw": "Xác nhận mật khẩu mới",
+      "save_pw": "Cập nhật mật khẩu",
+      "saving": "Đang lưu...",
+      "pw_mismatch": "Mật khẩu mới không khớp nhau.",
+      "pw_too_short": "Mật khẩu mới phải có ít nhất 6 ký tự.",
+      "pw_success": "Đổi mật khẩu thành công!",
+      "pw_error": "Đổi mật khẩu thất bại."
     },
     "save_changes": "Lưu Thay Đổi"
   }

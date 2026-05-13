@@ -389,7 +389,19 @@
     },
     "security": {
       "title": "Security",
-      "desc": "Feature coming soon."
+      "subtitle": "Manage your password and account security",
+      "google_title": "Google Account",
+      "google_desc": "Your account uses Google Sign-In. Password management is handled by Google.",
+      "current_pw": "Current Password",
+      "new_pw": "New Password",
+      "new_pw_ph": "Min. 6 characters",
+      "confirm_pw": "Confirm New Password",
+      "save_pw": "Update Password",
+      "saving": "Saving...",
+      "pw_mismatch": "New passwords do not match.",
+      "pw_too_short": "New password must be at least 6 characters.",
+      "pw_success": "Password changed successfully!",
+      "pw_error": "Failed to change password."
     },
     "save_changes": "Save Changes"
   }

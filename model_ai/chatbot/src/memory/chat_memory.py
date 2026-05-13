@@ -36,6 +36,7 @@ def _validate_uuid(value: str, field: str = "user_id"):
     except (ValueError, AttributeError):
         raise ValueError(f"{field} '{value}' không phải UUID hợp lệ")
 
+REGISTRY_PATH = "data/chat_history/registry.json"
 
 class ChatMemory:
 

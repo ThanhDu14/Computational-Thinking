@@ -1,0 +1,448 @@
+[
+    {
+        "url": "",
+        "location_name": "Hồ Ba Bể",
+        "address": "Xã Nam Mẫu, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Hồ Ba Bể là một trong những hồ nước ngọt tự nhiên lớn nhất Việt Nam, nằm lọt thỏm giữa những dãy núi đá vôi hùng vĩ và rừng nguyên sinh rậm rạp. Mặt hồ phẳng lặng, trong xanh như ngọc bích, in bóng mây trời và cây cối tạo nên một bức tranh thủy mặc tuyệt đẹp. Đến đây, du khách có thể ngồi thuyền máy dạo quanh hồ, khám phá cuộc sống bình dị của đồng bào dân tộc Tày và tận hưởng không khí trong lành.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.dulichhobabe.com%2FUserFiles%2Fimage%2Ftour%2Fhobabe1.jpg&f=1&nofb=1&ipt=85310e6924ae5eef68f0601f64a16c998238a9c9d40cf0261bc732d84107b9c9",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fik.imagekit.io%2Ftvlk%2Fblog%2F2022%2F10%2FYfwn8hL0-kinh-nghiem-du-lich-ho-ba-be-4.jpg%3Ftr%3Ddpr-2%2Cw-675&f=1&nofb=1&ipt=b9ef606bae343b5d01d6cea1fe1ed33d9e135e7db92451ebffbc08891059fc71",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvietair.com.vn%2FMedia%2FImages%2Fho-ba-be-2.jpeg&f=1&nofb=1&ipt=aca2fccc8217a4b8c93fb3cb49abcc65e725d67a458b45ab6cca136bb03be4ba"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.2728552",
+        "Longitude": "105.8564601"
+    },
+    {
+        "url": "",
+        "location_name": "Động Nàng Tiên",
+        "address": "Xã Lương Hạ, huyện Na Rì, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Động Nàng Tiên là một hang động tự nhiên mang vẻ đẹp lung linh, huyền ảo gắn liền với những truyền thuyết dân gian hấp dẫn. Bên trong động là hệ thống nhũ đá, măng đá kỳ vĩ với muôn vàn hình thù độc đáo được kiến tạo qua hàng triệu năm. Khám phá hang động này mang lại cho du khách cảm giác như đang bước vào một thế giới thần tiên bí ẩn và đầy mê hoặc.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.ilgIpg5cy266sxvc7XpBUQHaFj%3Fpid%3DApi&f=1&ipt=174506ccbac9873115ed3e1f470dd49da8fa9c53e9cb54e62e3ade2a68ec0d22&ipo=images",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftripmap.vn%2Fwp-content%2Fuploads%2F2020%2F12%2Fdong-nang-tien-1608275070396.png&f=1&nofb=1&ipt=ce71042de36d067c42cb1d3f1ebcf5e55a9a1ae41bb340f97be00c90c10959eb",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftripmap.vn%2Fwp-content%2Fuploads%2F2020%2F12%2Fdong-nang-tien-1608281818842.png&f=1&nofb=1&ipt=b27b048fd51ecfe0a4f49d953949ff99f8915966c738b13dd825c9dff7818b05"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Phiêu lưu"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.1508014",
+        "Longitude": "105.832436"
+    },
+    {
+        "url": "",
+        "location_name": "Động Puông",
+        "address": "Xã Khang Ninh, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Động Puông nằm trong khuôn viên Vườn quốc gia Ba Bể, là một hang động ngập nước độc đáo do dòng sông Năng chảy xuyên qua núi đá vôi tạo thành. Hang động sở hữu trần cao vút cùng những vách đá sừng sững, bên trong rủ xuống vô số thạch nhũ tuyệt đẹp và là nơi sinh sống của hàng ngàn con dơi. Việc ngồi thuyền xuyên qua động trong không gian tĩnh lặng chắc chắn là một trải nghiệm khó quên cho những người yêu thiên nhiên.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdatviettour.com.vn%2Fuploads%2Fimages%2Ftin-tuc-SEO%2Fmien-bac%2Ftong-hop%2Fthach-nhu-dong-puong.jpg&f=1&nofb=1&ipt=730edd21121ef7fa07148bef8f06db123dc78331f84c41eb755ac92e85d40071",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F2.bp.blogspot.com%2F-Cm82PksZKTA%2FVugL3xOEzsI%2FAAAAAAAAJFM%2FM_YcInaQuK8FRzcANp9I103jdBuJaBNCQ%2Fs1600%2Fbac%252Bkan-dong%252Bpuong.jpg&f=1&nofb=1&ipt=647fefece6caf25aabcd8e7974feb0463d3c81b63d2e3db76cf9ab6c254a2f0c",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdatviettour.com.vn%2Fuploads%2Fimages%2Ftin-tuc-SEO%2Fmien-bac%2Ftong-hop%2Fben-ngoai-dong-puong.jpg&f=1&nofb=1&ipt=e2d67b032ce6f24dd38c847cfea2049c2382b7c977c52388f4cb493238a176b1"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Phiêu lưu"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.2728552",
+        "Longitude": "105.8564601"
+    },
+    {
+        "url": "",
+        "location_name": "Vườn quốc gia Ba Bể",
+        "address": "Huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Vườn quốc gia Ba Bể là một khu bảo tồn thiên nhiên rộng lớn, được công nhận là Vườn di sản ASEAN với hệ sinh thái động thực vật vô cùng phong phú. Nơi đây là sự hòa quyện tuyệt vời giữa núi rừng nguyên sinh, hồ nước ngọt bao la và các hang động kỳ bí. Du khách đến đây không chỉ để chiêm ngưỡng cảnh sắc thiên nhiên hoang sơ mà còn có cơ hội trải nghiệm các hoạt động trekking, chèo thuyền đầy thú vị.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fhongngocha.com%2Fwp-content%2Fuploads%2F2021%2F11%2FHong-Ngoc-Ha-Travel_Du-lich-mien-Bac_Vuon-Quoc-gia-Ho-Ba-Be.jpg&f=1&nofb=1&ipt=a1cc06ce96f417b3501e71df8ad0c76913e787a7fdc925b6519d71246176ae30",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdulichhobabe.com%2FUserFiles%2Fimage%2FBlog%2F20(1).jpg&f=1&nofb=1&ipt=bc3491cd9a152ff50fd42aa15d8f433a639d28e8320fb0071f569729fa24a74e",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kynghidongduong.vn%2Fuserfiles%2Fimages%2FVietnam%2FCao%2520bang%2520bac%2520kan%2Fbac%2520kan%2Fho-ba-be-bac-kan-viet-nam-kynghidongduong.vn%2520(01).jpg&f=1&nofb=1&ipt=b1eb8da068878ce6602084cfacc44e0b54829cd352a3e65e708eb2c13959fcfa"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Phiêu lưu",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "12.0081025",
+        "Longitude": "107.6862334"
+    },
+    {
+        "url": "",
+        "location_name": "Thác Đầu Đẳng",
+        "address": "Xã Nam Mẫu, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Thác Đầu Đẳng là nơi dòng sông Năng bị chặn lại bởi những tảng đá lớn, tạo nên một thác nước hùng vĩ chia làm nhiều bậc tung bọt trắng xóa. Giữa không gian núi rừng rậm rạp, tiếng thác đổ ầm ầm vang vọng mang đến một cảm giác đầy tráng lệ và hoang dã. Cảnh sắc thiên nhiên ngoạn mục nơi đây là điểm dừng chân lý tưởng để du khách lưu lại những bức ảnh tuyệt đẹp.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dulichhobabe.com%2FUserFiles%2Fimage%2FBlog%2Fthac-dau-dang.jpg&f=1&nofb=1&ipt=0a692e64ed7997a5c0a7b97b7e74619931bc8924001d21d1bfe90b84f065a728",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kynghidongduong.vn%2Fuserfiles%2Fimages%2FVietnam%2FCao%2520bang%2520bac%2520kan%2Fbac%2520kan%2Fthac-dau-dang-ho-ba-be-bac-kan-viet-nam-kynghidongduong.vn%2520(03).jpg&f=1&nofb=1&ipt=f58762046366228656ffcfe1199ff18d66037ff1822dfa73c493bd6b18bae0ac",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.tgdd.vn%2FFiles%2F2022%2F11%2F07%2F1484810%2Fchinh-phuc-thac-dau-dang-con-thac-dep-nhat-ba-be-bac-kan-202211071352068722.jpg&f=1&nofb=1&ipt=7e4da55e547db26e69cb61b09509147a098814770d48723d607369b73579f896"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.1330067",
+        "Longitude": "105.8242445"
+    },
+    {
+        "url": "",
+        "location_name": "Khu di tích lịch sử ATK Bắc Kạn",
+        "address": "Huyện Chợ Đồn, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Khu di tích lịch sử ATK (An Toàn Khu) Chợ Đồn từng là căn cứ địa cách mạng quan trọng của Chủ tịch Hồ Chí Minh và các vị lãnh đạo trong thời kỳ kháng chiến chống Pháp. Nơi đây vẫn còn lưu giữ nhiều lán trại, hầm hào và các kỷ vật lịch sử quý giá nằm ẩn mình dưới những tán rừng già che phủ. Đến thăm khu di tích, du khách sẽ có cơ hội tìm hiểu sâu hơn về lịch sử đấu tranh hào hùng và bày tỏ lòng biết ơn đối với thế hệ cha ông.",
+        "images": [
+            "https://vstatic.vietnam.vn/vietnam/resource/IMAGE/2025/5/19/09592c71d05a487b9d41c894dfc6ab98",
+            "https://vstatic.vietnam.vn/vietnam/resource/IMAGE/2025/5/19/ebf270435a7f47828b527d48309a164d",
+            "https://vstatic.vietnam.vn/vietnam/resource/IMAGE/2025/5/19/bc4368e65d6e455483a83543f01d3440"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "21.8584902",
+        "Longitude": "105.4386361"
+    },
+    {
+        "url": "",
+        "location_name": "Đền An Mạ",
+        "address": "Đảo An Mã, hồ Ba Bể, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Đền An Mạ tọa lạc uy nghiêm trên một hòn đảo nhỏ linh thiêng nằm ngay giữa lòng hồ Ba Bể bao la sóng nước. Ngôi đền cổ kính này là nơi người dân địa phương thờ cúng các vị thần linh và tổ chức các lễ hội truyền thống cầu mưa thuận gió hòa. Bầu không khí thanh tịnh, trầm mặc nơi đây mang đến cho du khách cảm giác an yên, thoát tục giữa thiên nhiên bao la.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftoplist.vn%2Fimages%2F800px%2Fden-an-ma-517983.jpg&f=1&nofb=1&ipt=8e377e16c866f5e02f616d2919c9a48dd492bf8bc87a4923d59a57435afd946b",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dulichhobabe.com%2FUserFiles%2Fimage%2Fho%2520ba%2520be%2F%25C4%2591%25E1%25BB%2581n%2520An%2520m%25E1%25BA%25A1%25201.jpg&f=1&nofb=1&ipt=007933782ba8cd15a9b11b31f17a66e0a41c621870f0bfe7be153e631c6b41a1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kynghidongduong.vn%2Fuserfiles%2Fimages%2FVietnam%2FCao%2520bang%2520bac%2520kan%2Fbac%2520kan%2Fden-an-ma-ho-ba-be-bac-kan-viet-nam-kynghidongduong.vn%2520(02).jpg&f=1&nofb=1&ipt=34880bde5aaea5a0fe4054a677d5de46075ba74e07ff1d4c776c47df54d2f635"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.140219",
+        "Longitude": "105.8349959"
+    },
+    {
+        "url": "",
+        "location_name": "Di tích Nà Tu",
+        "address": "Xã Cẩm Giàng, huyện Bạch Thông, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Di tích lịch sử Nà Tu là nơi ghi dấu sự kiện Chủ tịch Hồ Chí Minh đến thăm và tặng lực lượng Thanh niên xung phong bốn câu thơ nổi tiếng \"Không có việc gì khó...\". Nơi đây được xây dựng thành một quần thể tưởng niệm khang trang, bao quanh là khuôn viên xanh mát, thanh bình. Đây là địa chỉ đỏ quan trọng để giáo dục truyền thống yêu nước và tinh thần vượt khó cho các thế hệ trẻ Việt Nam.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2F3go3XJDtxo0%2Fmaxresdefault.jpg&f=1&nofb=1&ipt=116eb0b686a49e4c7b0b4ee0ff25d191439af636fcd92ab3f977f87d8c9b2e24",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.travelviet.net%2Fvietnam%2Fs3%2Fs3_amazon%2Feabe54db-a21a-47a5-b1fe-6b864f2e1fdc-khu-di-tich-na-tu-copyjpg.jpg&f=1&nofb=1&ipt=583c3bb63d690bcf7356d9dc5c0a53f32929638f3cdfa8a9d85b8c7116e3de71",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.GzKVUPhCA9vu9XOI903uWgHaFN%3Fpid%3DApi&f=1&ipt=e022d964843977bb973e2ae3efa28fa6ef0713561e9c2ebb705753eec1ecd8ce"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "21.2100307",
+        "Longitude": "105.9322654"
+    },
+    {
+        "url": "",
+        "location_name": "Di tích Đồn Phủ Thông",
+        "address": "Thị trấn Phủ Thông, huyện Bạch Thông, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Di tích Đồn Phủ Thông là một minh chứng lịch sử hào hùng, nơi từng diễn ra trận đánh ác liệt và oanh liệt của quân và dân ta trong thời kỳ kháng chiến chống Pháp. Những dấu tích còn sót lại như những bức tường rêu phong, lỗ cốt đã khắc họa rõ nét tinh thần chiến đấu quả cảm của cha anh. Tham quan di tích này giúp du khách thêm phần tự hào về trang sử vẻ vang của dân tộc.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.travelviet.net%2Fvietnam%2Fs3%2Fs3_amazon%2Fb6b6c88d-2e5f-4e16-8981-585ebaf08224-don-phu-thong-1jpg.jpg&f=1&nofb=1&ipt=bb813a96147392f50ed227423e2cb5936781327a46cae99079522d3ae00b0a86",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.NZwfI7QQ3iZO5huukrxsOAHaFj%3Fpid%3DApi&f=1&ipt=61dccfc97eb9286255076e35ee1b4389b2811a3dabd6de1f33afadffbd64e01e"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "9.7088911",
+        "Longitude": "100.0027634"
+    },
+    {
+        "url": "",
+        "location_name": "Di tích Đèo Giàng",
+        "address": "Huyện Bạch Thông và Ngân Sơn, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Di tích lịch sử Đèo Giàng là nơi gắn liền với những chiến công vang dội của bộ đội ta trong chiến dịch Việt Bắc Thu Đông năm 1947. Con đèo này vắt ngang qua những ngọn núi cao, địa hình hiểm trở nhưng cảnh sắc hai bên đường lại vô cùng hùng vĩ và thơ mộng. Đứng trên đỉnh đèo, du khách có thể phóng tầm mắt ngắm nhìn núi rừng Đông Bắc trập trùng và ôn lại những trang sử vàng son.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fexotrails.com%2Fexplore%2Fwp-content%2Fuploads%2F2024%2F11%2F7f2c052a-b446-4cc6-8125-dc96c2beb9e3.png&f=1&nofb=1&ipt=6aa65ebcbc1aebc74ec324d03a91658fb9ee6421e932cf694424090ec91613ea",
+            "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fongvove.com%2Fuploads%2F0000%2F17%2F2024%2F12%2F17%2Fdia-diem-lich-su-deo-giang-noi-ghi-dau-nhung-chien-cong-oanh-liet.jpg&f=1&nofb=1&ipt=6545fe09e9215625d783a281c0c6600a02bc49a0e50e9ff700789ce54f39de69",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.bZZ8uuNm94Iy9t0OXqEORQHaE7%3Fpid%3DApi&f=1&ipt=20471891690a6397f77056f680e5cbf121538d2e1e6d07272ff022117734f80a"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá",
+            "Phiêu lưu"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "21.2100307",
+        "Longitude": "105.9322654"
+    },
+    {
+        "url": "",
+        "location_name": "Hồ sinh thái Bản Chang",
+        "address": "Xã Đức Vân, huyện Ngân Sơn, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Hồ sinh thái Bản Chang mang một vẻ đẹp vô cùng lãng mạn với mặt hồ bán nguyệt êm đềm, được bao bọc bởi những rặng thông xanh ngút ngàn rủ bóng. Bầu không khí nơi đây quanh năm mát mẻ, trong lành, rất thích hợp để du khách tổ chức cắm trại, chèo thuyền thư giãn. Đây thực sự là một điểm đến chữa lành lý tưởng, giúp bạn tránh xa những ồn ào và khói bụi của chốn thị thành.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdulichdiaphuong.com%2Fimgs%2Ftinh-bac-kan%2Fho-sinh-thai-ban-chang.jpg&f=1&nofb=1&ipt=348b379e64edf7b305fc795a98fc328274e3990b41dd7dfe8cc033bd3f784d36",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftripmap.vn%2Fwp-content%2Fuploads%2F2021%2F08%2Fho-sinh-thai-ban-chang-1630131340422.jpeg&f=1&nofb=1&ipt=725cd59e30b2a1dcdea5e77a3f5adbb294f6e84dedea8cd29d3f3102fc368e19",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsinhtour.vn%2Fwp-content%2Fuploads%2F2025%2F10%2Fho-ban-chang-1-768x510.jpg&f=1&nofb=1&ipt=8d4d5eb95efdbe89afa9900eb33ee2e7541ed0b913fdd7143c23526437290ea1"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Thư giãn",
+            "Khám phá"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.1477659",
+        "Longitude": "105.8278138"
+    },
+    {
+        "url": "",
+        "location_name": "Khu bảo tồn Thiên nhiên Kim Hỷ",
+        "address": "Huyện Na Rì, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Khu bảo tồn Thiên nhiên Kim Hỷ là một viên ngọc xanh hoang sơ, nổi tiếng với hệ sinh thái rừng trên núi đá vôi độc đáo bậc nhất vùng Đông Bắc. Nơi đây không chỉ bảo tồn nguồn gen của nhiều loài động thực vật quý hiếm mà còn sở hữu phong cảnh thiên nhiên kỳ vĩ, chưa chịu nhiều tác động của con người. Những chuyến đi bộ xuyên rừng tại đây hứa hẹn mang đến nhiều trải nghiệm phiêu lưu và khám phá đầy thú vị.",
+        "images": [
+            "https://cdn.media.dulich24.com.vn/diemden/khu-bao-ton-thien-nhien-kim-hy-4694/khu-bao-ton-thien-nhien-kim-hy-1.jpg",
+            "https://cdn.media.dulich24.com.vn/diemden/khu-bao-ton-thien-nhien-kim-hy-4694/khu-bao-ton-thien-nhien-kim-hy-2.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Phiêu lưu",
+            "Khám phá"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "20.3858631",
+        "Longitude": "105.8605764"
+    },
+    {
+        "url": "",
+        "location_name": "Ao Tiên",
+        "address": "Xã Nam Mẫu, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Ao Tiên là một hồ nước nhỏ hình tròn tuyệt đẹp nằm e ấp giữa khu rừng nguyên sinh tĩnh lặng, cách hồ Ba Bể không xa. Tương truyền, nơi đây từng là địa điểm các tiên nữ giáng trần tắm mát và đánh cờ, mang vẻ đẹp hoang sơ, bí ẩn và vô cùng thơ mộng. Mặt ao trong vắt phẳng lặng in bóng cây cổ thụ, tạo nên một không gian vô cùng huyền ảo và tĩnh mịch.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmia.vn%2Fmedia%2Fuploads%2Fblog-du-lich%2Ftham-quan-ao-tien-ho-ba-be-03-1707353792.jpg&f=1&nofb=1&ipt=70fca3c7e3122c8d34381d52e21d960047a56311a850fc9de52c7b2bbb3ae6bd",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fluhanhvietnam.com.vn%2Fdu-lich%2Fvnt_upload%2Fnews%2F11_2022%2Fao-tien-ho-ba-be-2.jpg&f=1&nofb=1&ipt=90e11b96f7fa79d1b9c1039747013429a7a992a4336fe0a3df10c829d627cdc3",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fluhanhvietnam.com.vn%2Fdu-lich%2Fvnt_upload%2Fnews%2F11_2022%2Fao-tien-ho-ba-be-11.jpg&f=1&nofb=1&ipt=7517aa6d645b8441b266f0cf9ddc00a5de9843765a5f4a52ca5c28ec6a68bc5d"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.2728552",
+        "Longitude": "105.8564601"
+    },
+    {
+        "url": "",
+        "location_name": "Thác Bạc Bản Vàng",
+        "address": "Xã Hoàng Trĩ, huyện Ba Bể, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Thác Bạc Bản Vàng đổ xuống từ những vách đá cao chót vót, tựa như một dải lụa trắng mềm mại vắt ngang qua mảng xanh rì của núi rừng rậm rạp. Không gian quanh thác luôn mát rượi, thoáng đãng, hòa cùng tiếng nước chảy róc rách tạo nên bản nhạc thiên nhiên êm dịu. Nơi đây là điểm đến lý tưởng để du khách dã ngoại, tắm mát và tận hưởng sự yên bình vào những ngày hè oi ả.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fik.imagekit.io%2Ftvlk%2Fblog%2F2022%2F10%2Fkinh-nghiem-du-lich-ho-ba-be-10.jpg%3Ftr%3Dq-70%2Cc-at_max%2Cw-500%2Ch-300%2Cdpr-2&f=1&nofb=1&ipt=48b9cd5475f87367160bd14231354f0a5fb6e6aaf8ca4b1a15f8002a2fc81c35",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffocusasiatravel.vn%2Fwp-content%2Fuploads%2F2024%2F07%2F45.png&f=1&nofb=1&ipt=d1cb318297591c789e3014ccd919b5792e98031aa611c2c27f240eab346c4db7"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.1477659",
+        "Longitude": "105.8278138"
+    },
+    {
+        "url": "",
+        "location_name": "Thác Nà Khoang",
+        "address": "Xã Nà Phặc, huyện Ngân Sơn, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Thác Nà Khoang mang một vẻ đẹp dịu dàng và hoang sơ, với dòng nước len lỏi chảy qua các bậc đá rêu phong tạo thành nhiều tầng thác nhỏ tuyệt đẹp. Xung quanh khu vực thác là cảnh quan rừng núi yên ả cùng bầu không khí vô cùng mát mẻ, trong lành. Du khách có thể đến đây để tự do thư giãn, ngâm mình dưới dòng suối mát lạnh và chiêm ngưỡng vẻ đẹp mộc mạc của thiên nhiên.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftripmap.vn%2Fwp-content%2Fuploads%2F2020%2F12%2Fthac-na-khoang_3.jpg&f=1&nofb=1&ipt=fa3a9b2bdc8c40bf10581748c8028b49d29d4dcaf0c335b6a569906bbb695207",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftripmap.vn%2Fwp-content%2Fuploads%2F2020%2F12%2Fthac-na-khoang-1608369109129-scaled.jpeg&f=1&nofb=1&ipt=b9e4bde990b3f03bd04c53521be0ecf7f10cd320958d3f4fb916a7a8900f1149",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fticotravel.com.vn%2Fwp-content%2Fuploads%2F2024%2F06%2Fthac-na-khoang-16-768x576.jpg&f=1&nofb=1&ipt=bf8d6367187f76a2322d1437a0e791935144387976b475e009774a9898590f33"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.2728552",
+        "Longitude": "105.8564601"
+    },
+    {
+        "url": "",
+        "location_name": "Đèo Gió",
+        "address": "Huyện Ngân Sơn, tỉnh Bắc Kạn",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Đèo Gió là một con đèo cao và dốc, quanh năm mây phủ sương giăng tạo nên một bầu không khí mát lạnh như mùa đông dẫu giữa những ngày hè oi bức. Cung đường đèo uốn lượn quanh co sườn núi, mang lại cho những người đam mê phượt cảm giác chinh phục vô cùng phấn khích. Đứng trên đỉnh đèo, bạn có thể chiêm ngưỡng biển mây bềnh bồng và khung cảnh đồi núi trập trùng đầy ngoạn mục.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdulichdiaphuong.com%2Fimgs%2Ftinh-bac-kan%2Fdeo-gio.jpg&f=1&nofb=1&ipt=d141ad148df806d30d0f9ec8cd713a0c09b171f608fe76c61fca8a860da04cc2",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.mia.vn%2Fuploads%2Fblog-du-lich%2Fkham-pha-ve-dep-cua-khu-du-lich-thac-tien-deo-gio-10-1643063594.jpg&f=1&nofb=1&ipt=3b9b59b5148bbd12763165cdf1f799542d8325fe16eb8001ac9caa44d2e302f1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fik.imagekit.io%2Ftvlk%2Fblog%2F2023%2F11%2Fdeo-gio-36.jpg%3Ftr%3Ddpr-2%2Cw-675&f=1&nofb=1&ipt=446ba6314d2d3a2f33878dd28f37657d237d16d0e434673554fe88792cb92aa0"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Phiêu lưu",
+            "Khám phá"
+        ],
+        "city": "Bắc Kạn",
+        "Latitude": "22.2728552",
+        "Longitude": "105.8564601"
+    }
+]
