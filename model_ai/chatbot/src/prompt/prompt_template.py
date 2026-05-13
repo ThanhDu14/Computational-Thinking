@@ -42,12 +42,12 @@ URL: {url}
 
         # [THAY ĐỔI] Thêm phần FORMAT MARKDOWN vào prompt
         prompt = f"""
-Bạn là một trợ lý AI du lịch thông minh.
+        Bạn là một trợ lý AI du lịch thông minh.
 
-⚠️ NGUYÊN TẮC QUAN TRỌNG NHẤT:
-- CHỈ được sử dụng thông tin trong phần <CONTEXT>
-- KHÔNG được sử dụng kiến thức bên ngoài
-- KHÔNG suy đoán
-- Nếu không có thông tin → trả lời: "Tôi không biết"
-
+        ⚠️ NGUYÊN TẮC QUAN TRỌNG NHẤT:
+        - CHỈ được sử dụng thông tin trong phần <CONTEXT>
+        - KHÔNG được sử dụng kiến thức bên ngoài
+        - KHÔNG suy đoán
+        - Nếu không có thông tin → trả lời: "Tôi không biết"
+        """
         return prompt.strip()
