@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { getAllLocations, filterLocations } from '../../services/locationService';
+import { getAllLocations, filterLocations, searchLocations } from '../../services/locationService';
 import { Loader2, MapPin, Star, Clock, Search, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react';
 import { Skeleton } from '../../components/common/Skeleton';
 
@@ -28,14 +28,14 @@ const CITIES = [
     { label: 'Tất cả', value: '' },
     { label: 'Hà Nội', value: 'ha noi' },
     { label: 'Hồ Chí Minh', value: 'ho chi minh' },
-    { label: 'Đà Lạt', value: 'da lat' },
+    { label: 'Lâm Đồng', value: 'lam dong' },
     { label: 'Hội An', value: 'hoi an' },
     { label: 'Thanh Hóa', value: 'thanh hoa' },
 ];
 
 const CATEGORIES = [
     { label: 'Tất cả', value: '' },
-    { label: 'Ẩm Thực', value: 'Vui chơi' },
+    { label: 'Ẩm Thực', value: 'Ẩm Thực' },
     { label: 'Văn Hóa', value: 'Văn Hóa' },
     { label: 'Khám Phá', value: 'Khám Phá' },
     { label: 'Thư Giãn', value: 'Thư Giãn' },
@@ -68,22 +68,33 @@ export default function DestinationsPage() {
         setError('');
         try {
             let result;
-            const hasFilter = selectedCity || selectedCategory || appliedSearch;
 
-            if (hasFilter) {
+            if (appliedSearch) {
+                // Có keyword → dùng searchLocations
+                result = await searchLocations(
+                    appliedSearch,
+                    selectedCity || '',
+                    selectedCategory || '',
+                    currentPage,
+                    ITEMS_PER_PAGE
+                );
+            } else if (selectedCity || selectedCategory) {
+                // Chỉ có filter → dùng filterLocations
                 result = await filterLocations({
-                    city: appliedSearch || selectedCity || undefined,
+                    city: selectedCity || undefined,
                     category: selectedCategory || undefined,
                     page: currentPage,
                     limit: ITEMS_PER_PAGE,
                 });
             } else {
+                // Không có gì → lấy tất cả
                 result = await getAllLocations(currentPage, ITEMS_PER_PAGE);
             }
 
             setLocations(result?.data || []);
             setTotalItems(result?.total || 0);
         } catch (err) {
+            console.error('❌ fetchData error:', err);
             setError(err.message || 'Không thể tải dữ liệu địa điểm.');
             setLocations([]);
         } finally {

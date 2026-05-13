@@ -9,6 +9,10 @@ import (
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/contact"
+	"smart-travel-backend/features/location"
+	"smart-travel-backend/features/profile"
+	"smart-travel-backend/features/review"
+	"smart-travel-backend/features/wishlist"
 	"syscall"
 	"time"
 
@@ -21,7 +25,7 @@ func main() {
 
 	// 1. Khởi tạo Database
 	db := config.InitDatabase()
-	log.Println("Đang đồng bộ hóa cấu trúc Database...")
+	log.Println("Đã kết nối Database thành công!")
 
 	// 2. Khởi tạo Firebase
 	authClient := config.InitFirebase()
@@ -31,10 +35,11 @@ func main() {
 
 	// Cấu hình CORS - Chỉ cho phép Frontend được khai báo gọi API
 	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
+
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{frontendURL},
+		AllowOrigins:  []string{frontendURL, "http://localhost:3000"},
 		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization"},
+		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
 		ExposeHeaders: []string{"Content-Length"},
 		MaxAge:        12 * time.Hour,
 	}))
@@ -47,7 +52,27 @@ func main() {
 
 	contactGroup := router.Group("/api/contact")
 	{
-		contact.SetupContactRoutes(contactGroup)
+		contact.SetupContactRoutes(contactGroup, authClient)
+	}
+
+	profileGroup := router.Group("/api/profile")
+	{
+		profile.SetupProfileRoutes(profileGroup, authClient, db)
+	}
+
+	reviewGroup := router.Group("/api/review")
+	{
+		review.SetupReviewRoutes(reviewGroup, authClient, db)
+	}
+
+	wishlistGroup := router.Group("/api/wishlist")
+	{
+		wishlist.SetupWishlistRoutes(wishlistGroup, authClient, db)
+	}
+
+	locationGroup := router.Group("/api/location")
+	{
+		location.SetupLocationRoutes(locationGroup, authClient, db)
 	}
 
 	// 5. Khởi tạo Http Server
@@ -59,7 +84,7 @@ func main() {
 
 	// Chạy server trên một luồng lùi (Goroutine)
 	go func() {
-		log.Printf("Server đang chạy tại: http://localhost:%s", port)
+		log.Printf("Server đang chạy tại: http://13.229.155.181:%s", port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Lỗi khi chạy server: %v", err)
 		}

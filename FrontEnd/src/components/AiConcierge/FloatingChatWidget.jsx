@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, X, MessageCircle, Plus, LogIn, Mic, Image as ImageIcon, MapPin, Star, ExternalLink, Menu, Trash2, Loader2, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import { useChat } from '../../context/ChatContext';
 import { useNavigate } from 'react-router-dom';
-import { sendChatMessage, createNewChat, getChatSessions, getChatHistory, deleteChatSession } from '../../services/chatService';
+import { sendImageResult } from '../../services/chatService';
 
 const renderMessageContent = (text) => {
   if (!text) return null;
@@ -314,22 +315,20 @@ export default function FloatingChatWidget() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const loginPopupRef = useRef(null);
 
-  const [sessionId, setSessionId] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [sessionsList, setSessionsList] = useState([]);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const { 
+    sessions: sessionsList, 
+    currentSessionId: sessionId, 
+    messages, 
+    isTyping, 
+    isLoadingHistory,
+    loadHistory, 
+    startNewChat: handleNewChat, 
+    sendMessage: handleSend, 
+    removeSession 
+  } = useChat();
 
-  const getDefaultMessages = () => ([
-    {
-      role: 'bot',
-      text: t('aiconcierge.greeting'),
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  ]);
-
-  const [messages, setMessages] = useState(getDefaultMessages());
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Auto scroll to bottom when messages update
@@ -339,15 +338,15 @@ export default function FloatingChatWidget() {
     }
   }, [messages, isTyping, isOpen]);
 
-  // Update greeting language if it changes
-  useEffect(() => {
-    setMessages(prev => {
-      if (prev.length === 1 && prev[0].role === 'bot') {
-        return getDefaultMessages();
-      }
-      return prev;
-    });
-  }, [t]);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const onSend = () => {
+    if (!input.trim()) return;
+    handleSend(input);
+    setInput('');
+  };
 
   // Đóng login popup khi click ra ngoài
   useEffect(() => {
@@ -368,123 +367,6 @@ export default function FloatingChatWidget() {
     }
     setShowLoginPopup(false);
     setIsOpen(true);
-  };
-
-  const handleNewChat = async () => {
-    try {
-      const userId = user?.username || user?.email || user?.id || 'Guest';
-      const data = await createNewChat(userId);
-      setSessionId(data.session_id);
-      setMessages(getDefaultMessages());
-      setInput('');
-      setIsSidebarOpen(false);
-    } catch (error) {
-      console.error('Failed to create new chat session:', error);
-    }
-  };
-
-  const fetchSessions = async () => {
-    try {
-      const userId = user?.username || user?.email || user?.id || 'Guest';
-      const data = await getChatSessions(userId);
-      setSessionsList(data.sessions || []);
-    } catch (err) {
-      console.error('Failed to fetch sessions:', err);
-    }
-  };
-
-  const loadHistory = async (id) => {
-    try {
-      setIsLoadingHistory(true);
-      const userId = user?.username || user?.email || user?.id || 'Guest';
-      const data = await getChatHistory(userId, id);
-      setSessionId(id);
-
-      if (data.messages && data.messages.length > 0) {
-        const historyMessages = data.messages.map(msg => ({
-          role: msg.role === 'assistant' ? 'bot' : 'user',
-          text: msg.content,
-          timestamp: ''
-        }));
-        setMessages(historyMessages);
-      } else {
-        setMessages(getDefaultMessages());
-      }
-      setIsSidebarOpen(false);
-    } catch (err) {
-      console.error('Failed to load history:', err);
-    } finally {
-      setIsLoadingHistory(false);
-    }
-  };
-
-  const removeSession = async (id) => {
-    try {
-      const userId = user?.username || user?.email || user?.id || 'Guest';
-      await deleteChatSession(userId, id);
-      if (id === sessionId) {
-        setSessionId(null);
-        setMessages(getDefaultMessages());
-      }
-      fetchSessions();
-    } catch (err) {
-      console.error('Failed to delete session:', err);
-    }
-  };
-
-  const toggleSidebar = () => {
-    if (!isSidebarOpen) {
-      fetchSessions();
-    }
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userId = user?.username || user?.email || user?.id || 'Guest';
-    let currentSessionId = sessionId;
-
-    // Auto-create session if sending first message without one
-    if (!currentSessionId) {
-      try {
-        const newSession = await createNewChat(userId);
-        currentSessionId = newSession.session_id;
-        setSessionId(currentSessionId);
-      } catch (err) {
-        console.warn('Could not auto-create session:', err);
-      }
-    }
-
-    const userMessage = input.trim();
-    const userMsg = { role: 'user', text: userMessage, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-    setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setIsTyping(true);
-
-    try {
-      const data = await sendChatMessage(userMessage, userId, currentSessionId);
-
-      // Save session id if backend returns it and we didn't have one
-      if (data.session_id && !currentSessionId) {
-        setSessionId(data.session_id);
-      }
-
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        text: data.reply || "Xin lỗi, tôi không có câu trả lời lúc này.",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }]);
-    } catch (error) {
-      console.error("Chatbot error:", error);
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        text: `⚠️ Lỗi: ${error.message || "Không thể kết nối đến AI Concierge. Vui lòng thử lại sau."}`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }]);
-    } finally {
-      setIsTyping(false);
-    }
   };
 
   return (
@@ -595,7 +477,7 @@ export default function FloatingChatWidget() {
                 <div className="text-center text-on-surface-variant text-xs mt-10">Chưa có cuộc hội thoại nào.</div>
               ) : (
                 sessionsList.map(session => (
-                  <div key={session.id} className={`group flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${sessionId === session.id ? 'bg-primary/10 border-primary/30' : 'bg-surface border-outline-variant/20 hover:bg-surface-container'}`} onClick={() => loadHistory(session.id)}>
+                  <div key={session.id} className={`group flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${sessionId === session.id ? 'bg-primary/10 border-primary/30' : 'bg-surface border-outline-variant/20 hover:bg-surface-container'}`} onClick={() => { loadHistory(session.id); setIsSidebarOpen(false); }}>
                     <div className="flex-1 min-w-0 pr-2">
                       <h4 className="text-xs font-semibold text-on-surface truncate mb-1">{session.title || 'Cuộc hội thoại'}</h4>
                       <div className="flex items-center text-[10px] text-on-surface-variant gap-1">
@@ -704,7 +586,7 @@ export default function FloatingChatWidget() {
               />
               {input.trim() ? (
                 <button
-                  onClick={handleSend}
+                  onClick={onSend}
                   className="p-2.5 bg-primary text-on-primary rounded-full hover:bg-primary-container transition-colors disabled:opacity-50 flex-shrink-0"
                   disabled={!input.trim()}
                 >

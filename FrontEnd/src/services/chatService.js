@@ -5,7 +5,7 @@
  * Uses VITE_API_CHATBOT_URL from .env, falls back to localhost:8000.
  */
 const getChatbotBase = () => {
-  let base = import.meta.env.VITE_API_CHATBOT_URL || "http://localhost:8000";
+  let base = import.meta.env.VITE_CHATBOT_API_URL || "http://localhost:8000";
   if (base.endsWith("/")) {
     base = base.slice(0, -1);
   }

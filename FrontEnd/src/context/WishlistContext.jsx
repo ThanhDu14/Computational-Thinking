@@ -1,73 +1,112 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import * as wishlistService from '../services/wishlistService';
+import { getLocationById } from '../services/locationService';
 
 const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
   const [wishlist, setWishlist] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
-  const getPlaceId = (place) => {
-    return place.location_name || place.id;
-  };
+  // Helper to normalize location data from API
+  const normalizeLocation = useCallback((data) => {
+    if (!data) return null;
+    
+    // Normalize images
+    const allImages = (data.images || []).map(img => 
+      typeof img === 'string' ? img : (img.image || img.url || '')
+    ).filter(Boolean);
+    
+    const image = allImages.length > 0 ? allImages[0] : '';
+    
+    return {
+      ...data,
+      id: data.id || data.location_id,
+      name: data.name || data.location_name || 'Địa điểm',
+      image: image,
+      location: data.city || data.region || data.address || '',
+      description: data.description || '',
+      rating: data.rating || data.overall_rating || 0,
+      price: data.price || null,
+      // Keep original arrays if needed
+      categories: data.categories || [],
+      images: allImages
+    };
+  }, []);
 
-  // Load from localStorage on mount or when user changes
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const storageKey = `wishlist_${user.uid || user.email}`;
-      try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          setWishlist(JSON.parse(saved));
-        } else {
-          setWishlist([]); // Reset if no saved data
-        }
-      } catch (error) {
-        console.error("Error reading wishlist from localStorage", error);
-        setWishlist([]);
-      }
-    } else {
-      setWishlist([]); // Clear wishlist from memory if logged out
+  // Load wishlist from API when authenticated
+  const fetchWishlistData = useCallback(async () => {
+    if (!isAuthenticated) {
+      setWishlist([]);
+      return;
     }
-  }, [isAuthenticated, user]);
 
-  // Sync to localStorage whenever wishlist changes
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const storageKey = `wishlist_${user.uid || user.email}`;
-      localStorage.setItem(storageKey, JSON.stringify(wishlist));
+    setLoading(true);
+    try {
+      const wishlistItems = await wishlistService.getMyWishlist();
+      
+      // Fetch details for each location in the wishlist
+      const detailedWishlist = await Promise.all(
+        wishlistItems.map(async (item) => {
+          try {
+            const data = await getLocationById(item.location_id);
+            return normalizeLocation(data);
+          } catch (err) {
+            console.error(`Error fetching details for location ${item.location_id}:`, err);
+            return null;
+          }
+        })
+      );
+
+      setWishlist(detailedWishlist.filter(item => item !== null));
+    } catch (error) {
+      console.error("Error loading wishlist from API:", error);
+      setWishlist([]);
+    } finally {
+      setLoading(false);
     }
-  }, [wishlist, isAuthenticated, user]);
+  }, [isAuthenticated, normalizeLocation]);
 
-  const toggleWishlist = (place) => {
+  useEffect(() => {
+    fetchWishlistData();
+  }, [fetchWishlistData, user]);
+
+  const toggleWishlist = async (place) => {
     if (!isAuthenticated) {
       alert("Vui lòng đăng nhập để lưu vào Wishlist / Please login to use Wishlist");
       return;
     }
     
-    const placeId = getPlaceId(place);
+    const placeId = place.id || place.location_id;
+    const exists = wishlist.some(item => (item.id || item.location_id) === placeId);
     
-    setWishlist(prev => {
-      const exists = prev.some(item => getPlaceId(item) === placeId);
+    try {
       if (exists) {
-        return prev.filter(item => getPlaceId(item) !== placeId);
+        await wishlistService.removeFromWishlist(placeId);
+        setWishlist(prev => prev.filter(item => (item.id || item.location_id) !== placeId));
       } else {
-        return [...prev, place];
+        await wishlistService.addToWishlist(placeId);
+        // Add the place object to local state immediately
+        setWishlist(prev => [...prev, normalizeLocation(place)]);
       }
-    });
+    } catch (error) {
+      console.error("Error toggling wishlist:", error);
+      alert("Có lỗi xảy ra khi cập nhật Wishlist. Vui lòng thử lại.");
+    }
   };
 
   const isInWishlist = (placeOrId) => {
-    // allow passing full object or just string ID
-    const targetId = typeof placeOrId === 'object' ? getPlaceId(placeOrId) : placeOrId;
-    return wishlist.some(item => getPlaceId(item) === targetId);
+    const targetId = typeof placeOrId === 'object' ? (placeOrId.id || placeOrId.location_id) : placeOrId;
+    return wishlist.some(item => (item.id || item.location_id) === targetId);
   };
 
   return (
     <WishlistContext.Provider value={{ 
-      wishlist, toggleWishlist, isInWishlist, getPlaceId,
-      isWishlistOpen, setIsWishlistOpen 
+      wishlist, toggleWishlist, isInWishlist, loading,
+      isWishlistOpen, setIsWishlistOpen, refreshWishlist: fetchWishlistData
     }}>
       {children}
     </WishlistContext.Provider>
@@ -81,3 +120,4 @@ export const useWishlist = () => {
   }
   return context;
 };
+
