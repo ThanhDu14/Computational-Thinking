@@ -267,5 +267,4 @@ USER QUESTION
 JSON RESPONSE
 ==================================================
 """
-
         return prompt.strip()
