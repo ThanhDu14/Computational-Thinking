@@ -41,7 +41,7 @@ llm:
   temperature: 0.2
 
   # [MAX TOKENS] Số token tối đa trong response
-  max_tokens: 2000
+  max_tokens: 1500
 
 vector_store:
   # [HF REPO] HuggingFace repo chứa vector DB
@@ -53,7 +53,7 @@ vector_store:
 
 memory:
   # [MAX RECENT] Số message gần nhất giữ trong context
-  max_recent: 6
+  max_recent: 3
 
   # [DEFAULT USER] User mặc định nếu không truyền
 
