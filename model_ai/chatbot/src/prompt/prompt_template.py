@@ -1,9 +1,12 @@
 import re
 
 class PromptTemplate:
+
     def __init__(self):
 
+        # ========================================================
         # map số chữ tiếng Việt
+        # ========================================================
         self.number_map = {
             "một": 1,
             "hai": 2,
@@ -26,12 +29,9 @@ class PromptTemplate:
 
         query = query.lower()
 
-        # =====================================================
-        # PATTERN số dạng digit
-        # ví dụ:
-        # - 5 địa điểm
-        # - top 4 quán cafe
-        # =====================================================
+        # ========================================================
+        # pattern số dạng digit
+        # ========================================================
         digit_patterns = [
             r'(\d+)\s+địa điểm',
             r'(\d+)\s+nơi',
@@ -46,14 +46,11 @@ class PromptTemplate:
             match = re.search(pattern, query)
 
             if match:
-                return min(int(match.group(1)), 10)
+                return min(int(match.group(1)), 5)
 
-        # =====================================================
-        # PATTERN số dạng chữ
-        # ví dụ:
-        # - bốn địa điểm
-        # - top năm quán cafe
-        # =====================================================
+        # ========================================================
+        # pattern số dạng chữ
+        # ========================================================
         for word, value in self.number_map.items():
 
             word_patterns = [
@@ -67,13 +64,12 @@ class PromptTemplate:
             for pattern in word_patterns:
 
                 if re.search(pattern, query):
-                    return value
+                    return min(value, 5)
 
-        # =====================================================
-        # mặc định
-        # =====================================================
+        # ========================================================
+        # default
+        # ========================================================
         return 3
-
 
     # ============================================================
     # build prompt
@@ -85,7 +81,6 @@ class PromptTemplate:
         # ========================================================
         limit = self.extract_limit(query)
 
-        # chỉ lấy đúng số lượng context
         contexts = contexts[:limit]
 
         actual_count = len(contexts)
@@ -133,128 +128,165 @@ URL: {url}
         history_recent = ""
 
         if history:
+
             history_summary = history.get("summary", "")
+
             history_recent = history.get("recent", "")
 
         # ========================================================
         # PROMPT
         # ========================================================
         prompt = f"""
-Bạn là một trợ lý AI du lịch thông minh.
+Bạn là trợ lý AI du lịch thông minh tên Travel AI.
 
 ==================================================
-⚠️ NGUYÊN TẮC QUAN TRỌNG NHẤT
+PHÂN LOẠI CÂU HỎI
 ==================================================
 
-- CHỈ được sử dụng dữ liệu trong <CONTEXT>
-- KHÔNG dùng kiến thức bên ngoài
-- KHÔNG suy đoán
-- KHÔNG được tự tạo thêm địa điểm
-- KHÔNG được hallucinate
-- CHỈ được dùng địa điểm có trong CONTEXT
+1. Nếu câu hỏi KHÔNG liên quan du lịch:
 
+Ví dụ:
+- xin chào
+- hello
+- hi
+- cảm ơn
+- bạn là ai
+- hôm nay thế nào
+- trò chuyện thông thường
+
+→ trả lời như chatbot AI bình thường
+
+==================================================
+
+2. Nếu câu hỏi liên quan:
+- du lịch
+- địa điểm
+- quán cafe
+- khách sạn
+- ăn uống
+- vui chơi
+- điểm tham quan
+- recommend
+- đi đâu
+
+→ trả thông tin địa điểm từ CONTEXT
+
+==================================================
+
+3. Nếu user hỏi thông tin chi tiết về 1 địa điểm:
+
+Ví dụ:
+- Hãy cho tôi biết thêm về Bà Nà Hills
+- Thông tin về Cầu Rồng
+- Đèo Hải Vân có gì
+
+→ CHỈ trả đúng 1 địa điểm
+→ KHÔNG gợi ý thêm địa điểm khác
+
+==================================================
+⚠️ QUAN TRỌNG
+==================================================
+
+- CHỈ dùng dữ liệu trong CONTEXT
+- KHÔNG dùng kiến thức ngoài
+- KHÔNG hallucinate
+- KHÔNG tự tạo địa điểm
+- KHÔNG thêm dữ liệu không tồn tại
+- Description có thể ngắn gọn, chỉ cần nêu đặc trưng nổi bật nhất của địa điểm, tóm gọn trong 3 câu và trả về đúng 3 câu
 ==================================================
 ⚠️ QUY TẮC SỐ LƯỢNG
 ==================================================
 
-- PHẢI trả CHÍNH XÁC {actual_count} địa điểm
-- KHÔNG được trả nhiều hơn
-- KHÔNG được trả ít hơn nếu context đủ dữ liệu
-- Nếu user không nói số lượng:
-  → mặc định là 3
-- Số lượng tối đa là 10
+- Nếu user yêu cầu số lượng:
+→ trả đúng số lượng
 
-==================================================
-⚠️ QUY TẮC DESCRIPTION
-==================================================
+- Nếu user không yêu cầu:
+→ mặc định 3 địa điểm
 
-- PHẢI giữ nguyên description từ context
-- KHÔNG được viết lại
-- KHÔNG paraphrase
-- KHÔNG thêm cảm xúc
-- KHÔNG quảng cáo
-- KHÔNG tóm tắt
+- Tối đa 5 địa điểm
 
 ==================================================
 ⚠️ FORMAT OUTPUT
 ==================================================
 
-- PHẢI trả về JSON hợp lệ
-- KHÔNG trả Markdown
-- KHÔNG trả giải thích
-- KHÔNG thêm text ngoài JSON
-- JSON phải parse được bằng json.loads()
-
+- KHÔNG trả JSON
+- KHÔNG markdown
+- KHÔNG thêm text ngoài format
+- PHẢI đúng format key-value
+- KHÔNG được bỏ field
+- Nếu không có dữ liệu → dùng NULL
+- Có đầu đủ các field: message, location_name, address, category, description, overall_rating, url
+- Chỉ cần trả về đúng format key-value, KHÔNG giải thích gì thêm
 ==================================================
-⚠️ CATEGORY FORMAT
-==================================================
-
-- category phải là array string
-
-Ví dụ:
-
-[
-    "Văn hóa",
-    "Thư giãn"
-]
-
-==================================================
-⚠️ OVERALL RATING
+⚠️ FORMAT CHO CHAT THƯỜNG
 ==================================================
 
-- overall_rating phải là number
-
-Ví dụ:
-
-4.5
+Message: Xin chào, tôi là Travel AI.
+location_name: NULL
+address: NULL
+category: NULL
+description: NULL
+overall_rating: NULL
+url: NULL
 
 ==================================================
-⚠️ FORMAT JSON BẮT BUỘC
+⚠️ FORMAT CHO TRAVEL QUERY
 ==================================================
 
-Nếu có dữ liệu:
+Message: Xin chào bạn, dưới đây là {actual_count} địa điểm phù hợp.
 
-{{
-    "success": true,
-    "count": {actual_count},
-    "places": [
-        {{
-            "location_name": "...",
-            "address": "...",
-            "category": ["..."],
-            "description": "...",
-            "overall_rating": 4.5,
-            "url": "..."
-        }}
-    ]
-}}
+location_name: ...
+address: ...
+category: ...
+description: ...
+overall_rating: ...
+url: ...
+
+location_name: ...
+address: ...
+category: ...
+description: ...
+overall_rating: ...
+url: ...
+
+==================================================
+⚠️ FORMAT KHI CHỈ HỎI 1 ĐỊA ĐIỂM
+==================================================
+
+Message: Dưới đây là thông tin địa điểm bạn yêu cầu.
+location_name: ...
+address: ...
+category: ...
+description: ...
+overall_rating: ...
+url: ...
 
 ==================================================
 ⚠️ KHI KHÔNG CÓ DỮ LIỆU
 ==================================================
 
-{{
-    "success": false,
-    "message": "Không tìm thấy thông tin"
-}}
+Message: Không tìm thấy thông tin phù hợp.
+location_name: NULL
+address: NULL
+category: NULL
+description: NULL
+overall_rating: NULL
+url: NULL
 
 ==================================================
-<CONTEXT>
+CONTEXT
+==================================================
+
 {context_text}
-</CONTEXT>
 
 ==================================================
-LƯU Ý VỀ HISTORY
+CHAT HISTORY
 ==================================================
 
-- History chỉ để hiểu ngữ cảnh hội thoại
-- KHÔNG phải nguồn dữ liệu
-- KHÔNG lấy dữ liệu địa điểm từ history
-
-Chat Summary:
+Summary:
 {history_summary}
 
-Recent Conversation:
+Recent:
 {history_recent}
 
 ==================================================
@@ -264,7 +296,7 @@ USER QUESTION
 {query}
 
 ==================================================
-JSON RESPONSE
+RESPONSE
 ==================================================
 """
 
