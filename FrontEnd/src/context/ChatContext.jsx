@@ -23,8 +23,13 @@ export const ChatProvider = ({ children }) => {
 
   // Helper to get consistent userId
   const getUserId = useCallback(() => {
-    if (!user) return 'Guest';
-    return user.username || user.email || user.id || user.firebaseUid || 'Guest';
+    if (!user) return null;
+    const backendId = user.db_id || user.id || user.user_id || user.userId;
+    if (!backendId) {
+      console.warn("⚠️ Không tìm thấy backend user ID!", user);
+      return null;
+    }
+    return backendId;
   }, [user]);
 
   const getDefaultMessages = useCallback(() => ([
@@ -89,7 +94,7 @@ export const ChatProvider = ({ children }) => {
   }, [isAuthenticated, getUserId, loadSessions]);
 
   const sendMessage = useCallback(async (text) => {
-    if (!isAuthenticated || !text.trim()) return;
+    if (!isAuthenticated || !text || !text.trim()) return;
     
     const userId = getUserId();
     let sessionId = currentSessionId;

@@ -6,7 +6,7 @@ import { getLocationById } from '../services/locationService';
 const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, getToken } = useAuth();
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
@@ -46,7 +46,8 @@ export const WishlistProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      const wishlistItems = await wishlistService.getMyWishlist();
+      const token = await getToken();
+      const wishlistItems = await wishlistService.getMyWishlist(token);
       
       // Fetch details for each location in the wishlist
       const detailedWishlist = await Promise.all(
@@ -84,11 +85,12 @@ export const WishlistProvider = ({ children }) => {
     const exists = wishlist.some(item => (item.id || item.location_id) === placeId);
     
     try {
+      const token = await getToken();
       if (exists) {
-        await wishlistService.removeFromWishlist(placeId);
+        await wishlistService.removeFromWishlist(placeId, token);
         setWishlist(prev => prev.filter(item => (item.id || item.location_id) !== placeId));
       } else {
-        await wishlistService.addToWishlist(placeId);
+        await wishlistService.addToWishlist(placeId, token);
         // Add the place object to local state immediately
         setWishlist(prev => [...prev, normalizeLocation(place)]);
       }

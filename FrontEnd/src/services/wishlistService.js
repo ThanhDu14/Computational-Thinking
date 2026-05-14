@@ -3,15 +3,24 @@ if (API_BASE_URL.endsWith('/')) {
   API_BASE_URL = API_BASE_URL.slice(0, -1);
 }
 
-const getAuthHeaders = () => {
+const getAuthHeaders = (token) => {
+  if (token) {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+  }
+
   try {
     const savedUser = localStorage.getItem('smart_travel_user');
     const user = savedUser ? JSON.parse(savedUser) : null;
-    const token = user?.access_token || user?.token || '';
+    
+    // Kiểm tra nhiều trường token khả thi từ backend
+    const storedToken = user?.access_token || user?.token || user?.accessToken || user?.jwt || '';
     
     return {
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      'Authorization': storedToken ? `Bearer ${storedToken}` : ''
     };
   } catch (error) {
     console.error("Error getting auth headers:", error);
@@ -26,10 +35,10 @@ const getAuthHeaders = () => {
  * Thêm một địa điểm vào wishlist.
  * @param {string} locationId - UUID của địa điểm.
  */
-export const addToWishlist = async (locationId) => {
+export const addToWishlist = async (locationId, token) => {
   const response = await fetch(`${API_BASE_URL}/api/wishlist/add`, {
     method: 'POST',
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
     body: JSON.stringify({ location_id: locationId }),
   });
 
@@ -44,10 +53,10 @@ export const addToWishlist = async (locationId) => {
 /**
  * Lấy danh sách wishlist của người dùng hiện tại.
  */
-export const getMyWishlist = async () => {
+export const getMyWishlist = async (token) => {
   const response = await fetch(`${API_BASE_URL}/api/wishlist/my-wishlist`, {
     method: 'GET',
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
   });
 
   if (!response.ok) {
@@ -63,10 +72,10 @@ export const getMyWishlist = async () => {
  * Xóa một địa điểm khỏi wishlist.
  * @param {string} locationId - UUID của địa điểm.
  */
-export const removeFromWishlist = async (locationId) => {
+export const removeFromWishlist = async (locationId, token) => {
   const response = await fetch(`${API_BASE_URL}/api/wishlist/remove/${locationId}`, {
     method: 'DELETE',
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
   });
 
   if (!response.ok) {
@@ -81,10 +90,10 @@ export const removeFromWishlist = async (locationId) => {
  * Kiểm tra xem một địa điểm đã có trong wishlist chưa.
  * @param {string} locationId - UUID của địa điểm.
  */
-export const checkIfInWishlist = async (locationId) => {
+export const checkIfInWishlist = async (locationId, token) => {
   const response = await fetch(`${API_BASE_URL}/api/wishlist/check/${locationId}`, {
     method: 'GET',
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
   });
 
   if (!response.ok) {
