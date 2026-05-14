@@ -299,5 +299,4 @@ USER QUESTION
 RESPONSE
 ==================================================
 """
-
         return prompt.strip()
