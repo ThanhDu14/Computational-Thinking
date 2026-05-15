@@ -5,14 +5,28 @@
 #            → Validate UUID ở tầng Pydantic, trả 422 nếu sai
 # ============================================================
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from uuid import UUID   # [THAY ĐỔI] import UUID
+import os
 import logging
 import re
 import ast
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+AI_KEY = os.getenv("AI_KEY")
+
+def verify_internal_call(x_internal_secret: str = Header(None)):
+    if x_internal_secret != AI_KEY:
+        raise HTTPException(
+            status_code=403, 
+            detail="Cấm truy cập! Chỉ hệ thống trung gian mới được phép gọi AI."
+        )
 
 from model_ai.chatbot.src.rag.rag_pipeline import RAGPipeline
 from model_ai.chatbot.src.vectorstore.vector_store import vector_store
@@ -25,7 +39,7 @@ from model_ai.chatbot.src.config.config import SUPABASE_SESSIONS_TABLE
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Nha Trang Travel Chatbot API")
+app = FastAPI(title="Nha Trang Travel Chatbot API", dependencies=[Depends(verify_internal_call)])
 
 app.add_middleware(
     CORSMiddleware,
