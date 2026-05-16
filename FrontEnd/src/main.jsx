@@ -7,6 +7,7 @@ import { ThemeProvider } from './context/ThemeContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { WishlistProvider } from './context/WishlistContext.jsx'
 import { ProfileProvider } from './context/ProfileContext.jsx'
+import { ChatProvider } from './context/ChatContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <ProfileProvider>
           <WishlistProvider>
-            <App />
+            <ChatProvider>
+              <App />
+            </ChatProvider>
           </WishlistProvider>
         </ProfileProvider>
       </AuthProvider>

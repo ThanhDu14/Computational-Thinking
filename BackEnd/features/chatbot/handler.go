@@ -25,7 +25,7 @@ func getUserID(c *gin.Context) string {
 
 // Hàm proxy chung sang AI Server
 func proxyToAI(c *gin.Context, method string, aiPath string, customBody []byte) {
-	aiBaseURL := config.GetEnv("AI_ENDPOINT", "http://13.229.155.181:8000")
+	aiBaseURL := config.GetEnv("AI_ENDPOINT", "http://localhost:8000")
 	targetURL := aiBaseURL + aiPath
 
 	var bodyReader io.Reader
@@ -46,6 +46,7 @@ func proxyToAI(c *gin.Context, method string, aiPath string, customBody []byte) 
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Internal-Secret", config.GetEnv("AI_INTERNAL_SECRET", "super_secret_key_123"))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -98,7 +99,7 @@ func ChatHandler() gin.HandlerFunc {
 // 3. Lấy lịch sử chat (History)
 func GetHistoryHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Dù Frontend truyền user_id trên URL, ta vẫn ép lấy user_id từ Token 
+		// Dù Frontend truyền user_id trên URL, ta vẫn ép lấy user_id từ Token
 		// để đảm bảo an toàn tuyệt đối, gọi sang AI đúng ID thật của user.
 		userID := getUserID(c)
 		sessionID := c.Param("session_id")
@@ -118,7 +119,8 @@ func GetSessionsHandler() gin.HandlerFunc {
 // 5. Xóa hội thoại (Delete Session)
 func DeleteSessionHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		userID := getUserID(c)
 		sessionID := c.Param("session_id")
-		proxyToAI(c, "DELETE", "/chat/"+sessionID, nil)
+		proxyToAI(c, "DELETE", "/chat/"+userID+"/"+sessionID, nil)
 	}
 }
