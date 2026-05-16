@@ -1,0 +1,276 @@
+[
+  {
+    "url": "",
+    "location_name": "Chùa Keo (Thần Quang Tự)",
+    "city": "Thái Bình",
+    "address": "Làng Keo, Xã Duy Nhất, Huyện Vũ Thư, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.6/5",
+    "rating_count": "3575",
+    "opening_hours": "Mở cửa 24/24",
+    "description": "Chùa Keo là một trong những ngôi chùa cổ nhất và đẹp nhất Việt Nam, được xây dựng từ năm 1061 và bảo tồn gần như nguyên vẹn với kiến trúc gỗ truyền thống đặc sắc của thời Lê. Nổi bật nhất là tòa Gác Chuông cao ba tầng được chạm khắc tinh xảo, là kiệt tác của nghệ thuật kiến trúc dân gian Bắc Bộ. Đây là di tích cấp quốc gia đặc biệt và là điểm hành hương linh thiêng không thể bỏ qua khi đến Thái Bình, đặc biệt vào các dịp lễ hội tháng 9 âm lịch hằng năm.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Một địa điểm không thể bỏ qua khi đến thành phố Thái Bình"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Ngôi chùa cổ xinh đẹp với những cánh cửa gỗ tuyệt vời, rất yên bình"
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.3609862",
+    "Longitude": "106.2971985"
+  },
+  {
+    "url": "",
+    "location_name": "Bãi Biển Cồn Vành",
+    "city": "Thái Bình",
+    "address": "Xã Nam Phú, Huyện Tiền Hải, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "3.9/5",
+    "rating_count": "3891",
+    "opening_hours": "Mở cửa 24/24",
+    "description": "Cồn Vành là bãi biển hoang sơ nằm trên một doi cát nổi giữa biển thuộc huyện Tiền Hải, được bao bọc bởi những cánh rừng ngập mặn xanh mát trù phú. Đây là điểm du lịch sinh thái nổi tiếng của Thái Bình, thu hút du khách đến tắm biển, thưởng thức hải sản tươi ngon và trải nghiệm không khí biển trong lành yên tĩnh. Thời điểm đẹp nhất để ghé thăm là lúc nước ròng khi bãi cát vàng trải dài mịn màng, rất thích hợp để dạo chơi và chụp ảnh.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Bãi biển rất trong lành, cảm giác thư giãn và sạch sẽ"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Thưởng thức hải sản và hít thở không khí biển"
+      }
+    ],
+    "category": ["Thư giãn", "Ẩm thực", "Khám phá"],
+    "Latitude": "20.273563499999998",
+    "Longitude": "106.6049736"
+  },
+  {
+    "url": "",
+    "location_name": "Đền Tiên La (Đền Bà Triệu - Chầu Bát)",
+    "city": "Thái Bình",
+    "address": "Làng Tiên La, Xã Đoan Hùng, Huyện Hưng Hà, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.7/5",
+    "rating_count": "537",
+    "opening_hours": "8:00 SA - 6:00 CH hàng ngày",
+    "description": "Đền Tiên La là nơi thờ phụng nữ tướng Vũ Thị Thục – một trong những nữ anh hùng dân tộc thời Hai Bà Trưng, người đã anh dũng chống lại ách đô hộ của nhà Hán vào thế kỷ thứ I. Khuôn viên đền rộng lớn, nằm bên bờ sông thơ mộng với kiến trúc cổ kính uy nghiêm, là điểm hành hương linh thiêng thu hút đông đảo người dân khắp nơi. Đây còn là nơi tổ chức lễ hội truyền thống đặc sắc hằng năm, mang đậm giá trị văn hóa tín ngưỡng của người dân vùng đồng bằng Bắc Bộ.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Địa điểm Phật giáo bình dân, hấp dẫn, tốt lành và bình yên"
+      },
+      { "reviewer_name": "", "stars": "5/5", "comment": "Rất tốt" }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.623118899999998",
+    "Longitude": "106.2188149"
+  },
+  {
+    "url": "",
+    "location_name": "Bảo Tàng Thái Bình",
+    "city": "Thái Bình",
+    "address": "Đường Lý Thường Kiệt, Phường Cầu Bo, Thành phố Thái Bình, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.4/5",
+    "rating_count": "2355",
+    "opening_hours": "7:00 SA - 10:00 CH hàng ngày",
+    "description": "Bảo tàng Thái Bình là nơi lưu giữ và trưng bày hàng nghìn hiện vật quý giá phản ánh lịch sử, văn hóa và quá trình phát triển của vùng đất Thái Bình qua các thời kỳ. Đây là điểm đến lý tưởng cho những ai muốn tìm hiểu sâu về bản sắc văn hóa địa phương, từ di chỉ khảo cổ đến các hiện vật kháng chiến thời hiện đại. Khuôn viên rộng rãi xung quanh bảo tàng còn là nơi người dân tụ họp vui chơi giải trí vào buổi tối, tạo nên không khí sôi động của thành phố.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Nơi tuyệt vời để nhắc nhở mọi thứ về thành phố Thái Bình"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Quảng trường đáng yêu, mọi người dành thời gian vui vẻ ngoài đó mỗi đêm"
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.4529653",
+    "Longitude": "106.3483069"
+  },
+  {
+    "url": "",
+    "location_name": "Đền Trần Thái Bình",
+    "city": "Thái Bình",
+    "address": "Thôn Tam Đường, Xã Tiến Đức, Huyện Hưng Hà, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.7/5",
+    "rating_count": "748",
+    "opening_hours": "Mở cửa 24/24",
+    "description": "Đền Trần Thái Bình là khu di tích lịch sử quốc gia đặc biệt, nơi thờ phụng các vị vua và danh tướng nhà Trần – triều đại đã ba lần đánh thắng quân Nguyên Mông xâm lược vĩ đại trong thế kỷ XIII. Thái Bình được coi là vùng đất phát tích của vương triều Trần, nơi dòng họ Trần sinh sống và gây dựng cơ nghiệp trước khi lên nắm quyền lãnh đạo đất nước. Lễ hội đền Trần tổ chức vào tháng Giêng âm lịch hằng năm là sự kiện văn hóa tâm linh lớn thu hút hàng vạn du khách thập phương.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Nơi tìm hiểu văn hóa Việt Nam qua các triều đại nhà Trần"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Thiên nhiên đẹp, hùng vĩ"
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.5989762",
+    "Longitude": "106.146816"
+  },
+  {
+    "url": "",
+    "location_name": "Đền Đồng Bằng",
+    "city": "Thái Bình",
+    "address": "Thôn Đồng Bằng, Xã An Lễ, Huyện Quỳnh Phụ, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.6/5",
+    "rating_count": "883",
+    "opening_hours": "5:00 SA - 6:00 CH hàng ngày",
+    "description": "Đền Đồng Bằng là một trong những ngôi đền linh thiêng và to đẹp nhất vùng đồng bằng sông Hồng, thờ Đức Vua Cha Bát Hải Động Đình – vị thần cai quản vùng sông nước. Công trình kiến trúc đền mang phong cách truyền thống Bắc Bộ đặc sắc với nhiều gian thờ được bài trí trang nghiêm, uy nghi. Đền là điểm đến tâm linh quan trọng của người dân Thái Bình và các tỉnh lân cận, đặc biệt thu hút đông đảo tín đồ đạo Mẫu trong các dịp lễ hội lớn.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Nhỏ với ý nghĩa lịch sử. Liên quan đến vị thánh cổ xưa của Việt Nam"
+      },
+      { "reviewer_name": "", "stars": "5/5", "comment": "tâm linh" }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.6258145",
+    "Longitude": "106.3859674"
+  },
+  {
+    "url": "",
+    "location_name": "Làng Nghề Chạm Bạc Đồng Xâm",
+    "city": "Thái Bình",
+    "address": "Làng Thượng Gia, Xã Trà Giang, Huyện Kiến Xương, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.7/5",
+    "rating_count": "58",
+    "opening_hours": "9:00 SA - 5:00 CH hàng ngày",
+    "description": "Làng nghề chạm bạc Đồng Xâm có lịch sử hơn 600 năm, nổi tiếng với kỹ thuật chạm khắc thủ công tinh xảo trên bạc và đồng tạo ra những sản phẩm mỹ nghệ độc đáo có giá trị cao. Tiếng đục chạm tỉ mỉ vang lên từ sáng sớm đến tối khuya bên dòng sông êm đềm đã trở thành âm thanh đặc trưng của làng nghề truyền thống này. Du khách đến đây có thể trực tiếp xem các nghệ nhân làm việc, mua sắm các sản phẩm tranh chạm khắc, đồ trang sức và vật phẩm tâm linh làm quà tặng độc đáo.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Ấn tượng bởi sự khéo léo, giá cả không đắt"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Nhiều sản phẩm trang sức đẹp, chất lượng"
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.4589042",
+    "Longitude": "106.46470640000001"
+  },
+  {
+    "url": "",
+    "location_name": "Biển Vô Cực Thái Bình",
+    "city": "Thái Bình",
+    "address": "Xã Thái Thượng, Huyện Thái Thụy, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.6/5",
+    "rating_count": "484",
+    "opening_hours": "Mở cửa 24/24",
+    "description": "Biển Vô Cực Thái Bình là điểm check-in nổi tiếng trên mạng xã hội với cảnh quan mặt nước phẳng lặng như gương vào buổi sáng sớm, tạo ra hiệu ứng phản chiếu bầu trời tuyệt đẹp như cảnh 'biển trời hòa làm một'. Để thưởng thức vẻ đẹp đặc trưng này, du khách cần chọn thời điểm triều cường phù hợp và trời yên gió lặng, thường là vào buổi sáng sớm. Xung quanh khu vực còn có những rừng ngập mặn xanh tươi rộng lớn, mang lại trải nghiệm khám phá thiên nhiên hệ sinh thái ven biển độc đáo.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Khung cảnh tuyệt vời, không phải khu du lịch nhưng khu vực rất đẹp"
+      },
+      { "reviewer_name": "", "stars": "5/5", "comment": "Tuyệt" }
+    ],
+    "category": ["Thư giãn", "Khám phá"],
+    "Latitude": "20.5563792",
+    "Longitude": "106.6015908"
+  },
+  {
+    "url": "",
+    "location_name": "Bãi Biển Đồng Châu",
+    "city": "Thái Bình",
+    "address": "Xã Đông Minh, Huyện Tiền Hải, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.2/5",
+    "rating_count": "1214",
+    "opening_hours": "6:00 SA - 6:00 CH hàng ngày",
+    "description": "Bãi biển Đồng Châu là một trong những bãi biển được yêu thích nhất của tỉnh Thái Bình, thu hút du khách bởi không khí trong lành và phong cảnh biển bình yên giữa rừng phi lao xanh mát. Dọc bờ biển có nhiều nhà hàng hải sản tươi ngon phục vụ các món đặc sản biển đặc trưng của vùng đồng bằng Bắc Bộ như ngao, cua, tôm và cá biển. Đây là điểm nghỉ dưỡng cuối tuần lý tưởng cho người dân các tỉnh lân cận, đặc biệt vào mùa hè khi bãi biển tấp nập du khách vui chơi và tắm biển.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Nơi yên bình đáng yêu với nhà hàng cá tươi"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Bãi biển đẹp, nơi yên bình với những người mỉm cười"
+      }
+    ],
+    "category": ["Thư giãn", "Ẩm thực"],
+    "Latitude": "20.394601299999998",
+    "Longitude": "106.5847079"
+  },
+  {
+    "url": "",
+    "location_name": "Vườn Quốc Gia Xuân Thủy",
+    "city": "Thái Bình",
+    "address": "Huyện Giao Thủy, Tỉnh Nam Định (tiếp giáp Tiền Hải, Thái Bình), Việt Nam",
+    "overall_rating": "4.3/5",
+    "rating_count": "942",
+    "opening_hours": "Mở cửa 24/24",
+    "description": "Vườn Quốc gia Xuân Thủy là khu Ramsar đầu tiên của Đông Nam Á và là vùng đất ngập nước có giá trị bảo tồn sinh thái cao, nơi trú ngụ của hơn 200 loài chim di trú quý hiếm từ khắp nơi trên thế giới. Rừng ngập mặn bạt ngàn cùng hệ thống đê sông, bãi bồi phù sa tạo nên cảnh quan thiên nhiên hoang dã đặc sắc của vùng duyên hải Bắc Bộ. Đây là điểm đến lý tưởng cho những người yêu thiên nhiên, chim học và muốn trải nghiệm cắm trại, chèo kayak giữa không gian sinh thái nguyên sơ.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Vườn quốc gia với hơn 200 loài chim, rất được khuyến khích"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Nơi tốt để cắm trại, tuyệt vời để ghé thăm ở đây"
+      }
+    ],
+    "category": ["Phiêu lưu", "Khám phá", "Thư giãn"],
+    "Latitude": "20.2329811",
+    "Longitude": "106.5700505"
+  },
+  {
+    "url": "",
+    "location_name": "Di Tích Lịch Sử Đền Hệ",
+    "city": "Thái Bình",
+    "address": "Làng Ninh Cư, Xã Thụy Ninh, Huyện Thái Thụy, Tỉnh Thái Bình, Việt Nam",
+    "overall_rating": "4.6/5",
+    "rating_count": "130",
+    "opening_hours": "N/A",
+    "description": "Đền Hệ là một di tích lịch sử văn hóa cổ kính nằm tựa lưng vào đê sông, mặt hướng ra cánh đồng làng thơ mộng, thờ hai vị thần Ngô Đồng và Bà Á – tướng lĩnh thời Hùng Vương có công phù trợ đánh giặc thời nhà Lý. Không gian đền yên tĩnh, linh thiêng, được bao bọc bởi cảnh quan sông nước hữu tình rất phù hợp để tham quan và chiêm bái. Đây là một trong những điểm thờ tự truyền thống ít được biết đến nhưng mang giá trị lịch sử và kiến trúc đặc sắc của huyện Thái Thụy.",
+    "images": [],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Ngôi chùa truyền thống, vị trí yên bình và tuyệt đẹp"
+      },
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Hệ thống đền chùa đáng tham quan"
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "Latitude": "20.6063469",
+    "Longitude": "106.46514049999999"
+  }
+]

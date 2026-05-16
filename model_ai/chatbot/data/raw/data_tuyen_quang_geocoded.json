@@ -1,0 +1,310 @@
+[
+  {
+    "url": "",
+    "location_name": "Thác Khuổi Nhi",
+    "address": "Xã Thượng Lâm, huyện Lâm Bình, tỉnh Tuyên Quang",
+    "overall_rating": "4.5/5",
+    "rating_count": "358",
+    "opening_hours": "6:00 AM – 6:00 PM",
+    "description": "Thác Khuổi Nhi là một trong những thác nước đẹp nhất Tuyên Quang với nhiều tầng nước trắng xóa đổ xuống giữa khung cảnh rừng núi hùng vĩ. Du khách có thể bơi lội trong làn nước trong xanh mát lạnh và tận hưởng trải nghiệm thú vị khi được đàn cá nhỏ nhẹ nhàng massage bàn chân. Để đến nơi đây, bạn thường phải đi thuyền qua lòng hồ Na Hang thơ mộng, tạo nên một hành trình khám phá thiên nhiên trọn vẹn và đáng nhớ.",
+    "images": [
+      "https://ik.imagekit.io/tvlk/blog/2023/08/go-and-share-thac-khuoi-nhi-ho-na-hang-20.jpg?tr=q-70,c-at_max,w-500,h-250,dpr-2",
+      "https://ik.imagekit.io/tvlk/blog/2023/08/go-and-share-thac-khuoi-nhi-ho-na-hang-2.png?tr=q-70,c-at_max,w-1000,h-600",
+      "https://ik.imagekit.io/tvlk/blog/2023/08/go-and-share-thac-khuoi-nhi-ho-na-hang-3.jpg?tr=q-70,c-at_max,w-1000,h-600",
+      "https://ik.imagekit.io/tvlk/blog/2023/08/go-and-share-thac-khuoi-nhi-ho-na-hang-5.jpg?tr=q-70,c-at_max,w-1000,h-600"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Thác nước tuyệt đẹp với rất nhiều cá gặm nhấm đôi chân của chúng tôi."
+      }
+    ],
+    "category": ["Phiêu lưu", "Khám phá", "Thư giãn"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.4850121",
+    "Longitude": "105.3747245"
+  },
+  {
+    "url": "",
+    "location_name": "Hồ Thủy Điện Na Hang",
+    "address": "Thị trấn Nà Hang, huyện Nà Hang, tỉnh Tuyên Quang",
+    "overall_rating": "4.5/5",
+    "rating_count": "197",
+    "opening_hours": "N/A",
+    "description": "Hồ Thủy Điện Na Hang là một kỳ quan thiên nhiên rộng lớn với diện tích hơn 8.000 héc-ta, được mệnh danh là 'Hạ Long trên cạn' của vùng núi phía Bắc. Mặt hồ phẳng lặng bao phủ bởi những dãy núi đá vôi hùng vĩ mọc lên như những bức tranh thủy mặc giữa làn sương sớm. Đây là điểm lý tưởng để du thuyền ngắm cảnh, khám phá các bản làng dân tộc ven hồ và cảm nhận vẻ đẹp hoang sơ, yên bình hiếm có.",
+    "images": [
+      "https://statics.vinpearl.com/khung-canh-hung-vi-o-na-hang_1729872796.jpg",
+      "https://statics.vinpearl.com/ve-dep-tho-mong-cua-na-hang_1729872769.jpg",
+      "https://statics.vinpearl.com/khung-canh-tai-na-hang_1729872729.jpg",
+      "https://statics.vinpearl.com/check-in-na-hang_1729872681.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Khung cảnh tuyệt vời trên hồ!"
+      }
+    ],
+    "category": ["Thư giãn", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.3687055",
+    "Longitude": "105.3991205"
+  },
+  {
+    "url": "",
+    "location_name": "Thác Nặm Me",
+    "address": "Xã Thượng Lâm, huyện Lâm Bình, tỉnh Tuyên Quang",
+    "overall_rating": "4.9/5",
+    "rating_count": "45",
+    "opening_hours": "N/A",
+    "description": "Thác Nặm Me là một trong những thác nước hùng vĩ và hoang sơ nhất Tuyên Quang, cao khoảng 200m với 15 tầng nước trắng xóa chảy qua những vách đá giữa rừng già xanh thẳm. Hành trình chinh phục thác đòi hỏi sức khỏe và sự kiên trì, nhưng sẽ đền đáp xứng đáng bằng khung cảnh thiên nhiên hùng tráng và không khí trong lành. Đây là điểm đến không thể bỏ qua dành cho những tâm hồn yêu thích phiêu lưu và khám phá thiên nhiên đại ngàn.",
+    "images": [
+      "https://statics.vinpearl.com/Thac-nam-me-mat-me-quanh-nam_1730130902.jpg",
+      "https://statics.vinpearl.com/v%E1%BA%BB%20dep-nen-tho-cua-thac-nam-me_1730130876.jpg",
+      "https://statics.vinpearl.com/truyen-thuyet-ve-thac-nam-me_1730130854.jpg",
+      "https://statics.vinpearl.com/Chiem-nguong-ve-dep-thac-nam-me_1730130833.jpg",
+      "https://statics.vinpearl.com/tam-thac-nam-me_1730130811.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Mùa thu tuyệt vời! Phải ghé thăm khi lưu trú tại Na Hang!"
+      }
+    ],
+    "category": ["Phiêu lưu", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.5695795",
+    "Longitude": "105.2898037"
+  },
+  {
+    "url": "",
+    "location_name": "Khu Di Tích Quốc Gia Đặc Biệt Tân Trào",
+    "address": "Xã Tân Trào, huyện Sơn Dương, tỉnh Tuyên Quang",
+    "overall_rating": "4.7/5",
+    "rating_count": "208",
+    "opening_hours": "N/A",
+    "description": "Tân Trào là khu di tích lịch sử cách mạng đặc biệt quan trọng, nơi Chủ tịch Hồ Chí Minh từng sống và làm việc trong những ngày đầu kháng chiến chống thực dân Pháp. Khu di tích lưu giữ nhiều địa danh gắn với lịch sử dân tộc như lán Nà Nưa, đình Tân Trào và cây đa lịch sử nơi phát lệnh Tổng khởi nghĩa tháng Tám năm 1945. Đây là điểm đến giàu ý nghĩa giáo dục lịch sử, giúp du khách hiểu sâu hơn về cuộc cách mạng hào hùng của dân tộc Việt Nam.",
+    "images": [
+      "https://baotanghochiminh.vn/pic/Service/images/cay%20da%20tam%20(Large).jpg",
+      "https://baotanghochiminh.vn/pic/Service/images/%E1%BA%A2nh%20ch%E1%BB%A5p%20M%C3%A0n%20h%C3%ACnh%202020-03-08%20l%C3%BAc%2011_50_18.png",
+      "https://images.vietnamtourism.gov.vn/vn//images/2019/CNMN/31.8._Ve_thu_do_khang_chien_Tan_Trao.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Nơi lịch sử tuyệt vời để tìm hiểu về Cách mạng Việt Nam."
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.7744840",
+    "Longitude": "105.4720760"
+  },
+  {
+    "url": "",
+    "location_name": "Lán Nà Nưa",
+    "address": "Xã Tân Trào, huyện Sơn Dương, tỉnh Tuyên Quang",
+    "overall_rating": "4.5/5",
+    "rating_count": "745",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Lán Nà Nưa là căn lán nhỏ giản dị nơi Bác Hồ từng ở và làm việc trong những tháng ngày chuẩn bị cho Cách mạng tháng Tám lịch sử. Nằm ẩn mình dưới tán rừng già xanh mát của Chiến khu Việt Bắc, nơi đây mang một vẻ yên tĩnh và thiêng liêng đặc biệt. Đến thăm lán Nà Nưa, du khách sẽ cảm nhận được tinh thần bất khuất và lối sống giản dị đáng kính của vị lãnh tụ vĩ đại của dân tộc.",
+    "images": [
+      "https://statics.vinpearl.com/di-tich-lich-su-lan-na-nua-tuyen-quang_1729600569.jpg",
+      "https://statics.vinpearl.com/vi-tri-lan-na-nua_1729600657.jpg",
+      "https://statics.vinpearl.com/du-khach-tham-quan-lan-na-nua_1729600697.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Tuyệt vời."
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.7748939",
+    "Longitude": "105.4848754"
+  },
+  {
+    "url": "",
+    "location_name": "Ruộng Bậc Thang Hồng Thái",
+    "address": "Xã Hồng Thái, huyện Na Hang, tỉnh Tuyên Quang",
+    "overall_rating": "4.6/5",
+    "rating_count": "96",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Ruộng bậc thang Hồng Thái trải dài trên những sườn núi cao hơn 1.000m so với mực nước biển, tạo nên những dải vàng óng ánh tuyệt đẹp vào mùa lúa chín từ tháng 9 đến tháng 10. Nơi đây được ví như 'Sa Pa thu nhỏ' của Tuyên Quang với khí hậu mát mẻ quanh năm và phong cảnh bình yên, thơ mộng. Ngoài ruộng bậc thang, du khách còn có thể thưởng thức các đặc sản địa phương như cá ruộng, lợn đen và mận rừng thơm ngon.",
+    "images": [
+      "https://statics.vinpearl.com/kham-pha-ruong-bac-thang-hong-thai-dep_1732883785.jpg",
+      "https://statics.vinpearl.com/check-in-ruong-bac-thang-hong-thai_1732883813.jpg",
+      "https://statics.vinpearl.com/mua-vang-tai-hong-thai_1732883844.jpg",
+      "https://statics.vinpearl.com/ve-dep-ruong-bac-thang-tai-hong-thai_1732883894.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Ruộng bậc thang đẹp với khí hậu mát mẻ quanh năm."
+      }
+    ],
+    "category": ["Khám phá", "Thư giãn", "Ẩm thực"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.5165573",
+    "Longitude": "105.5594968"
+  },
+  {
+    "url": "",
+    "location_name": "Đền Hạ",
+    "address": "39 Đường Chiến Thắng Sông Lô, Minh Xuân, thành phố Tuyên Quang, tỉnh Tuyên Quang",
+    "overall_rating": "4.6/5",
+    "rating_count": "230",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Đền Hạ là một trong những ngôi đền cổ kính và linh thiêng nhất tọa lạc bên bờ sông Lô thơ mộng giữa lòng thành phố Tuyên Quang. Đền thờ các vị thần bảo hộ của vùng đất và thường xuyên tổ chức các nghi lễ Hầu Đồng đặc sắc của tín ngưỡng thờ Mẫu người Việt. Ghé thăm đền, du khách sẽ được đắm mình trong không gian tâm linh thanh tịnh và tìm hiểu thêm về nét đẹp văn hóa tín ngưỡng đặc trưng của vùng đất Tuyên Quang.",
+    "images": [
+      "https://statics.vinpearl.com/den-ha-tuyen-quang_1733937168.jpg",
+      "https://statics.vinpearl.com/khong-gian-xanh-mat-tai-den-ha_1733937142.jpg",
+      "https://statics.vinpearl.com/ben-trong-den-ha_1733937119.jpg",
+      "https://statics.vinpearl.com/kien-truc-den-ha_1733937095.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Vị trí đẹp trực tiếp trên sông. Ngôi đền thật cổ kính."
+      }
+    ],
+    "category": ["Văn hóa", "Thư giãn"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.8127202",
+    "Longitude": "105.2148621"
+  },
+  {
+    "url": "",
+    "location_name": "Đền Ỷ La",
+    "address": "Phường Ỷ La, thành phố Tuyên Quang, tỉnh Tuyên Quang",
+    "overall_rating": "4.6/5",
+    "rating_count": "135",
+    "opening_hours": "N/A",
+    "description": "Đền Ỷ La là một địa điểm tâm linh nổi tiếng và linh thiêng bậc nhất của tỉnh Tuyên Quang, thờ phụng Thánh Mẫu Đệ Nhị theo tín ngưỡng thờ Mẫu Tứ Phủ truyền thống. Ngôi đền mang kiến trúc cổ kính, trang nghiêm và luôn tấp nập người dân, du khách thập phương đến thắp hương, cầu bình an và may mắn. Đây cũng là nơi gìn giữ nhiều giá trị văn hóa phi vật thể quý báu của người dân Tuyên Quang và vùng Việt Bắc.",
+    "images": [
+      "https://statics.vinpearl.com/%C4%91%E1%BB%81n-m%E1%BA%ABu-%E1%BB%B7-la-tuy%C3%AAn-quang_1734502859.jpg",
+      "https://statics.vinpearl.com/canh-quan-den-y-lan_1734502891.jpg",
+      "https://statics.vinpearl.com/san-den-y-lan-tuyen-quang_1734502925.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Địa điểm tâm linh rất đẹp và trang nghiêm. Mọi người nên ghé thăm."
+      }
+    ],
+    "category": ["Văn hóa"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.8194761",
+    "Longitude": "105.1870297"
+  },
+  {
+    "url": "",
+    "location_name": "Di Tích Thành Nhà Mạc",
+    "address": "Đường Bình Thuận, Minh Xuân, thành phố Tuyên Quang, tỉnh Tuyên Quang",
+    "overall_rating": "4.3/5",
+    "rating_count": "598",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Thành Nhà Mạc là dấu tích lịch sử còn sót lại của tòa thành cổ được xây dựng vào thế kỷ XVI dưới triều đại nhà Mạc (1527–1592), minh chứng cho một giai đoạn lịch sử đặc biệt của vùng đất Tuyên Quang. Những đoạn tường thành và cổng thành còn lưu giữ được là bằng chứng vật thể quý giá về kiến trúc quân sự phong kiến Việt Nam. Đây là điểm đến thú vị cho những ai yêu thích tìm hiểu lịch sử và kiến trúc cổ của dân tộc.",
+    "images": [
+      "https://statics.vinpearl.com/cong-thanh-con-lai-cua-di-tich-thanh-nha-mac-tuyen-quang_1732465929.jpg",
+      "https://statics.vinpearl.com/kien-truc-thanh-tuyen-quang_1732465909.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/B%E1%BA%A3n_v%E1%BA%BD_th%C3%A0nh_Tuy%C3%AAn_Quang.jpg/500px-B%E1%BA%A3n_v%E1%BA%BD_th%C3%A0nh_Tuy%C3%AAn_Quang.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "4/5",
+        "comment": "Một cánh cổng thuộc cụm di tích lịch sử Thành cổ Tuyên Quang."
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.8192011",
+    "Longitude": "105.2149755"
+  },
+  {
+    "url": "",
+    "location_name": "Quảng Trường Tỉnh Tuyên Quang",
+    "address": "Đường Minh Xuân, thành phố Tuyên Quang, tỉnh Tuyên Quang",
+    "overall_rating": "4.6/5",
+    "rating_count": "79",
+    "opening_hours": "N/A",
+    "description": "Quảng trường tỉnh Tuyên Quang (còn gọi là Quảng trường Nguyễn Tất Thành) là trái tim của thành phố, nơi diễn ra các sự kiện văn hóa, chính trị và lễ hội lớn của tỉnh. Đặc biệt, nơi đây nổi tiếng toàn quốc với Lễ hội Trung thu Tuyên Quang hàng năm, quy tụ những mô hình đèn lồng khổng lồ rực rỡ sắc màu với đủ hình dạng sáng tạo độc đáo. Đến đây, bạn sẽ cảm nhận được sức sống và bản sắc văn hóa đặc trưng của người dân Tuyên Quang qua từng mùa lễ hội.",
+    "images": [
+      "https://mia.vn/media/uploads/blog-du-lich/quang-truong-nguyen-tat-thanh-4-1726500027.jpg",
+      "https://mia.vn/media/uploads/blog-du-lich/quang-truong-nguyen-tat-thanh-3-1726500027.jpg",
+      "https://mia.vn/media/uploads/blog-du-lich/quang-truong-nguyen-tat-thanh-2-1726500027.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Trung thu ở đây thực sự khó quên với những mô hình đèn lồng khổng lồ."
+      }
+    ],
+    "category": ["Văn hóa", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "21.8193156",
+    "Longitude": "105.2183554"
+  },
+  {
+    "url": "",
+    "location_name": "Thác Mạ Héc",
+    "address": "Xã Phú Lưu, huyện Lâm Bình, tỉnh Tuyên Quang",
+    "overall_rating": "4.8/5",
+    "rating_count": "24",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Thác Mạ Héc là một điểm đến thiên nhiên ấn tượng với hệ thống thác nhiều tầng trải dài trên nền đá vôi phủ rêu xanh mượt, tạo ra vô số hồ bơi tự nhiên trong vắt giữa đại ngàn. Khí hậu mát mẻ và không khí trong lành nơi đây khiến cho chuyến ghé thăm trở thành trải nghiệm nghỉ dưỡng và giải nhiệt tuyệt vời trong những ngày hè oi bức. Tuy nhiên, du khách cần đặc biệt lưu ý đi giày đế bám chắc vì mặt đá thường xuyên trơn trượt do lớp rêu phong dày.",
+    "images": [
+      "https://statics.vinpearl.com/hinh-anh-thac-ma-hec_1732466797.jpg",
+      "https://statics.vinpearl.com/hinh-anh-ngon-thac-ma-hec_1732466757.jpg",
+      "https://statics.vinpearl.com/nui-cham-chu-o-tuyen-quang_1732466731.jpg",
+      "https://statics.vinpearl.com/nguoi-dao-do-o-nui-cham-chu_1732466705.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Rất thích hợp để bơi lội và giải nhiệt trong những ngày nắng nóng."
+      }
+    ],
+    "category": ["Phiêu lưu", "Thư giãn", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.1830993",
+    "Longitude": "105.0782348"
+  },
+  {
+    "url": "",
+    "location_name": "Vườn Mận Nà Héc",
+    "address": "Xã Yên Lập, huyện Chiêm Hóa, tỉnh Tuyên Quang",
+    "overall_rating": "4.8/5",
+    "rating_count": "4",
+    "opening_hours": "Mở cửa 24/7",
+    "description": "Vườn Mận Nà Héc là điểm check-in hấp dẫn nằm trên cao nguyên xanh mát của huyện Chiêm Hóa, đặc biệt thu hút du khách vào mùa mận nở rộ từ tháng 1 đến tháng 3 hàng năm. Những hàng mận trắng muốt trải dài trên nền trời xanh biếc tạo nên bức tranh thiên nhiên vô cùng lãng mạn và dịu dàng. Đây cũng là cơ hội tuyệt vời để du khách được thưởng thức mận tươi và các đặc sản nông sản sạch trực tiếp từ bàn tay người nông dân địa phương.",
+    "images": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEeqsTmqclcEkf96xF0AoRCMyTHDN2_9u8iLsklzUWV_C2s2XGOb6lxnm50jW-7kGT_kOUcmBvak8pVMRVM6VOd28pHfq0cpJdi-wjX1_F1iTaYL62jsaaVabm4wWxa2V8vmH1kmMPfljMt=w270-h312-n-k-no",
+      "https://chiemhoa.gov.vn/media/images/img_20250211153737.jpg",
+      "https://chiemhoa.gov.vn/media/images/img_20250211153812.jpg",
+      "https://chiemhoa.gov.vn/media/images/img_20250211153925.jpg"
+    ],
+    "reviews": [
+      {
+        "reviewer_name": "",
+        "stars": "5/5",
+        "comment": "Checkin chụp ảnh ok"
+      }
+    ],
+    "category": ["Thư giãn", "Ẩm thực", "Khám phá"],
+    "city": "Tuyên Quang",
+    "Latitude": "22.2253214",
+    "Longitude": "105.4034204"
+  }
+]
