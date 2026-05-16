@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
+	"smart-travel-backend/features/chatbot"
 	"smart-travel-backend/features/contact"
 	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
@@ -73,6 +74,11 @@ func main() {
 	locationGroup := router.Group("/api/location")
 	{
 		location.SetupLocationRoutes(locationGroup, db)
+	}
+
+	chatbotGroup := router.Group("/api/chatbot")
+	{
+		chatbot.SetupChatbotRoutes(chatbotGroup, authClient)
 	}
 
 	// 5. Khởi tạo Http Server
