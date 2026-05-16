@@ -25,7 +25,7 @@ const Layout = () => {
         </motion.main>
       </AnimatePresence>
       <FloatingChatWidget />
-      <Footer />
+      {!location.pathname.startsWith('/ai-concierge') && <Footer />}
     </div>
   );
 };

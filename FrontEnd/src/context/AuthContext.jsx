@@ -38,23 +38,31 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (username, password) => {
     try {
       const userData = await authService.loginLocalBackend(username, password);
-      let userWithMeta = { ...userData, authType: 'local' };
+      console.log("🔍 RAW userData from backend:", JSON.stringify(userData, null, 2));
+      // Trích xuất ID ngay lập tức từ dữ liệu trả về của backend
+      const userId = userData.db_id || userData.id || userData.user_id || (userData.user && (userData.user.id || userData.user.user_id));
+      let userWithMeta = { ...userData, id: userId, authType: 'local' };
       
       // Lấy thông tin profile ngay sau khi login
       try {
         const token = userData.access_token || userData.token;
         if (token) {
            const profileData = await getInfo(token);
-           if (profileData) {
-               userWithMeta = {
-                   ...userWithMeta,
-                   name: profileData.display_name || userWithMeta.name || userWithMeta.username,
-                   avatar: profileData.avatar || userWithMeta.avatar,
-                   phone: profileData.phone_number || userWithMeta.phone,
-                   bio: profileData.bio || userWithMeta.bio,
-                   preferences: profileData.travel_preferences || userWithMeta.preferences
-               };
-           }
+            if (profileData) {
+                userWithMeta = {
+                    ...userWithMeta,
+                    db_id: userData.db_id || userWithMeta.db_id,
+                    // Tìm ID ở mọi ngóc ngách có thể
+                    id: profileData.id || profileData.user_id || profileData.userId || 
+                        userWithMeta.id || userWithMeta.user_id || 
+                        (userData.user && (userData.user.id || userData.user.user_id)),
+                    name: profileData.display_name || userWithMeta.name || userWithMeta.username,
+                    avatar: profileData.avatar || userWithMeta.avatar,
+                    phone: profileData.phone_number || userWithMeta.phone,
+                    bio: profileData.bio || userWithMeta.bio,
+                    preferences: profileData.travel_preferences || userWithMeta.preferences
+                };
+            }
         }
       } catch (err) {
          console.warn("Không thể lấy thông tin profile lúc đăng nhập:", err);
@@ -87,24 +95,31 @@ export const AuthProvider = ({ children }) => {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
       const userData = await authService.loginWithGoogleBackend(idToken);
-
-      let userWithMeta = { ...userData, authType: 'google', firebaseUid: result.user.uid };
+      
+      // Trích xuất ID ngay lập tức từ dữ liệu trả về của backend
+      const userId = userData.db_id || userData.id || userData.user_id || 
+               (userData.user && (userData.user.db_id || userData.user.id));
+      let userWithMeta = { ...userData, id: userId, authType: 'google', firebaseUid: result.user.uid };
       
       // Lấy thông tin profile ngay sau khi login
       try {
         const token = userData.access_token || userData.token || idToken;
         if (token) {
            const profileData = await getInfo(token);
-           if (profileData) {
-               userWithMeta = {
-                   ...userWithMeta,
-                   name: profileData.display_name || result.user.displayName || userWithMeta.name,
-                   avatar: profileData.avatar || result.user.photoURL || userWithMeta.avatar,
-                   phone: profileData.phone_number || userWithMeta.phone,
-                   bio: profileData.bio || userWithMeta.bio,
-                   preferences: profileData.travel_preferences || userWithMeta.preferences
-               };
-           }
+            if (profileData) {
+                userWithMeta = {
+                    ...userWithMeta,
+                    // Tìm ID ở mọi ngóc ngách có thể
+                    id: profileData.db_id || profileData.id || profileData.user_id || profileData.userId || 
+                        userWithMeta.id || userWithMeta.user_id || 
+                        (userData.user && (userData.user.id || userData.user.user_id)),
+                    name: profileData.display_name || result.user.displayName || userWithMeta.name,
+                    avatar: profileData.avatar || result.user.photoURL || userWithMeta.avatar,
+                    phone: profileData.phone_number || userWithMeta.phone,
+                    bio: profileData.bio || userWithMeta.bio,
+                    preferences: profileData.travel_preferences || userWithMeta.preferences
+                };
+            }
         }
       } catch (err) {
          console.warn("Không thể lấy thông tin profile lúc đăng nhập Google:", err);
@@ -153,15 +168,19 @@ export const AuthProvider = ({ children }) => {
 
   // Lấy Token linh hoạt — phải định nghĩa TRƯỚC khi dùng trong các hàm khác
   const getToken = useCallback(async () => {
+    // Ưu tiên token từ backend trả về nếu có (đã lưu trong user object)
+    // Điều này quan trọng vì backend thường mong đợi JWT của chính nó phát hành
+    const backendToken = user?.access_token || user?.token;
+    if (backendToken) return backendToken;
+
     await auth.authStateReady(); // Đợi Firebase khởi tạo xong
 
-    // Nếu Firebase có user đang đăng nhập (Google) => lấy token mới nhất từ Firebase
+    // Nếu không có backend token nhưng có Firebase user (Google) => lấy idToken
     if (auth.currentUser) {
       return await auth.currentUser.getIdToken();
     }
 
-    // Nếu không có Firebase user (Local account) => dùng token từ backend
-    return user?.access_token || user?.token || '';
+    return '';
   }, [user]);
 
   // Đổi mật khẩu
