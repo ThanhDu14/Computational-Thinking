@@ -1,13 +1,11 @@
-from src.vectorstore.vectordb import VectorDB
-from src.retriever.retriever import Retriever
-from src.retriever.reranker import Reranker
-from src.prompt.prompt_template import PromptTemplate
-from src.llm.groq_client import GroqClient
-from src.embeddings.embedding_model import EmbeddingModel
-from src.memory.chat_memory import ChatMemory
-
+from model_ai.chatbot.src.retriever.retriever import Retriever
+from model_ai.chatbot.src.retriever.reranker import Reranker
+from model_ai.chatbot.src.prompt.prompt_template import PromptTemplate
+from model_ai.chatbot.src.memory.chat_memory import ChatMemory
+from model_ai.chatbot.src.vectorstore.vector_store import vector_store
 
 class RAGPipeline:
+<<<<<<< HEAD
     """
     End-to-end RAG pipeline with session management and summarization
     """
@@ -25,14 +23,19 @@ class RAGPipeline:
         self.vectordb = VectorDB(index_path, texts_path)
 
         # Retriever
+=======
+    def __init__(self, embedding_model, llm, user_id="guest", session_id=None):
+        # [FIXED] Nhận embedding_model và llm từ ngoài vào để không tốn RAM khởi tạo lại
+        self.embedding_model = embedding_model
+        self.llm = llm
+        
+        self.vectordb = vector_store.get_db()
+>>>>>>> main
         self.retriever = Retriever(self.embedding_model, self.vectordb)
-
-        # Reranker
         self.reranker = Reranker()
-
-        # Prompt builder
         self.prompt_builder = PromptTemplate()
 
+<<<<<<< HEAD
         # LLM client
         self.llm = GroqClient()
 
@@ -59,9 +62,22 @@ class RAGPipeline:
         
         full_query = f"[Summary of previous conversation: {summary}]\n\nUser: {query}" if summary else query
 
+=======
+        self.memory = ChatMemory(
+            session_id=session_id,
+            user_id=user_id
+        )
+
+    def ask(self, query: str):
+        docs = self.retriever.retrieve(query)
+        docs = self.reranker.rerank(query, docs)
+        history_data = self.memory.get_context()
+        
+>>>>>>> main
         prompt = self.prompt_builder.build_prompt(
             query=full_query,
             contexts=docs,
+<<<<<<< HEAD
             history=recent_history
         )
 
@@ -83,6 +99,18 @@ class RAGPipeline:
             # Check for summarization (if history > 20 messages)
             if len(updated_history) > 20:
                 self.auto_summarize(session_id, updated_history)
+=======
+            history=history_data
+        )
+
+        answer = self.llm.generate(prompt)
+
+        self.memory.add_chat(
+            user_message=query,
+            assistant_message=answer,
+            llm=self.llm
+        )
+>>>>>>> main
 
         return answer
 

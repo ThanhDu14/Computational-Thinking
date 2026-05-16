@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Location đại diện cho bảng 'location'
+// Location đại diện cho bảng 'location' (Khớp hoàn toàn với ảnh của bạn)
 type Location struct {
 	ID              uuid.UUID `gorm:"column:location_id;primaryKey;default:uuid_generate_v4()" json:"id"`
 	Name            string    `gorm:"column:name;type:varchar(255);not null" json:"name"`
@@ -18,17 +18,17 @@ type Location struct {
 	Rating          float64   `gorm:"column:rating;type:float8" json:"rating"`
 	CountRating     int       `gorm:"column:count_rating;type:int4" json:"count_rating"`
 	Description     string    `gorm:"column:description;type:text" json:"description"`
+	
+	City            string    `gorm:"column:city;type:varchar(100);index" json:"city"`
+	
+	CreatedAt       time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
+	UpdatedAt       time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 
-	City string `gorm:"column:city;type:varchar(100);index" json:"city"`
-
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
-
-	// Quan hệ n-n với Category
+	// Quan hệ Nhiều-Nhiều với Category
 	Categories []Category `gorm:"many2many:locationcategories;foreignKey:ID;joinForeignKey:location_id;References:ID;joinReferences:category_id" json:"categories"`
-
-	// Quan hệ 1-n với LocationImage
-	Images []LocationImage `gorm:"foreignKey:LocationID;references:ID" json:"images"`
+	
+	// Quan hệ Một-Nhiều với LocationImage
+	Images     []LocationImage `gorm:"foreignKey:LocationID;references:ID" json:"images"`
 }
 
 func (Location) TableName() string {
@@ -44,6 +44,8 @@ type LocationImage struct {
 func (LocationImage) TableName() string {
 	return "locationimages"
 }
+
+
 
 // Category đại diện cho bảng 'categories'
 type Category struct {
