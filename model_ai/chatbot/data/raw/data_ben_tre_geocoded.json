@@ -1,0 +1,533 @@
+[
+    {
+        "url": "",
+        "location_name": "Chùa Tuyên Linh",
+        "address": "Xã Minh Đức, huyện Mỏ Cày Nam, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Chùa Tuyên Linh là một di tích lịch sử văn hóa cấp quốc gia với kiến trúc cổ kính và không gian thanh tịnh. Nơi đây từng là cơ sở hoạt động cách mạng quan trọng và là nơi cụ Phó bảng Nguyễn Sinh Sắc từng lưu trú, bốc thuốc trị bệnh cho người dân. Du khách đến đây không chỉ để chiêm bái, cầu bình an mà còn để tìm hiểu về những trang sử hào hùng của vùng đất xứ dừa.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/chua-tuyen-linh-trung-tam-phat-giao-lon-tai-ben-tre-01-1666720555.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/chua-tuyen-linh-trung-tam-phat-giao-lon-tai-ben-tre-02-1666720555.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/chua-tuyen-linh-trung-tam-phat-giao-lon-tai-ben-tre-03-1666720555.jpeg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2366127",
+        "Longitude": "106.3774683"
+    },
+    {
+        "url": "",
+        "location_name": "Lăng mộ Nguyễn Đình Chiểu",
+        "address": "Xã An Đức, huyện Ba Tri, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Lăng mộ Nguyễn Đình Chiểu là nơi an nghỉ của nhà thơ lớn, nhà yêu nước vĩ đại và vị thầy thuốc đức độ của dân tộc. Khu di tích được xây dựng khang trang với đền thờ, nhà bia và phần mộ bao quanh bởi những hàng cây xanh mát. Đây là điểm đến tâm linh mang ý nghĩa giáo dục sâu sắc, thu hút đông đảo du khách đến dâng hương và tưởng nhớ cụ Đồ Chiểu.",
+        "images": [
+            "https://thamhiemmekong.com/wp-content/uploads/2020/06/langmonguyendinhchieu-1024x655.jpg",
+            "https://thamhiemmekong.com/wp-content/uploads/2020/06/langmonguyendinhchieu1-1-1024x650.jpg",
+            "https://thamhiemmekong.com/wp-content/uploads/2020/06/ditichlangmonguyendinhchieu1-1024x644.jpg",
+            "https://thamhiemmekong.com/wp-content/uploads/2020/06/khuditichlangmonguyendinhchieu1-1024x768.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2361673",
+        "Longitude": "106.3777957"
+    },
+    {
+        "url": "",
+        "location_name": "Khu tưởng niệm nữ tướng Nguyễn Thị Định",
+        "address": "Xã Lương Hòa, huyện Giồng Trôm, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Khu tưởng niệm được lập ra để ghi nhớ công lao to lớn của Nữ tướng Nguyễn Thị Định, người chỉ huy kiệt xuất của đội quân tóc dài huyền thoại. Không gian khu tưởng niệm trang nghiêm, lưu giữ nhiều hiện vật và hình ảnh quý giá về cuộc đời hoạt động cách mạng của bà. Đến đây, du khách sẽ cảm nhận được lòng yêu nước nồng nàn và tinh thần quật cường của người phụ nữ Nam Bộ.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/khu-luu-niem-nguyen-thi-dinh-noi-ghi-dau-cuoc-doi-vi-nu-tuong-dang-kinh-01-1664626396.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/khu-luu-niem-nguyen-thi-dinh-noi-ghi-dau-cuoc-doi-vi-nu-tuong-dang-kinh-03-1664626396.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/khu-luu-niem-nguyen-thi-dinh-noi-ghi-dau-cuoc-doi-vi-nu-tuong-dang-kinh-04-1664626396.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.8567214",
+        "Longitude": "106.6127955"
+    },
+    {
+        "url": "",
+        "location_name": "Khu nhà tưởng niệm Trương Vĩnh Ký",
+        "address": "Xã Vĩnh Hòa, huyện Chợ Lách, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Nhà tưởng niệm Trương Vĩnh Ký là nơi tôn vinh một trong những nhà bác học xuất sắc của Việt Nam thế kỷ 19 với nhiều đóng góp cho nền văn hóa nước nhà. Ngôi nhà mang đậm nét kiến trúc truyền thống, trưng bày nhiều tư liệu và tác phẩm tiêu biểu của ông. Đây là điểm dừng chân thú vị cho những ai đam mê tìm hiểu về lịch sử, văn hóa và ngôn ngữ dân tộc.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fnguoikesu.com%2Fimages%2Fwiki%2Ftruong-vinh-ky%2Fcf45dc6aa5d5f8639a90c6dc79c4aacf.jpg&f=1&nofb=1&ipt=303438574cfc3b36e4489d12c71502b612ba84f332f0bdfdf7152dbb2e326f5d"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2087854",
+        "Longitude": "106.2203994"
+    },
+    {
+        "url": "",
+        "location_name": "Làng du kích Đồng Khởi",
+        "address": "Xã Định Thủy, huyện Mỏ Cày Nam, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Làng du kích Đồng Khởi là cái nôi của phong trào Đồng Khởi hào hùng năm xưa, đánh dấu bước ngoặt quan trọng trong lịch sử cách mạng miền Nam. Nơi đây hiện còn bảo tồn nhiều di tích như hầm bí mật, chiến hào và các vũ khí thô sơ mà quân dân ta từng sử dụng. Tham quan làng du kích, bạn sẽ được sống lại những giây phút lịch sử oanh liệt và thêm tự hào về truyền thống đánh giặc giữ nước.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.vntrip.vn%2Fcam-nang%2Fwp-content%2Fuploads%2F2017%2F08%2FLang-du-kich-Dong-Khoi.jpg&f=1&nofb=1&ipt=ade2a90ec1a4168ebcc0b5d4dea1dc61ac5c303a459dcdb4e1f3f9db284ece9c",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdulichvietnam.com.vn%2Fvnt_upload%2Fnews%2F03_2021%2Flang_du_kich_dong_khoi_4.jpg&f=1&nofb=1&ipt=6f7e46992a3762ae4e3687e0b2c259397e95fc349b8d3f7dcbc3f35ff2acea5d",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vietfuntravel.com.vn%2Fimage%2Fdata%2FMekong%2Fdu-lich-ben-tre-lang-du-kich-dong-khoi-3.jpg&f=1&nofb=1&ipt=cd67cae1e9610f1880e81631c313aa25c35eabb4051da188d390b278e4bf9b40"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2496287",
+        "Longitude": "106.3735873"
+    },
+    {
+        "url": "",
+        "location_name": "Làng hoa cảnh Chợ Lách",
+        "address": "Huyện Chợ Lách, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Làng hoa cảnh Chợ Lách nổi tiếng là vương quốc của các loại hoa kiểng, bonsai và cây giống cung cấp cho khắp các tỉnh miền Tây. Đặc biệt vào những ngày giáp Tết, nơi đây như khoác lên mình tấm áo mới rực rỡ sắc màu của hàng ngàn chậu hoa khoe sắc. Du khách đến đây có thể tự do tản bộ, chụp ảnh check-in và chọn mua những chậu cây ưng ý nhất về trang trí nhà cửa.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vietfuntravel.com.vn%2Fimage%2Fdata%2FBlog%2Fcam-nang%2FDao-choi-lang-hoa-canh-cai-mon-cho-lach-ben-tre%2FDao-choi-lang-hoa-canh-cai-mon-cho-lach-ben-tre-h3.jpg&f=1&nofb=1&ipt=25ab851cdc38f877cf0e34bcbfbdb8a2c348c8c1c02850ec86a19880c23e1e92",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vietfuntravel.com.vn%2Fimage%2Fdata%2FBlog%2Fcam-nang%2FDao-choi-lang-hoa-canh-cai-mon-cho-lach-ben-tre%2FDao-choi-lang-hoa-canh-cai-mon-cho-lach-ben-tre-h2.jpg&f=1&nofb=1&ipt=53b856968711160966f3cc4ae07ef86092583ccfd41adf4aa3e1af75d2e4abe3",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg5.thuthuatphanmem.vn%2Fuploads%2F2021%2F11%2F10%2Fhinh-anh-lang-hoa-cho-lach-ben-tre_022745486.jpg&f=1&nofb=1&ipt=6a0f7640482c740479c7ef7701405083f5ac7932a8a54073684d190a19544575"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2281391",
+        "Longitude": "106.1919449"
+    },
+    {
+        "url": "",
+        "location_name": "Cồn Phụng (Cồn Ông Đạo Dừa)",
+        "address": "Xã Tân Thạch, huyện Châu Thành, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Cồn Phụng là một trong tứ linh cồn nổi tiếng rợp bóng dừa xanh mát trên dòng sông Tiền hiền hòa. Nơi đây không chỉ có cảnh quan sinh thái miệt vườn tuyệt đẹp mà còn lưu giữ các di tích độc đáo của Đạo Dừa do ông Nguyễn Thành Nam sáng lập. Du khách có thể trải nghiệm đi xe ngựa, thưởng thức kẹo dừa thủ công và nghe đờn ca tài tử Nam Bộ vô cùng đặc sắc.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fnhakhachcongdoan.com.vn%2Fuploads%2Fcontents%2Fimages%2Fdao-dua-1.jpg&f=1&nofb=1&ipt=243ed869e4223c9862e65ec90b43e325b3f32251c429b423dc89ad6ac3887c36",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fr2.nucuoimekong.com%2Fwp-content%2Fuploads%2Fchua-nam-quoc-phat-con-phung.webp&f=1&nofb=1&ipt=e712b1d280ea72d9df62bf07c71b839f1ed4b070dd342c76d2329bd9b957146b"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Văn hóa",
+            "Ẩm thực",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2376579",
+        "Longitude": "106.3758519"
+    },
+    {
+        "url": "",
+        "location_name": "Cồn Tiên",
+        "address": "Xã Tiên Long, huyện Châu Thành, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Cồn Tiên mang một vẻ đẹp thơ mộng, hoang sơ với những bãi cát trải dài và làn nước sông hiền hòa bao quanh. Đây là một điểm đến tương đối mới mẻ, mang lại cảm giác bình yên, tách biệt hoàn toàn với sự ồn ào của phố thị. Du khách có thể đến đây để tắm mát, tổ chức cắm trại dã ngoại và thưởng thức các món ăn dân dã đậm chất miền Tây.",
+        "images": [
+            "https://bazantravel.com/cdn/medias/uploads/28/28646-con-tien-670x446.jpg",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vietfuntravel.com.vn%2Fimage%2Fdata%2FMekong%2Fdu-lich-ben-tre-con-tien-1.jpg&f=1&nofb=1&ipt=721e762b999d3959e12280a147415afd57ac96b16b922726221e805bf5f2c79e"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Thư giãn",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "9.8837431",
+        "Longitude": "106.7340154"
+    },
+    {
+        "url": "",
+        "location_name": "Cồn Qui",
+        "address": "Xã Quới Sơn, huyện Châu Thành, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Cồn Qui được bao phủ bởi những vườn cây ăn trái trĩu quả quanh năm, đặc biệt là các loại trái cây đặc sản như nhãn, chôm chôm và bưởi. Nơi đây giữ được nét đẹp nguyên sơ của miệt vườn sông nước, chưa bị khai thác du lịch thương mại quá mức. Hoạt động thú vị nhất tại đây là ngồi đò chèo len lỏi qua các con rạch rợp bóng bần và thưởng thức trái cây tươi ngon ngay tại vườn.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/con-quy-ben-tre-va-khong-gian-thanh-binh-dam-chat-song-nuoc-5-1667232134.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/con-quy-ben-tre-va-khong-gian-thanh-binh-dam-chat-song-nuoc-1-1667232133.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/con-quy-ben-tre-va-khong-gian-thanh-binh-dam-chat-song-nuoc-2-1667232133.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Ẩm thực",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "9.8837431",
+        "Longitude": "106.7340154"
+    },
+    {
+        "url": "",
+        "location_name": "Sân chim Vàm Hồ",
+        "address": "Xã Tân Mỹ, huyện Ba Tri, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Sân chim Vàm Hồ là khu bảo tồn sinh thái độc đáo, nơi trú ngụ của hàng chục ngàn cá thể chim thuộc nhiều loài khác nhau như cò, vạc, diệc. Thời điểm lý tưởng nhất để tham quan là vào buổi chiều tà, khi từng đàn chim rợp trời gọi nhau bay về tổ sau một ngày tìm kiếm thức ăn. Khung cảnh thiên nhiên hoang dã nơi đây kết hợp với âm thanh sống động sẽ mang lại những trải nghiệm khó quên.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/den-san-chim-vam-ho-chiem-nguong-ve-dep-thien-nhien-ky-thu-01-1668485055.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/den-san-chim-vam-ho-chiem-nguong-ve-dep-thien-nhien-ky-thu-02-1668485055.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/den-san-chim-vam-ho-chiem-nguong-ve-dep-thien-nhien-ky-thu-03-1668485056.jpeg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Phiêu lưu",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2347683",
+        "Longitude": "106.3751744"
+    },
+    {
+        "url": "",
+        "location_name": "Vườn cây ăn trái Cái Mơn",
+        "address": "Xã Vĩnh Thành, huyện Chợ Lách, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Vườn cây ăn trái Cái Mơn là vựa trái cây trứ danh của Nam Bộ, đặc biệt nổi tiếng với giống sầu riêng Cái Mơn béo ngậy. Đặt chân đến đây, du khách sẽ như lạc vào mê cung của những vườn chôm chôm, măng cụt, bòn bon trĩu quả đan xen theo từng con rạch. Ngoài việc được tự tay hái và thưởng thức trái cây, bạn còn được khám phá lối sống chân chất của người dân nhà vườn.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/vuon-trai-cay-cai-mon-toa-do-giai-nhiet-ngay-nang-nong-1-1666699930.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/vuon-trai-cay-cai-mon-toa-do-giai-nhiet-ngay-nang-nong-3-1666699930.jpgv",
+            "https://mia.vn/media/uploads/blog-du-lich/vuon-trai-cay-cai-mon-toa-do-giai-nhiet-ngay-nang-nong-4-1666699930.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Ẩm thực",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2339636",
+        "Longitude": "106.3709439"
+    },
+    {
+        "url": "",
+        "location_name": "Nhà thờ La Mã",
+        "address": "Xã Hưng Nhượng, huyện Giồng Trôm, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Nhà thờ La Mã Bến Tre, hay còn gọi là Trung tâm Hành hương Đức Mẹ La Mã, là một công trình tôn giáo mang đậm dấu ấn kiến trúc phương Tây. Nơi đây gắn liền với sự kiện lịch sử bức ảnh Đức Mẹ Hằng Cứu Giúp hiện ra, thu hút đông đảo giáo dân khắp nơi đến hành hương. Không gian nhà thờ tĩnh lặng và trang nghiêm tạo cảm giác thư thái, an bình cho tâm hồn của mọi du khách ghé thăm.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/nha-tho-la-ma-ben-tre-trung-tam-hanh-huong-noi-tieng-01-1721696833.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/nha-tho-la-ma-ben-tre-trung-tam-hanh-huong-noi-tieng-02-1666925364.jpeg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.1030578",
+        "Longitude": "106.4397924"
+    },
+    {
+        "url": "",
+        "location_name": "Chùa Vạn Phước",
+        "address": "Thị trấn Bình Đại, huyện Bình Đại, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Chùa Vạn Phước là một trong những ngôi tự viện lớn và đẹp nhất tại vùng ven biển Bình Đại, gây ấn tượng bởi tông màu vàng rực rỡ lộng lẫy. Khuôn viên chùa vô cùng rộng rãi, nổi bật với tôn tượng Phật Di Lặc khổng lồ và hệ thống cảnh quan đầm sen được chăm chút tỉ mỉ. Du khách thường tìm đến đây để vãn cảnh, lễ Phật cầu bình an và tận hưởng không gian thanh tịnh chốn thiền môn.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/den-chua-van-phuoc-ben-tre-kham-pha-tien-canh-tran-gian-01-1666723836.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/den-chua-van-phuoc-ben-tre-kham-pha-tien-canh-tran-gian-03-1666723836.jpeg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "9.9452394",
+        "Longitude": "106.5147921"
+    },
+    {
+        "url": "",
+        "location_name": "Đình Tiên Thủy",
+        "address": "Xã Tiên Thủy, huyện Châu Thành, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Đình Tiên Thủy là một di tích kiến trúc nghệ thuật cổ kính, thể hiện rõ nét tín ngưỡng thờ Thành hoàng bản cảnh của người dân Nam Bộ xưa. Ngôi đình còn lưu giữ được nhiều nét chạm khắc gỗ tinh xảo, những bức hoành phi và câu đối có giá trị nghệ thuật cao. Hàng năm, các lễ hội kỳ yên tại đình được tổ chức long trọng, mang đậm bản sắc văn hóa truyền thống của vùng đất miệt vườn.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/ghe-den-dinh-tien-thuy-kham-pha-kien-truc-truyen-thong-2-1666744098.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/ghe-den-dinh-tien-thuy-kham-pha-kien-truc-truyen-thong-7-1666744098.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Văn hóa",
+            "Khám phá"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.142435",
+        "Longitude": "106.342545"
+    },
+    {
+        "url": "",
+        "location_name": "Biển Cồn Bửng",
+        "address": "Xã Thạnh Hải, huyện Thạnh Phú, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Biển Cồn Bửng là một bãi biển phù sa mang nét hoang sơ mộc mạc, chưa chịu nhiều sự tác động của các dịch vụ du lịch thương mại. Khác với những bãi biển cát trắng, biển ở đây có nét đặc trưng với những bãi triều thoai thoải và rừng phi lao rì rào trong gió. Du khách có thể đến đây để hít thở gió biển trong lành, bắt ốc cào nghêu và thưởng thức hải sản tươi rói với giá cả bình dân.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/bien-con-bung-ben-tre-noi-tieng-voi-net-dep-thuan-tu-nhien-01-1668519051.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/bien-con-bung-ben-tre-noi-tieng-voi-net-dep-thuan-tu-nhien-02-1668519051.jpeg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Thư giãn",
+            "Ẩm thực"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "9.8317043",
+        "Longitude": "106.6562779"
+    },
+    {
+        "url": "",
+        "location_name": "Biển Bình Đại",
+        "address": "Huyện Bình Đại, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Biển Bình Đại nằm nép mình bên cửa sông Mekong, mang trong mình vẻ đẹp hoang dã với làn nước đục màu phù sa đặc trưng của biển Tây Nam Bộ. Đây là điểm đến lý tưởng để tìm hiểu về cuộc sống của ngư dân làng chài và tham gia những lễ hội nghinh Ông đậm chất văn hóa. Trải nghiệm tuyệt vời nhất là đón bình minh trên bãi biển và mua sắm hải sản tươi ngon ngay tại bến thuyền.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/bien-binh-dai-ben-tre-toa-do-tron-nong-ly-tuong-dip-he-nay-04-1668327292.jpeg",
+            "https://mia.vn/media/uploads/blog-du-lich/bien-binh-dai-ben-tre-toa-do-tron-nong-ly-tuong-dip-he-nay-05-1668327293.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Văn hóa",
+            "Ẩm thực"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2855022",
+        "Longitude": "106.5045006"
+    },
+    {
+        "url": "",
+        "location_name": "Biển Ngọc Thạch Phú",
+        "address": "Huyện Thạnh Phú, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Biển Thạnh Phú, hay còn được gọi trìu mến là Biển Ngọc, là một bãi biển thanh bình nằm cách xa sự ồn ào náo nhiệt của đô thị. Nơi đây không có bãi cát trắng phau mà nổi bật với vẻ đẹp tự nhiên của vùng biển phù sa cùng hệ sinh thái ngập mặn phong phú. Đến tham quan, du khách sẽ được thả mình vào thiên nhiên lộng gió và nếm thử những món đặc sản biển tươi ngon đặc trưng của Bến Tre.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/thanh-phu-ben-tre-bien-thanh-phu-1742178433.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/canh-dong-dien-gio-thanh-phu-ben-tre-1742178433.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Thư giãn",
+            "Khám phá",
+            "Ẩm thực"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2475685",
+        "Longitude": "106.3755037"
+    },
+    {
+        "url": "",
+        "location_name": "Biển Cồn Nhàn",
+        "address": "Xã Bảo Thuận, huyện Ba Tri, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Biển Cồn Nhàn sở hữu bãi cát dài thoai thoải hòa quyện cùng những rặng phi lao xanh ngắt đong đưa theo gió biển. Khung cảnh nơi đây vô cùng hoang sơ và lãng mạn, rất thích hợp cho những nhóm bạn trẻ yêu thích tổ chức cắm trại hay các hoạt động dã ngoại ngoài trời. Vào những ngày nước ròng, bạn có thể tản bộ trên bãi bồi rộng lớn và quan sát nhịp sống bình dị của người dân bắt sò, cào nghêu.",
+        "images": [
+            "https://mia.vn/media/uploads/blog-du-lich/kham-pha-bien-con-nhan-hoang-so-va-thi-vi-bac-nhat-xu-dua-7-1667266154.jpg",
+            "https://mia.vn/media/uploads/blog-du-lich/kham-pha-bien-con-nhan-hoang-so-va-thi-vi-bac-nhat-xu-dua-1-1667266153.jpg"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Phiêu lưu",
+            "Khám phá",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2379411",
+        "Longitude": "106.3582438"
+    },
+    {
+        "url": "",
+        "location_name": "Cù Lao Minh",
+        "address": "Nằm trên địa phận các huyện Mỏ Cày Nam, Mỏ Cày Bắc, Chợ Lách và Thạnh Phú, tỉnh Bến Tre",
+        "overall_rating": "5.0/5",
+        "rating_count": "1",
+        "opening_hours": "N/A",
+        "description": "Cù lao Minh là một trong ba dải cù lao lớn tạo nên tỉnh Bến Tre, nổi bật với hệ thống sông ngòi chằng chịt và những vườn dừa bạt ngàn. Vùng đất này lưu giữ nhiều làng nghề truyền thống đặc sắc như làm kẹo dừa, sản xuất chỉ xơ dừa hay các vườn ươm cây giống chất lượng cao. Du ngoạn trên cù lao, bạn sẽ được đắm chìm trong bức tranh miệt vườn miền Tây trù phú và tận hưởng lòng hiếu khách của người dân.",
+        "images": [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vietfuntravel.com.vn%2Fimage%2Fdata%2FBlog%2Fchia-se%2Fgioi-thieu-doi-net-ve-cu-lao-minh-ben-tre%2Fgioi-thieu-doi-net-ve-cu-lao-minh-ben-tre-h1.jpg&f=1&nofb=1&ipt=b36df5d31f5bbfe5146bc101aaf1dd8984a8f7d44d0a5c90ac30751d05577b1d",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbazantravel.com%2Fcdn%2Fmedias%2Fuploads%2F30%2F30031-cu-lao-minh-ben-tre-670x446.jpg&f=1&nofb=1&ipt=1bf4535b74dc75d696d65bf44033b6dbd6b203987b050c3c55e0bbd891e335db"
+        ],
+        "reviews": [
+            {
+                "reviewer_name": "",
+                "stars": "5/5",
+                "comment": "Nice design, well know place"
+            }
+        ],
+        "category": [
+            "Khám phá",
+            "Văn hóa",
+            "Thư giãn"
+        ],
+        "city": "Bến Tre",
+        "Latitude": "10.2373862",
+        "Longitude": "106.3713362"
+    }
+]

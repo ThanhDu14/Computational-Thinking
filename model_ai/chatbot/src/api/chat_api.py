@@ -12,13 +12,28 @@ import uvicorn
 #            → Validate UUID ở tầng Pydantic, trả 422 nếu sai
 # ============================================================
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from uuid import UUID   # [THAY ĐỔI] import UUID
+import os
 import logging
->>>>>>> main
+import re
+import ast
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+AI_KEY = os.getenv("AI_KEY")
+
+def verify_internal_call(x_internal_secret: str = Header(None)):
+    if x_internal_secret != AI_KEY:
+        raise HTTPException(
+            status_code=403, 
+            detail="Cấm truy cập! Chỉ hệ thống trung gian mới được phép gọi AI."
+        )
 
 from model_ai.chatbot.src.rag.rag_pipeline import RAGPipeline
 from model_ai.chatbot.src.vectorstore.vector_store import vector_store
@@ -37,8 +52,7 @@ from model_ai.chatbot.src.config.config import SUPABASE_SESSIONS_TABLE
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Nha Trang Travel Chatbot API")
->>>>>>> main
+app = FastAPI(title="Nha Trang Travel Chatbot API", dependencies=[Depends(verify_internal_call)])
 
 app.add_middleware(
     CORSMiddleware,
@@ -139,7 +153,95 @@ def _validate_uuid(value: str):
     except ValueError:
         raise ValueError(f"user_id '{value}' không phải UUID hợp lệ")
 
+def parse_ai_response_to_json(text: str):
 
+    result = {
+        "message": "",
+        "data": []
+    }
+
+    current_location = None
+
+    # normalize xuống dòng
+    text = text.replace("\r\n", "\n")
+
+    lines = text.split("\n")
+
+    for raw_line in lines:
+
+        line = raw_line.strip()
+
+        if not line:
+            continue
+
+        # match key: value
+        match = re.match(r"^([a-zA-Z_ ]+)\s*:\s*(.*)$", line)
+
+        if not match:
+            continue
+
+        key = match.group(1).strip().lower()
+        value = match.group(2).strip()
+
+        # normalize key
+        key = key.replace(" ", "_")
+
+        # =====================================================
+        # MESSAGE
+        # =====================================================
+        if key == "message":
+            result["message"] = value
+            continue
+
+        # =====================================================
+        # LOCATION START
+        # =====================================================
+        if key in ["location", "location_name"]:
+
+            # push object cũ
+            if current_location:
+                result["data"].append(current_location)
+
+            current_location = {
+                "location": value
+            }
+
+            continue
+
+        # =====================================================
+        # FIELD CỦA LOCATION
+        # =====================================================
+        if current_location is not None:
+
+            # category
+            if key == "category":
+
+                try:
+                    parsed_category = ast.literal_eval(value)
+
+                    if isinstance(parsed_category, list):
+                        current_location[key] = parsed_category
+                    else:
+                        current_location[key] = [str(parsed_category)]
+
+                except:
+                    current_location[key] = [
+                        x.strip()
+                        for x in value.split(",")
+                    ]
+
+            # null
+            elif value.upper() == "NULL":
+                current_location[key] = None
+
+            else:
+                current_location[key] = value
+
+    # append cuối
+    if current_location:
+        result["data"].append(current_location)
+
+    return result
 # =====================================================================
 # 1. TẠO PHIÊN CHAT MỚI
 # =====================================================================
@@ -177,8 +279,7 @@ async def chat_text(req: ChatRequest):
 
         return {
             "session_id": rag.memory.session_id,
-            "reply": answer,
-            "reply_markdown": answer,   # Frontend dùng trường này để render Markdown
+            "reply": parse_ai_response_to_json(answer)
         }
     except Exception as e:
         logger.error(f"Lỗi API /chat: {str(e)}")
