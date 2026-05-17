@@ -306,6 +306,8 @@ async def chat_with_image(
             }).execute()
 
         # 4. Gửi câu hỏi vào Chatbot (RAG)
+        user_message_saved = f"![Image]({image_url})"
+
         if location_name != "Không xác định":
             prompt = f"![Image]({image_url})\n\nHãy cho tôi thêm thông tin về địa điểm {location_name} sau."
         else:
@@ -317,7 +319,7 @@ async def chat_with_image(
             user_id=str(user_id),
             session_id=session_id
         )
-        answer = rag.ask(prompt)
+        answer = rag.ask(query=prompt, user_message_override=user_message_saved)
 
         return {
             "session_id": rag.memory.session_id,

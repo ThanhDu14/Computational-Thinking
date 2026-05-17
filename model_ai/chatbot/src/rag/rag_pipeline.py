@@ -20,7 +20,7 @@ class RAGPipeline:
             user_id=user_id
         )
 
-    def ask(self, query: str):
+    def ask(self, query: str, user_message_override: str = None):
         docs = self.retriever.retrieve(query)
         docs = self.reranker.rerank(query, docs)
         history_data = self.memory.get_context()
@@ -30,15 +30,15 @@ class RAGPipeline:
             contexts=docs,
             history=history_data
         )
-
+ 
         answer = self.llm.generate(prompt)
-
+ 
         self.memory.add_chat(
-            user_message=query,
+            user_message=user_message_override if user_message_override is not None else query,
             assistant_message=answer,
             llm=self.llm
         )
-
+ 
         return answer
 
     def auto_generate_title(self, session_id, history):
