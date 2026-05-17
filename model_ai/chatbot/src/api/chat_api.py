@@ -273,7 +273,7 @@ async def chat_with_image(
         image_url = supabase.storage.from_("images").get_public_url(filename)
         
         # 2. Gọi model Landmark Recognizer để dự đoán
-        from model_ai.landmark_recognizer.api.app import recognizer, location_lookup
+        from landmark_recognizer.api.app import recognizer, location_lookup
         
         if recognizer is None:
             raise HTTPException(status_code=503, detail="Landmark Recognizer chưa được khởi tạo. Hãy chạy qua server.py hoặc port 8004.")
