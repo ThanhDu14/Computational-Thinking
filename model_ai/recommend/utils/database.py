@@ -254,7 +254,7 @@ class SupabaseManager:
             return []
 
         # 1. Lấy danh sách plans của user
-        plans_resp = self.client.table("plans").select("plan_id, created_at").eq("user_id", user_id).order("created_at", desc=True).execute()
+        plans_resp = self.client.table("plans").select("plan_id").eq("user_id", user_id).execute()
         plans_data = plans_resp.data or []
         if not plans_data:
             return []
@@ -338,7 +338,7 @@ class SupabaseManager:
             return None
 
         # 1. Kiểm tra plan có tồn tại
-        plan_resp = self.client.table("plans").select("plan_id, user_id, created_at").eq("plan_id", plan_id).execute()
+        plan_resp = self.client.table("plans").select("plan_id, user_id").eq("plan_id", plan_id).execute()
         if not plan_resp.data:
             return None
         plan_info = plan_resp.data[0]
