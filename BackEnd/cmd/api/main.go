@@ -37,13 +37,25 @@ func main() {
 	// 3. Khởi tạo Router Gin
 	router := gin.Default()
 
-	// Cấu hình CORS - Chỉ cho phép Frontend được khai báo gọi API
-	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
+	// Inject DB vào Context để Middleware (VerifyUserToken) có thể dùng
+	router.Use(func(c *gin.Context) {
+		c.Set("db", db)
+		c.Next()
+	})
 
+	// Cấu hình CORS - Đóng vai trò bảo vệ hệ thống khi Deploy
+	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{frontendURL, "http://localhost:3000"},
+		AllowOriginFunc: func(origin string) bool {
+			// Nếu đang ở môi trường Local (Debug) -> Cho phép mọi Frontend kết nối thoải mái
+			if gin.Mode() == gin.DebugMode {
+				return true
+			}
+			// Nếu Deploy (Release) -> CHỈ cho phép tên miền Frontend hợp lệ được phép gọi
+			return origin == frontendURL || origin == "http://localhost:3000"
+		},
 		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
+		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
 		ExposeHeaders: []string{"Content-Length"},
 		MaxAge:        12 * time.Hour,
 	}))

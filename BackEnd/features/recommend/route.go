@@ -10,22 +10,20 @@ import (
 // SetupRecommendRoutes đăng ký các API cho Recommendation (proxy sang AI Server)
 func SetupRecommendRoutes(rg *gin.RouterGroup, authClient *auth.Client) {
 	// Tất cả route đều yêu cầu xác thực Firebase Token / Local JWT
-	protected := rg.Group("/")
-	protected.Use(middlewares.VerifyUserToken(authClient))
-	{
-		// 1. Lấy gợi ý lịch trình (predict)
-		protected.POST("", RecommendHandler())
+	rg.Use(middlewares.VerifyUserToken(authClient))
 
-		// 2. Lưu lịch trình lên Supabase
-		protected.POST("/save", SavePlanHandler())
+	// 1. Lấy gợi ý lịch trình (predict)
+	rg.POST("", RecommendHandler())
 
-		// 3. Lấy lịch sử lịch trình
-		protected.GET("/history", GetHistoryHandler())
+	// 2. Lưu lịch trình lên Supabase
+	rg.POST("/save", SavePlanHandler())
 
-		// 4. Lấy chi tiết một lịch trình
-		protected.GET("/plan/:plan_id", GetPlanHandler())
+	// 3. Lấy lịch sử lịch trình
+	rg.GET("/history", GetHistoryHandler())
 
-		// 5. Xóa một lịch trình
-		protected.DELETE("/plan/:plan_id", DeletePlanHandler())
-	}
+	// 4. Lấy chi tiết một lịch trình
+	rg.GET("/plan/:plan_id", GetPlanHandler())
+
+	// 5. Xóa một lịch trình
+	rg.DELETE("/plan/:plan_id", DeletePlanHandler())
 }

@@ -8,6 +8,7 @@ import (
 
 	"firebase.google.com/go/v4/auth"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func VerifyUserToken(authClient *auth.Client) gin.HandlerFunc {
@@ -38,6 +39,18 @@ func VerifyUserToken(authClient *auth.Client) gin.HandlerFunc {
 		if err == nil {
 			c.Set("firebase_uid", token.UID)
 			c.Set("auth_provider", "firebase")
+			
+			// Lấy DB từ Context và query user_id (UUID) từ firebase_uid
+			if dbObj, exists := c.Get("db"); exists {
+				if db, ok := dbObj.(*gorm.DB); ok {
+					var userID string
+					db.Table("users").Select("user_id").Where("firebase_uid = ?", token.UID).Scan(&userID)
+					if userID != "" {
+						c.Set("user_id", userID)
+					}
+				}
+			}
+
 			c.Next()
 			return
 		}
