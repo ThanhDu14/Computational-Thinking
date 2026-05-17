@@ -10,8 +10,11 @@ import (
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/chatbot"
 	"smart-travel-backend/features/contact"
+	"smart-travel-backend/features/landmark"
+
 	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
+	"smart-travel-backend/features/recommend"
 	"smart-travel-backend/features/review"
 	"smart-travel-backend/features/wishlist"
 	"syscall"
@@ -79,6 +82,16 @@ func main() {
 	chatbotGroup := router.Group("/api/chatbot")
 	{
 		chatbot.SetupChatbotRoutes(chatbotGroup, authClient)
+	}
+
+	recommendGroup := router.Group("/api/recommend")
+	{
+		recommend.SetupRecommendRoutes(recommendGroup, authClient)
+	}
+
+	landmarkGroup := router.Group("/api/landmark")
+	{
+		landmark.SetupLandmarkRoutes(landmarkGroup, authClient)
 	}
 
 	// 5. Khởi tạo Http Server

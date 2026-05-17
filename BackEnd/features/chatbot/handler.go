@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"smart-travel-backend/config"
 	"smart-travel-backend/utils"
@@ -46,6 +47,75 @@ func proxyToAI(c *gin.Context, method string, aiPath string, customBody []byte) 
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Internal-Secret", config.GetEnv("AI_INTERNAL_SECRET", "super_secret_key_123"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("[CHATBOT] ❌ Lỗi kết nối AI: %v", err)
+		utils.RespondError(c, http.StatusBadGateway, "Không thể kết nối đến hệ thống AI", nil)
+		return
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		utils.RespondError(c, http.StatusInternalServerError, "Lỗi xử lý phản hồi từ AI", nil)
+		return
+	}
+
+	c.Data(resp.StatusCode, resp.Header.Get("Content-Type"), respBody)
+}
+
+// Hàm proxy multipart/form-data sang AI Server (dùng cho chat/image)
+func proxyMultipartToAI(c *gin.Context, aiPath string, extraFields map[string]string) {
+	aiBaseURL := config.GetEnv("AI_ENDPOINT", "http://localhost:8000")
+	targetURL := aiBaseURL + aiPath
+
+	// Lấy file từ request Frontend
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		log.Printf("[CHATBOT] ❌ Không lấy được file ảnh: %v", err)
+		utils.RespondError(c, http.StatusBadRequest, "Không tìm thấy file ảnh trong request", nil)
+		return
+	}
+	defer file.Close()
+
+	// Tạo multipart body mới để forward sang AI
+	var buf bytes.Buffer
+	writer := multipart.NewWriter(&buf)
+
+	// Copy file vào multipart
+	part, err := writer.CreateFormFile("file", header.Filename)
+	if err != nil {
+		log.Printf("[CHATBOT] ❌ Lỗi tạo multipart: %v", err)
+		utils.RespondError(c, http.StatusInternalServerError, "Lỗi server nội bộ", nil)
+		return
+	}
+	if _, err = io.Copy(part, file); err != nil {
+		log.Printf("[CHATBOT] ❌ Lỗi copy file: %v", err)
+		utils.RespondError(c, http.StatusInternalServerError, "Lỗi server nội bộ", nil)
+		return
+	}
+
+	// Thêm các field bổ sung (user_id, session_id, ...)
+	for key, val := range extraFields {
+		if err := writer.WriteField(key, val); err != nil {
+			log.Printf("[CHATBOT] ❌ Lỗi ghi field %s: %v", key, err)
+		}
+	}
+
+	writer.Close()
+
+	// Tạo request sang AI
+	req, err := http.NewRequest("POST", targetURL, &buf)
+	if err != nil {
+		log.Printf("[CHATBOT] ❌ Lỗi tạo request: %v", err)
+		utils.RespondError(c, http.StatusInternalServerError, "Lỗi server nội bộ", nil)
+		return
+	}
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Header.Set("X-Internal-Secret", config.GetEnv("AI_INTERNAL_SECRET", "super_secret_key_123"))
 
 	client := &http.Client{}
@@ -122,5 +192,35 @@ func DeleteSessionHandler() gin.HandlerFunc {
 		userID := getUserID(c)
 		sessionID := c.Param("session_id")
 		proxyToAI(c, "DELETE", "/chat/"+userID+"/"+sessionID, nil)
+	}
+}
+
+// 6. Đổi tên phiên trò chuyện (Rename Session Title)
+func RenameSessionHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := getUserID(c)
+		sessionID := c.Param("session_id")
+		// Forward body (chứa {"title": "..."}) sang AI
+		proxyToAI(c, "PATCH", "/sessions/"+userID+"/"+sessionID+"/title", nil)
+	}
+}
+
+// 7. Gửi tin nhắn bằng hình ảnh - Vision/Landmark (Chat Image)
+func ChatImageHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := getUserID(c)
+
+		// Lấy session_id từ form-data (tùy chọn)
+		sessionID := c.Request.FormValue("session_id")
+
+		// Tạo map extra fields, ghi đè user_id bằng ID thực từ token
+		extraFields := map[string]string{
+			"user_id": userID,
+		}
+		if sessionID != "" {
+			extraFields["session_id"] = sessionID
+		}
+
+		proxyMultipartToAI(c, "/chat/image", extraFields)
 	}
 }

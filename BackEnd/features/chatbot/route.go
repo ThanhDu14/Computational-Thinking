@@ -27,5 +27,11 @@ func SetupChatbotRoutes(rg *gin.RouterGroup, authClient *auth.Client) {
 		
 		// 5. Xóa hội thoại
 		protected.DELETE("/chat/:session_id", DeleteSessionHandler())
+
+		// 6. Đổi tên phiên trò chuyện
+		protected.PATCH("/sessions/:session_id/title", RenameSessionHandler())
+
+		// 7. Gửi tin nhắn bằng hình ảnh (Vision/Landmark)
+		protected.POST("/chat/image", ChatImageHandler())
 	}
 }
