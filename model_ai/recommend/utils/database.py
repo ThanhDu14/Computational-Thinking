@@ -185,13 +185,13 @@ class SupabaseManager:
     def save_recommendation_result(
         self,
         user_id: str,
-        input_params: Dict[str, Any],
-        province: str,
         itinerary: Dict[str, Any],
+        input_params: Optional[Dict[str, Any]] = None,
+        province: Optional[str] = None,
     ) -> Optional[Dict[str, Any]]:
         """
-        Lưu toàn bộ kết quả gợi ý lịch trình lên Supabase.
-        Luồng: usertriprequest → plans → planday → plandaylocation.
+        Lưu kết quả lịch trình lên Supabase.
+        Luồng: (tùy chọn usertriprequest) → plans → planday → plandaylocation.
         Returns: dict chứa request_id, plan_id, plan_days nếu thành công.
         """
         if not self.client:
@@ -199,9 +199,11 @@ class SupabaseManager:
             return None
 
         try:
-            # 1. Lưu yêu cầu trip
-            request_id = self.save_user_trip_request(user_id, province, input_params)
-            logger.info(f"[Save] Đã lưu usertriprequest: {request_id}")
+            request_id = None
+            # 1. Lưu yêu cầu trip (nếu có input_params)
+            if input_params and province:
+                request_id = self.save_user_trip_request(user_id, province, input_params)
+                logger.info(f"[Save] Đã lưu usertriprequest: {request_id}")
 
             # 2. Tạo plan
             plan_id = self.save_plan(user_id)
@@ -243,5 +245,172 @@ class SupabaseManager:
         except Exception as e:
             logger.error(f"[Save] Lỗi khi lưu kết quả recommend: {e}")
             return None
+
+    def get_user_itinerary_history(self, user_id: str) -> List[Dict[str, Any]]:
+        """
+        Lấy toàn bộ lịch sử các plan (lịch trình) của user.
+        """
+        if not self.client:
+            return []
+
+        # 1. Lấy danh sách plans của user
+        plans_resp = self.client.table("plans").select("plan_id, created_at").eq("user_id", user_id).order("created_at", desc=True).execute()
+        plans_data = plans_resp.data or []
+        if not plans_data:
+            return []
+
+        plan_ids = [p["plan_id"] for p in plans_data]
+
+        # 2. Lấy danh sách planday của các plans đó
+        days_resp = self.client.table("planday").select("plan_day_id, plan_id, day_seq").in_("plan_id", plan_ids).execute()
+        days_data = days_resp.data or []
+        plan_day_ids = [d["plan_day_id"] for d in days_data]
+
+        # 3. Lấy plandaylocation (các địa điểm trong mỗi ngày)
+        if not plan_day_ids:
+            return plans_data # Return plans with empty days
+
+        loc_resp = self.client.table("plandaylocation").select("plan_day_id, location_id, visit_order").in_("plan_day_id", plan_day_ids).order("visit_order").execute()
+        loc_data = loc_resp.data or []
+        location_ids = list(set([l["location_id"] for l in loc_data]))
+
+        # 4. Lấy thông tin chi tiết locations
+        locations_detail = {}
+        if location_ids:
+            # Lấy thông tin cơ bản
+            detail_resp = self.client.table("locations").select("location_id, name, address, latitude, longitude, rating").in_("location_id", location_ids).execute()
+            
+            # Lấy hình ảnh (chỉ lấy 1 ảnh đầu tiên cho nhẹ)
+            images_resp = self.client.table("locationimages").select("location_id, image").in_("location_id", location_ids).execute()
+            images_dict = {}
+            for img in (images_resp.data or []):
+                lid = img["location_id"]
+                if lid not in images_dict:
+                    images_dict[lid] = []
+                images_dict[lid].append(img["image"])
+
+            for item in (detail_resp.data or []):
+                lid = item["location_id"]
+                item["images"] = images_dict.get(lid, [])[:1] # Giới hạn 1 ảnh
+                locations_detail[lid] = item
+
+        # 5. Lắp ráp dữ liệu
+        history = []
+        for plan in plans_data:
+            pid = plan["plan_id"]
+            plan_days = [d for d in days_data if d["plan_id"] == pid]
+            plan_days.sort(key=lambda x: x["day_seq"])
+
+            itinerary = {}
+            for pd in plan_days:
+                pd_id = pd["plan_day_id"]
+                day_seq = pd["day_seq"]
+                day_key = f"day_{day_seq}"
+
+                # Các location trong ngày này
+                day_locs = [l for l in loc_data if l["plan_day_id"] == pd_id]
+                day_locs.sort(key=lambda x: x["visit_order"])
+
+                places = []
+                for dl in day_locs:
+                    lid = dl["location_id"]
+                    if lid in locations_detail:
+                        places.append(locations_detail[lid])
+
+                itinerary[day_key] = {
+                    "day": day_seq,
+                    "places": places
+                }
+
+            history.append({
+                "plan_id": pid,
+                "created_at": plan.get("created_at"),
+                "itinerary": itinerary
+            })
+
+        return history
+
+    def get_plan_detail(self, plan_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Lấy chi tiết 1 lịch trình cụ thể dựa vào plan_id.
+        """
+        if not self.client:
+            return None
+
+        # 1. Kiểm tra plan có tồn tại
+        plan_resp = self.client.table("plans").select("plan_id, user_id, created_at").eq("plan_id", plan_id).execute()
+        if not plan_resp.data:
+            return None
+        plan_info = plan_resp.data[0]
+
+        # 2. Lấy danh sách planday
+        days_resp = self.client.table("planday").select("plan_day_id, day_seq").eq("plan_id", plan_id).execute()
+        days_data = days_resp.data or []
+        plan_day_ids = [d["plan_day_id"] for d in days_data]
+
+        if not plan_day_ids:
+            return {"plan_id": plan_id, "created_at": plan_info.get("created_at"), "itinerary": {}}
+
+        # 3. Lấy plandaylocation
+        loc_resp = self.client.table("plandaylocation").select("plan_day_id, location_id, visit_order").in_("plan_day_id", plan_day_ids).order("visit_order").execute()
+        loc_data = loc_resp.data or []
+        location_ids = list(set([l["location_id"] for l in loc_data]))
+
+        # 4. Lấy thông tin locations
+        locations_detail = {}
+        if location_ids:
+            detail_resp = self.client.table("locations").select("location_id, name, address, latitude, longitude, rating").in_("location_id", location_ids).execute()
+            images_resp = self.client.table("locationimages").select("location_id, image").in_("location_id", location_ids).execute()
+            
+            images_dict = {}
+            for img in (images_resp.data or []):
+                lid = img["location_id"]
+                if lid not in images_dict:
+                    images_dict[lid] = []
+                images_dict[lid].append(img["image"])
+
+            for item in (detail_resp.data or []):
+                lid = item["location_id"]
+                item["images"] = images_dict.get(lid, [])[:1]
+                locations_detail[lid] = item
+
+        # 5. Lắp ráp dữ liệu
+        days_data.sort(key=lambda x: x["day_seq"])
+        itinerary = {}
+        for pd in days_data:
+            pd_id = pd["plan_day_id"]
+            day_seq = pd["day_seq"]
+            day_key = f"day_{day_seq}"
+
+            day_locs = [l for l in loc_data if l["plan_day_id"] == pd_id]
+            day_locs.sort(key=lambda x: x["visit_order"])
+
+            places = []
+            for dl in day_locs:
+                lid = dl["location_id"]
+                if lid in locations_detail:
+                    places.append(locations_detail[lid])
+
+            itinerary[day_key] = {
+                "day": day_seq,
+                "places": places
+            }
+
+        return {
+            "plan_id": plan_id,
+            "user_id": plan_info.get("user_id"),
+            "created_at": plan_info.get("created_at"),
+            "itinerary": itinerary
+        }
+
+    def delete_plan(self, plan_id: str) -> bool:
+        """
+        Xóa một plan. Nhờ ON DELETE CASCADE ở DB, nó sẽ tự động xóa planday và plandaylocation.
+        """
+        if not self.client:
+            return False
+            
+        resp = self.client.table("plans").delete().eq("plan_id", plan_id).execute()
+        return len(resp.data or []) > 0
 
 db_manager = SupabaseManager()

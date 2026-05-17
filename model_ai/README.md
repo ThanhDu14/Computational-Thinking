@@ -18,13 +18,13 @@ Tất cả các API yêu cầu phải truyền header xác thực `X-Internal-Se
 Các API liên quan đến hệ thống gợi ý lịch trình du lịch.
 
 ### 1.1. Lấy gợi ý lịch trình
-- **Endpoint:** `/recommend/{user_id}`
+- **Endpoint:** `/recommend`
 - **Method:** `POST`
-- **Chức năng:** Nhận dữ liệu đầu vào bao gồm điểm đến (destination), sở thích (preferences) và thông tin di chuyển (logistics) để tạo ra một lịch trình gợi ý phù hợp, đồng thời lưu lịch trình này vào Supabase liên kết với `user_id`.
+- **Chức năng:** Nhận dữ liệu đầu vào bao gồm điểm đến (destination), sở thích (preferences) và thông tin di chuyển (logistics) để tạo ra một lịch trình gợi ý phù hợp. Endpoint này chỉ dự đoán, **không lưu vào database**.
 
 **Ví dụ cURL:**
 ```bash
-curl -X POST "http://localhost:8000/recommend/{user_id}" \
+curl -X POST "http://localhost:8000/recommend" \
      -H "Content-Type: application/json" \
      -H "X-Internal-Secret: <YOUR_AI_KEY>" \
      -d '{
@@ -43,6 +43,62 @@ curl -X POST "http://localhost:8000/recommend/{user_id}" \
              "transportation": "motorbike"
            }
          }'
+```
+
+### 1.2. Lưu lịch trình lên Supabase
+- **Endpoint:** `/recommend/save/{user_id}`
+- **Method:** `POST`
+- **Chức năng:** Nhận kết quả lịch trình (JSON từ endpoint `/recommend`) và lưu lên Supabase, liên kết với `user_id` từ bảng `users`. Dữ liệu sẽ được lưu vào các bảng: `plans`, `planday`, `plandaylocation`.
+
+**Ví dụ cURL:**
+```bash
+curl -X POST "http://localhost:8003/recommend/save/123e4567-e89b-12d3-a456-426614174000" \
+     -H "Content-Type: application/json" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+     -d '{
+           "itinerary": {
+             "day_1": {
+               "day": 1,
+               "places": [
+                 {"location_id": "uuid-1", "name": "Địa điểm A"},
+                 {"location_id": "uuid-2", "name": "Địa điểm B"}
+               ]
+             }
+           }
+         }'
+```
+
+### 1.3. Lấy lịch sử lịch trình
+- **Endpoint:** `/recommend/history/{user_id}`
+- **Method:** `GET`
+- **Chức năng:** Trả về danh sách tất cả các lịch trình (kèm chi tiết các địa điểm theo từng ngày) mà người dùng đã từng tạo và lưu trên hệ thống.
+
+**Ví dụ cURL:**
+```bash
+curl -X GET "http://localhost:8003/recommend/history/123e4567-e89b-12d3-a456-426614174000" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>"
+```
+
+### 1.4. Lấy chi tiết một lịch trình cụ thể
+- **Endpoint:** `/recommend/plan/{plan_id}`
+- **Method:** `GET`
+- **Chức năng:** Trả về chi tiết của duy nhất 1 lịch trình dựa vào `plan_id` của nó.
+
+**Ví dụ cURL:**
+```bash
+curl -X GET "http://localhost:8003/recommend/plan/YOUR_PLAN_UUID" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>"
+```
+
+### 1.5. Xóa một lịch trình
+- **Endpoint:** `/recommend/plan/{plan_id}`
+- **Method:** `DELETE`
+- **Chức năng:** Xóa hoàn toàn 1 lịch trình ra khỏi hệ thống (bao gồm cả các địa điểm trong lịch trình đó).
+
+**Ví dụ cURL:**
+```bash
+curl -X DELETE "http://localhost:8003/recommend/plan/YOUR_PLAN_UUID" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>"
 ```
 
 ---

@@ -1,14 +1,14 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from .config import settings
 from ..utils.database import db_manager
 from ..utils.categories import expand_categories_with_semantics
 from ..utils.filter import filter_by_categories, sort_by_place_style, filter_by_radius
 from ..utils.itinerary import build_itinerary
 
-def recommend(input_json: Dict[str, Any], user_id: Optional[str] = None) -> Dict[str, Any]:
+def recommend(input_json: Dict[str, Any]) -> Dict[str, Any]:
     """
     Hàm chính: nhận input JSON và trả về lịch trình 3 ngày.
-    Nếu có user_id, kết quả sẽ được lưu lên Supabase.
+    Chỉ dự đoán/gợi ý, không lưu vào database.
     """
     # ── Parse input ──────────────────────────────────────────────────
     destination = input_json.get("destination", {})
@@ -125,16 +125,6 @@ def recommend(input_json: Dict[str, Any], user_id: Optional[str] = None) -> Dict
         geo_filtered, images_map, cat_id_to_name, loc_cat_map
     )
 
-    # ── Step 9: Lưu kết quả lên Supabase ────────────────────────────
-    saved_data = None
-    if user_id:
-        saved_data = db_manager.save_recommendation_result(
-            user_id=user_id,
-            input_params=input_json,
-            province=province,
-            itinerary=itinerary,
-        )
-
     result = {
         "status": "success",
         "province": province,
@@ -148,8 +138,5 @@ def recommend(input_json: Dict[str, Any], user_id: Optional[str] = None) -> Dict
         "after_geo_filter": len(geo_filtered),
         "itinerary": itinerary,
     }
-
-    if saved_data:
-        result["saved"] = saved_data
 
     return result
