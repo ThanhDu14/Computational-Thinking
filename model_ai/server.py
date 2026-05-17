@@ -187,11 +187,11 @@ class RecommendRequest(BaseModel):
     preferences: RecommendPreferences
     logistics: RecommendLogistics
 
-@app.post("/recommend", tags=["Recommend"])
-async def get_recommendation(request: RecommendRequest):
+@app.post("/recommend/{user_id}", tags=["Recommend"])
+async def get_recommendation(user_id: UUID, request: RecommendRequest):
     try:
         input_data = request.model_dump()
-        result = recommend(input_data)
+        result = recommend(input_data, user_id=str(user_id))
         
         if result.get("status") == "error":
             raise HTTPException(status_code=400, detail=result.get("message"))

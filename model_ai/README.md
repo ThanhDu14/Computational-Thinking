@@ -18,13 +18,13 @@ Tất cả các API yêu cầu phải truyền header xác thực `X-Internal-Se
 Các API liên quan đến hệ thống gợi ý lịch trình du lịch.
 
 ### 1.1. Lấy gợi ý lịch trình
-- **Endpoint:** `/recommend`
+- **Endpoint:** `/recommend/{user_id}`
 - **Method:** `POST`
-- **Chức năng:** Nhận dữ liệu đầu vào bao gồm điểm đến (destination), sở thích (preferences) và thông tin di chuyển (logistics) để tạo ra một lịch trình gợi ý phù hợp.
+- **Chức năng:** Nhận dữ liệu đầu vào bao gồm điểm đến (destination), sở thích (preferences) và thông tin di chuyển (logistics) để tạo ra một lịch trình gợi ý phù hợp, đồng thời lưu lịch trình này vào Supabase liên kết với `user_id`.
 
 **Ví dụ cURL:**
 ```bash
-curl -X POST "http://localhost:8000/recommend" \
+curl -X POST "http://localhost:8000/recommend/{user_id}" \
      -H "Content-Type: application/json" \
      -H "X-Internal-Secret: <YOUR_AI_KEY>" \
      -d '{
