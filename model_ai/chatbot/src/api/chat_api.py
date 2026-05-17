@@ -280,7 +280,7 @@ async def chat_with_image(
             
         result = recognizer.predict(io.BytesIO(file_bytes))
         
-        if result is None:
+        if result is None or result[0] is None:
             location_name = "Không xác định"
         else:
             matched_img, inliers, elapsed = result
