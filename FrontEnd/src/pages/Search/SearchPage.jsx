@@ -4,6 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import Button from '../../components/common/Button';
 import PlaceCard from '../../components/places/PlaceCard';
 import { useTranslation } from 'react-i18next';
+import CustomSelect from '../../components/common/CustomSelect';
+import { VIETNAM_PROVINCES } from '../../data/vietnamProvinces';
 
 import { searchLocations } from '../../services/locationService';
 
@@ -21,15 +23,6 @@ export default function SearchPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const ITEMS_PER_PAGE = 8;
-
-  const CITIES = [
-    { label: 'Tất cả thành phố', value: '' },
-    { label: 'Hà Nội', value: 'ha noi' },
-    { label: 'Hồ Chí Minh', value: 'ho chi minh' },
-    { label: 'Đà Lạt', value: 'da lat' },
-    { label: 'Hội An', value: 'hoi an' },
-    { label: 'Thanh Hóa', value: 'thanh hoa' },
-  ];
 
   const CATEGORIES = [
     { label: 'Tất cả danh mục', value: '' },
@@ -112,10 +105,12 @@ export default function SearchPage() {
   return (
     <div className="w-full pt-32 pb-20 px-6 max-w-7xl mx-auto">
       {/* Search hero area */}
-      <div className="bg-gradient-to-br from-primary to-primary-container rounded-[3rem] p-10 md:p-20 mb-16 text-center text-white relative overflow-hidden shadow-xl shadow-primary/20">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200')] bg-cover mix-blend-overlay"></div>
-        <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm"></div>
-        <div className="relative z-10 max-w-3xl mx-auto">
+      <div className="bg-gradient-to-br from-primary to-primary-container rounded-[3rem] p-10 md:p-20 mb-16 text-center text-white relative shadow-xl shadow-primary/20">
+        <div className="absolute inset-0 rounded-[3rem] overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200')] bg-cover mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm"></div>
+        </div>
+        <div className="relative z-50 max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-display font-bold mb-10 tracking-tighter drop-shadow-md">{t('search_page.hero_title')}</h1>
           
           {/* Search Inputs & Filters */}
@@ -138,20 +133,30 @@ export default function SearchPage() {
             </div>
 
             <div className="flex flex-wrap gap-4 justify-center">
-                <select 
-                    value={selectedCity} 
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    className="bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm"
-                >
-                    {CITIES.map(c => <option key={c.value} value={c.value} className="text-on-surface">{c.label}</option>)}
-                </select>
-                <select 
-                    value={selectedCategory} 
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm"
-                >
-                    {CATEGORIES.map(c => <option key={c.value} value={c.value} className="text-on-surface">{c.label}</option>)}
-                </select>
+                <div className="w-48 relative z-20">
+                    <CustomSelect 
+                        options={[{label: 'Tất cả thành phố', value: ''}, ...VIETNAM_PROVINCES.slice(1)]}
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        placeholder="Thành phố"
+                        buttonClassName="w-full bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm flex justify-between items-center"
+                        dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl text-on-surface"
+                        optionClassName="text-on-surface hover:bg-surface-container-high"
+                        activeOptionClassName="bg-primary/10 text-primary font-bold"
+                    />
+                </div>
+                <div className="w-48 relative z-10">
+                    <CustomSelect 
+                        options={CATEGORIES}
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        placeholder="Danh mục"
+                        buttonClassName="w-full bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm flex justify-between items-center"
+                        dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl text-on-surface"
+                        optionClassName="text-on-surface hover:bg-surface-container-high"
+                        activeOptionClassName="bg-primary/10 text-primary font-bold"
+                    />
+                </div>
             </div>
           </div>
 

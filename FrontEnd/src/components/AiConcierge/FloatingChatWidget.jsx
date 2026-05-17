@@ -5,307 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 import { useNavigate } from 'react-router-dom';
 import { sendImageResult } from '../../services/chatService';
-
-const renderMessageContent = (text) => {
-  if (!text) return null;
-
-  const formatBold = (str) => {
-    return str.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part);
-  };
-
-  // 0. MARKDOWN INLINE JSON BLOCK FORMAT (```json ... ```)
-  if (text.includes('```json')) {
-    const blockRegex = /```json\s*([\s\S]*?)\s*```/gi;
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = blockRegex.exec(text)) !== null) {
-      let beforeText = text.substring(lastIndex, match.index);
-      
-      // Clean up the trailing item header prefix (e.g. "1. **Ngũ Hành Sơn**" or "1. Ngũ Hành Sơn")
-      beforeText = beforeText.replace(/(?:\r?\n)+\s*\d+[\.\/\s-]+\s*(?:\*\*.*?\*\*|.*?)?\s*$/g, '');
-
-      if (beforeText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mb-2">
-            {formatBold(beforeText.trim())}
-          </div>
-        );
-      }
-
-      const jsonStr = match[1];
-      try {
-        // Correct rating format if unquoted, e.g. "rating": 4.2/5 -> "rating": "4.2/5"
-        let cleaned = jsonStr.trim();
-        cleaned = cleaned.replace(/"rating"\s*:\s*(\d+(?:\.\d+)?)\s*\/\s*5/g, '"rating": "$1/5"');
-        
-        const place = JSON.parse(cleaned);
-        if (place && place.name) {
-          const cleanedName = place.name.replace(/^\d+[\.\/\s-]+\s*/, '');
-          
-          let categories = [];
-          if (Array.isArray(place.categories)) {
-            categories = place.categories;
-          } else if (Array.isArray(place.category)) {
-            categories = place.category;
-          } else if (typeof place.category === 'string') {
-            categories = place.category.split(',').map(c => c.trim()).filter(Boolean);
-          } else if (typeof place.categories === 'string') {
-            categories = place.categories.split(',').map(c => c.trim()).filter(Boolean);
-          }
-
-          const imageSrc = (place.images && place.images.length > 0) ? place.images[0] : (place.image || null);
-
-          elements.push(
-            <div key={`place-markdown-json-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-              {imageSrc && (
-                <div className="w-full h-32 overflow-hidden bg-surface-container">
-                  <img src={imageSrc} alt={cleanedName} className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="p-3">
-                <h4 className="font-display font-bold text-sm text-primary mb-1">{cleanedName}</h4>
-                {place.address && (
-                  <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-                    <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-                    <span className="line-clamp-2">{place.address}</span>
-                  </p>
-                )}
-                {categories.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {categories.map((cat, idx) => cat ? (
-                      <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                        {cat}
-                      </span>
-                    ) : null)}
-                  </div>
-                )}
-                {place.description && (
-                  <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-                    {place.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        }
-      } catch (e) {
-        console.error("Failed to parse inline markdown JSON:", e);
-        // Fallback to displaying raw code block if syntax is completely unfixable
-        elements.push(
-          <pre key={`code-block-${match.index}`} className="bg-surface-container-high p-2 rounded-lg text-xs overflow-x-auto my-1">
-            <code>{jsonStr}</code>
-          </pre>
-        );
-      }
-
-      lastIndex = blockRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // 1. FIRST FORMAT (Place Name: ...)
-  if (text.includes('Place Name:')) {
-    const placeRegex = /(?:(?:^|\n|\s)*\d+\.\s+[\s\S]*?(?=Place Name:))?Place Name:\s*([\s\S]*?)Address:\s*([\s\S]*?)Category:\s*([\s\S]*?)Description:\s*([\s\S]*?)Average Rating:\s*([\s\S]*?)(?:URL:\s*([^\s]+))?/gi;
-
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = placeRegex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        const beforeText = text.substring(lastIndex, match.index);
-        if (beforeText.trim()) {
-          elements.push(
-            <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mb-2">
-              {formatBold(beforeText.trim())}
-            </div>
-          );
-        }
-      }
-
-      const [fullMatch, name, address, categoryStr, description, rating, url] = match;
-
-      let categories = [];
-      try {
-        const cleaned = categoryStr.replace(/'/g, '"');
-        categories = JSON.parse(cleaned);
-      } catch (e) {
-        categories = categoryStr.replace(/[\[\]']/g, '').split(',').map(c => c.trim().replace(/^'|'$/g, ''));
-      }
-
-      elements.push(
-        <div key={`place-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-          <div className="p-3">
-            <h4 className="font-display font-bold text-sm text-primary mb-1">{name.trim()}</h4>
-            <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-              <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-              <span className="line-clamp-2">{address.trim()}</span>
-            </p>
-            <div className="flex flex-wrap gap-1 mb-2">
-              {categories.map((cat, idx) => cat ? (
-                <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                  {cat}
-                </span>
-              ) : null)}
-            </div>
-            <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-              {description.trim()}
-            </p>
-          </div>
-        </div>
-      );
-
-      lastIndex = placeRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // 2. SECOND FORMAT (Raw text block ending with URL: http...)
-  if (text.toLowerCase().includes('url: http')) {
-    const blockRegex = /([\s\S]+?)(?:\s*(?:URL|url):\s*(https?:\/\/[^\s\n]+))/gi;
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = blockRegex.exec(text)) !== null) {
-      const blockText = match[1];
-      const url = match[2];
-
-      const lines = blockText.split('\n').map(l => l.trim());
-
-      let rating = '';
-      let descLine = '';
-      let categories = [];
-      let address = '';
-      let name = '';
-      let introLines = [];
-
-      let step = 'rating';
-
-      for (let i = lines.length - 1; i >= 0; i--) {
-        const line = lines[i];
-
-        if (step === 'rating') {
-          if (line.includes('/5') || /^\d+(\.\d+)?$/.test(line)) {
-            rating = line;
-            step = 'description';
-          } else if (line !== '') {
-            descLine = line;
-            step = 'categories';
-          }
-        } else if (step === 'description') {
-          if (line !== '') {
-            descLine = line;
-            step = 'categories';
-          }
-        } else if (step === 'categories') {
-          if (line === '') {
-            step = 'address';
-          } else {
-            categories.unshift(line);
-          }
-        } else if (step === 'address') {
-          if (line !== '') {
-            address = line;
-            step = 'name';
-          }
-        } else if (step === 'name') {
-          if (line !== '') {
-            name = line;
-            step = 'intro';
-          }
-        } else if (step === 'intro') {
-          if (line !== '') {
-            introLines.unshift(line);
-          }
-        }
-      }
-
-      // Render any intro text preceding this place
-      if (introLines.length > 0) {
-        const introText = introLines.join('\n');
-        elements.push(
-          <div key={`intro-${match.index}`} className="whitespace-pre-wrap mb-2">
-            {formatBold(introText)}
-          </div>
-        );
-      }
-
-      // Render the place card
-      if (name && address) {
-        const cleanedName = name.replace(/^\d+[\.\/\s-]+\s*/, '');
-
-        elements.push(
-          <div key={`place-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-            <div className="p-3">
-              <h4 className="font-display font-bold text-sm text-primary mb-1">{cleanedName}</h4>
-              <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-                <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-                <span className="line-clamp-2">{address}</span>
-              </p>
-              <div className="flex flex-wrap gap-1 mb-2">
-                {categories.map((cat, idx) => cat ? (
-                  <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                    {cat}
-                  </span>
-                ) : null)}
-              </div>
-              {descLine && (
-                <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-                  {descLine}
-                </p>
-              )}
-            </div>
-          </div>
-        );
-      }
-
-      lastIndex = blockRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // Fallback for standard text
-  return <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-};
+import './ChatCards.css';
+import renderMessageContent from './ChatRenderer';
 
 export default function FloatingChatWidget() {
   const { t } = useTranslation();
@@ -315,16 +16,16 @@ export default function FloatingChatWidget() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const loginPopupRef = useRef(null);
 
-  const { 
-    sessions: sessionsList, 
-    currentSessionId: sessionId, 
-    messages, 
-    isTyping, 
+  const {
+    sessions: sessionsList,
+    currentSessionId: sessionId,
+    messages,
+    isTyping,
     isLoadingHistory,
-    loadHistory, 
-    startNewChat: handleNewChat, 
-    sendMessage: handleSend, 
-    removeSession 
+    loadHistory,
+    startNewChat: handleNewChat,
+    sendMessage: handleSend,
+    removeSession
   } = useChat();
 
   const [input, setInput] = useState('');
@@ -543,10 +244,10 @@ export default function FloatingChatWidget() {
                 <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[15px] leading-relaxed shadow-sm ${msg.role === 'user' ? 'widget-user-bubble rounded-tr-sm' : 'widget-bot-bubble text-on-surface rounded-tl-sm w-full'}`}>
                   {msg.role === 'user' ? (
                     <div className="whitespace-pre-wrap">
-                      {msg.text.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
+                      {(typeof msg.text === 'string' ? msg.text : String(msg.text || '')).split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
                     </div>
                   ) : (
-                    renderMessageContent(msg.text)
+                    renderMessageContent(msg.text, handleSend)
                   )}
                 </div>
                 <span className="text-[10px] text-on-surface-variant/60 font-medium px-1">

@@ -62,7 +62,6 @@ export const getLocationById = async (id) => {
 
     const json = await response.json();
     // Backend trả về { code, status, message, data: { ... } } hoặc data trực tiếp
-    console.log(json.data);
     return json.data || json;
 };
 /**

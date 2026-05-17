@@ -3,8 +3,11 @@ import {
   MessageSquare, History, Compass, Settings,
   Search, UserCircle, Bot, Send, Plus,
   Mic, Sparkles, FileText, Image as ImageIcon,
-  MoreHorizontal, ChevronRight, Trash2
+  MoreHorizontal, ChevronRight, Trash2, MapPin, ExternalLink
 } from 'lucide-react';
+import '../../components/AiConcierge/ChatCards.css';
+import renderMessageContent from '../../components/AiConcierge/ChatRenderer';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +15,7 @@ import { useChat } from '../../context/ChatContext';
 import { 
   sendImageResult 
 } from '../../services/chatService';
+import botAvatar from '../../assets/images/chatbot_logo.png';
 
 export default function AiConciergePage() {
   const navigate = useNavigate();
@@ -29,6 +33,7 @@ export default function AiConciergePage() {
   } = useChat();
 
   const [input, setInput] = useState('');
+  const [deleteSessionId, setDeleteSessionId] = useState(null);
   const userAvatar = user?.photoURL || user?.picture || user?.avatar || null;
   const userName = user?.displayName || user?.name || user?.username || 'Khách';
   
@@ -79,8 +84,8 @@ export default function AiConciergePage() {
       {/* Sidebar Navigation */}
       <aside className="hidden md:flex flex-col w-72 h-full py-8 px-4 bg-surface-container-low border-r border-outline-variant/30 font-medium text-sm">
         <div className="mb-12 px-4 cursor-pointer flex items-center gap-3" onClick={() => navigate('/home')}>
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-            <Bot className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden bg-surface-container-highest border border-outline-variant/20">
+            <img src={botAvatar} alt="AI Concierge" className="w-full h-full object-cover scale-110" />
           </div>
           <h1 className="text-xl font-bold text-on-surface font-display uppercase tracking-tight">AI Concierge</h1>
         </div>
@@ -121,7 +126,7 @@ export default function AiConciergePage() {
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  if(confirm("Xóa cuộc hội thoại này?")) removeSession(session.id);
+                  setDeleteSessionId(session.id);
                 }}
                 className="p-1.5 rounded-lg hover:bg-red-500/10 text-on-surface-variant/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
               >
@@ -167,8 +172,8 @@ export default function AiConciergePage() {
             <div key={idx} className={`message-item flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse max-w-[85%] ml-auto' : 'max-w-[95%]'}`}>
               <div className="flex-shrink-0 mt-1">
                 {msg.role === 'bot' ? (
-                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10">
-                    <Bot className="w-5 h-5 text-primary" />
+                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10 overflow-hidden shadow-sm">
+                    <img src={botAvatar} alt="AI Bot" className="w-full h-full object-cover scale-110" />
                   </div>
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-slate-300 overflow-hidden flex items-center justify-center">
@@ -181,9 +186,7 @@ export default function AiConciergePage() {
               </div>
               <div className={`space-y-2 ${msg.role === 'user' ? 'text-right' : ''}`}>
                 <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl`}>
-                  <p className="leading-relaxed font-body whitespace-pre-wrap text-sm">
-                    {msg.text.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
-                  </p>
+                  {renderMessageContent(msg.text, sendMessage)}
 
                   {msg.bento && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -236,7 +239,7 @@ export default function AiConciergePage() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder={t('aiconcierge.input_placeholder')}
-                className="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 font-body px-2"
+                className="flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2"
               />
               <div className="flex items-center gap-1">
                 <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
@@ -269,6 +272,17 @@ export default function AiConciergePage() {
           </div>
         </div>
       </main>
+
+      <ConfirmModal 
+        isOpen={!!deleteSessionId}
+        onClose={() => setDeleteSessionId(null)}
+        onConfirm={() => removeSession(deleteSessionId)}
+        title="Xóa cuộc hội thoại"
+        message="Bạn có chắc chắn muốn xóa cuộc hội thoại này? Lịch sử chat sẽ bị xóa vĩnh viễn."
+        confirmText="Xóa"
+        cancelText="Hủy"
+        isDanger={true}
+      />
     </div>
   );
 }
