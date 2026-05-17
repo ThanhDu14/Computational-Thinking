@@ -219,10 +219,42 @@ curl -X GET "http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426614174000
 
 **Ví dụ cURL:**
 ```bash
-curl -X PATCH "http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426614174000/YOUR_SESSION_ID/title" \
+curl -X PATCH "http://localhost:8003/sessions/123e4567-e89b-12d3-a456-426614174000/YOUR_SESSION_ID/title" \
      -H "Content-Type: application/json" \
      -H "X-Internal-Secret: <YOUR_AI_KEY>" \
      -d '{
            "title": "Chuyến du lịch Đà Lạt mùa mưa"
          }'
 ```
+
+### 3.7. Gửi tin nhắn bằng Hình ảnh (Vision/Landmark)
+- **Endpoint:** `/chat/image`
+- **Method:** `POST`
+- **Chức năng:** Người dùng tải lên một bức ảnh. Server sẽ lưu ảnh vào Supabase Bucket, gọi bộ nhận diện Landmark để dự đoán địa danh, chèn bản ghi vào bảng `imageupload` & `imageidentifiedlocation` và tự động hỏi RAG Chatbot thông tin về địa danh đó. Tin nhắn lưu trong database sẽ chỉ chứa ảnh (`![Image](image_url)`), còn chatbot sẽ trả lời chi tiết về địa danh.
+- **Body:** `form-data`
+  - `file`: File ảnh (`.jpg`, `.png`).
+  - `user_id`: UUID của người dùng.
+  - `session_id`: (Tùy chọn) UUID của phiên chat hiện tại. Nếu trống, hệ thống sẽ tạo phiên mới.
+
+**Ví dụ cURL:**
+```bash
+curl -X POST "http://localhost:8003/chat/image" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+     -F "file=@/path/to/image.jpg" \
+     -F "user_id=123e4567-e89b-12d3-a456-426614174000" \
+     -F "session_id=YOUR_SESSION_ID"
+```
+
+**Phản hồi:**
+```json
+{
+  "session_id": "YOUR_SESSION_ID",
+  "image_url": "https://<supabase-url>/storage/v1/object/public/images/123e.../abc.jpg",
+  "location_name": "Tháp Bà Ponagar",
+  "reply": {
+     "message": "Tháp Bà Ponagar là một ngôi đền Chăm Pa cổ nằm ở Nha Trang...",
+     "data": []
+  }
+}
+```
+*(Nếu nhận diện thất bại, địa danh sẽ là `"Không xác định"` và Chatbot sẽ tự động phản hồi bằng câu xin lỗi và yêu cầu gửi ảnh khác rõ ràng hơn).*
