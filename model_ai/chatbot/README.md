@@ -149,6 +149,35 @@ Xóa vĩnh viễn một cuộc hội thoại.
        -d '{"title": "Du lịch biển"}'
   ```
 
+### 7. Chat bằng Hình ảnh (Image Upload + Landmark)
+Tải lên một bức ảnh, hệ thống sẽ lưu ảnh vào Supabase Bucket, nhận diện địa danh bằng AI, lưu metadata vào DB và tự động tạo câu hỏi để hỏi Chatbot về địa điểm đó.
+- **Endpoint:** `POST /chat/image`
+- **Body:** `form-data`
+  - `file`: File ảnh (`.jpg`, `.png`).
+  - `user_id`: UUID của người dùng.
+  - `session_id`: (Tùy chọn) UUID của phiên chat hiện tại. Nếu không có, hệ thống sẽ tạo phiên mới.
+- **Ví dụ Curl:**
+  ```bash
+  curl -X POST "http://localhost:8003/chat/image" \
+       -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+       -F "file=@/path/to/image.jpg" \
+       -F "user_id=12345678-1234-1234-1234-123456789abc" \
+       -F "session_id=4ed2b013-a771-42e6-9b49-5b66a1aa93d7"
+  ```
+- **Phản hồi:** 
+  ```json
+  {
+    "session_id": "4ed2b013-a771-42e6-9b49-5b66a1aa93d7",
+    "image_url": "https://<supabase-url>/storage/v1/object/public/images/1234.../xyz.jpg",
+    "location_name": "Tháp Bà Ponagar",
+    "reply": {
+       "message": "Tháp Bà Ponagar là một ngôi đền Chăm Pa nằm ở Nha Trang...",
+       "data": []
+    }
+  }
+  ```
+> **Lưu ý:** Lịch sử chat (khi GET history) sẽ chứa Markdown kèm ảnh (VD: `![Image](https...)`) để Frontend hiển thị dễ dàng.
+
 ---
 
 ## ⚙️ Quy trình xử lý (Logic Flow)

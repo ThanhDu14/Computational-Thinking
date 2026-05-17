@@ -2,7 +2,7 @@
 # chat_api.py
 # ============================================================
 
-from fastapi import APIRouter, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends, Header, UploadFile, File, Form
 from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
@@ -10,6 +10,8 @@ import os
 import logging
 import re
 import ast
+import io
+import uuid
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -237,6 +239,97 @@ async def rename_session(user_id: str, session_id: str, req: RenameSessionReques
     except HTTPException:
         raise
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# =====================================================================
+# 7. CHAT VỚI ẢNH (LANDMARK RECOGNIZER + RAG)
+# =====================================================================
+@chat_router.post("/chat/image")
+async def chat_with_image(
+    file: UploadFile = File(...),
+    user_id: str = Form(...),
+    session_id: Optional[str] = Form(None)
+):
+    try:
+        _validate_uuid(user_id)
+        
+        file_bytes = await file.read()
+        
+        # 1. Upload ảnh lên Supabase Storage (bucket 'images')
+        from supabase import create_client
+        supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+        
+        # Tạo filename unique
+        ext = os.path.splitext(file.filename)[1] or ".jpg"
+        filename = f"{user_id}/{uuid.uuid4()}{ext}"
+        
+        res_upload = supabase.storage.from_("images").upload(
+            file=file_bytes, 
+            path=filename, 
+            file_options={"content-type": file.content_type}
+        )
+        
+        # Lấy URL public của ảnh
+        image_url = supabase.storage.from_("images").get_public_url(filename)
+        
+        # 2. Gọi model Landmark Recognizer để dự đoán
+        from model_ai.landmark_recognizer.api.app import recognizer, location_lookup
+        
+        if recognizer is None:
+            raise HTTPException(status_code=503, detail="Landmark Recognizer chưa được khởi tạo. Hãy chạy qua server.py hoặc port 8004.")
+            
+        result = recognizer.predict(io.BytesIO(file_bytes))
+        
+        if result is None:
+            location_name = "Không xác định"
+        else:
+            matched_img, inliers, elapsed = result
+            label = str(recognizer.labels[recognizer.image_paths.tolist().index(matched_img)] 
+                         if matched_img in recognizer.image_paths else "unknown")
+            location_name = location_lookup.get(label, "Không xác định")
+
+        # 3. Chèn vào bảng imageupload và imageidentifiedlocation
+        upload_data = supabase.table("imageupload").insert({
+            "user_id": user_id,
+            "image_url": image_url,
+            "status": "processed"
+        }).execute()
+        
+        image_id = upload_data.data[0]["image_id"]
+        
+        if location_name != "Không xác định":
+            supabase.table("imageidentifiedlocation").insert({
+                "image_id": image_id,
+                "detected_landmark_name": location_name,
+                "confidence_score": float(inliers) if result else 0.0,
+                "detected_by": "AI_DINOv2"
+            }).execute()
+
+        # 4. Gửi câu hỏi vào Chatbot (RAG)
+        if location_name != "Không xác định":
+            prompt = f"![Image]({image_url})\n\nHãy cho tôi thêm thông tin về địa điểm {location_name} sau."
+        else:
+            prompt = f"![Image]({image_url})\n\n[Hệ thống: Không nhận diện được địa danh từ ảnh này]. Hãy phản hồi người dùng bằng câu xin lỗi rằng bạn không thể dự đoán được địa danh từ ảnh này và yêu cầu họ gửi lại ảnh khác rõ ràng hơn."
+            
+        rag = RAGPipeline(
+            embedding_model=global_embedding_model,
+            llm=global_llm,
+            user_id=str(user_id),
+            session_id=session_id
+        )
+        answer = rag.ask(prompt)
+
+        return {
+            "session_id": rag.memory.session_id,
+            "image_url": image_url,
+            "location_name": location_name,
+            "reply": parse_ai_response_to_json(answer)
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        logger.error(f"Lỗi API /chat/image: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
