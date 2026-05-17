@@ -2,10 +2,12 @@ package landmark
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"smart-travel-backend/config"
 	"smart-travel-backend/utils"
 
@@ -63,7 +65,17 @@ func proxyMultipartToAI(c *gin.Context, aiPath string) {
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 
-	part, err := writer.CreateFormFile("file", header.Filename)
+	// Copy file vào multipart với Content-Type chuẩn
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, header.Filename))
+	
+	contentType := header.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
+	h.Set("Content-Type", contentType)
+
+	part, err := writer.CreatePart(h)
 	if err != nil {
 		log.Printf("[LANDMARK] ❌ Lỗi tạo multipart: %v", err)
 		utils.RespondError(c, http.StatusInternalServerError, "Lỗi server nội bộ", nil)
