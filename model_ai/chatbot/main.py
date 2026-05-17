@@ -20,7 +20,7 @@ def main():
     rag = RAGPipeline(
         embedding_model=global_embedding_model,
         llm=global_llm,
-        user_id="b785da61-d43f-4fe3-96f4-2f73a737ca63"
+        user_id="c16ed0ed-216d-4160-96ba-71b1c531593d"
     )
 
     print("\n✅ RAG Chatbot đã sẵn sàng!")

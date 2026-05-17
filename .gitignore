@@ -19,6 +19,7 @@ FrontEnd/dist
 /build
 /dist
 *.exe
+__init__.py
 
 # misc
 .DS_Store

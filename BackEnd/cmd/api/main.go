@@ -8,10 +8,12 @@ import (
 	"os/signal"
 	"smart-travel-backend/config"
 	"smart-travel-backend/features/auth"
+	"smart-travel-backend/features/chatbot"
 	"smart-travel-backend/features/contact"
 	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
 	"smart-travel-backend/features/review"
+	"smart-travel-backend/features/wishlist"
 	"syscall"
 	"time"
 
@@ -43,18 +45,6 @@ func main() {
 		MaxAge:        12 * time.Hour,
 	}))
 
-	/*
-		// Cấu hình CORS - Bắt buộc phải thêm các Header của Pinggy thì trình duyệt mới cho phép Preflight OPTIONS
-		frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
-		router.Use(cors.New(cors.Config{
-			AllowOrigins:  []string{frontendURL, "http://localhost:5173", "http://localhost:3000"},
-			AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-			AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
-			ExposeHeaders: []string{"Content-Length"},
-			MaxAge:        12 * time.Hour,
-		}))
-	*/
-
 	// 4. Đăng ký Routes
 	authGroup := router.Group("/api/auth")
 	{
@@ -63,7 +53,7 @@ func main() {
 
 	contactGroup := router.Group("/api/contact")
 	{
-		contact.SetupContactRoutes(contactGroup)
+		contact.SetupContactRoutes(contactGroup, authClient)
 	}
 
 	profileGroup := router.Group("/api/profile")
@@ -76,9 +66,19 @@ func main() {
 		review.SetupReviewRoutes(reviewGroup, authClient, db)
 	}
 
+	wishlistGroup := router.Group("/api/wishlist")
+	{
+		wishlist.SetupWishlistRoutes(wishlistGroup, authClient, db)
+	}
+
 	locationGroup := router.Group("/api/location")
 	{
 		location.SetupLocationRoutes(locationGroup, db)
+	}
+
+	chatbotGroup := router.Group("/api/chatbot")
+	{
+		chatbot.SetupChatbotRoutes(chatbotGroup, authClient)
 	}
 
 	// 5. Khởi tạo Http Server
