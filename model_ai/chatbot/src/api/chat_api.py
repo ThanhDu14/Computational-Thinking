@@ -246,27 +246,55 @@ async def rename_session(user_id: str, session_id: str, req: RenameSessionReques
 # =====================================================================
 @chat_router.post("/chat/image")
 async def chat_with_image(
-    file: UploadFile = File(...),
+    file: Optional[UploadFile] = File(None),
+    image_url: Optional[str] = Form(None),
     user_id: str = Form(...),
     session_id: Optional[str] = Form(None)
 ):
     try:
         _validate_uuid(user_id)
         
-        file_bytes = await file.read()
-        
+        if file is not None:
+            file_bytes = await file.read()
+            original_filename = file.filename
+            content_type = file.content_type or "image/jpeg"
+        elif image_url:
+            import httpx
+            from urllib.parse import urlparse
+            try:
+                async with httpx.AsyncClient() as client:
+                    resp = await client.get(image_url, timeout=15.0)
+                    if resp.status_code != 200:
+                        raise HTTPException(status_code=400, detail=f"Không thể tải ảnh từ URL: HTTP {resp.status_code}")
+                    file_bytes = resp.content
+                    content_type = resp.headers.get("content-type", "image/jpeg")
+                    
+                    parsed_url = urlparse(image_url)
+                    original_filename = os.path.basename(parsed_url.path) or "image.jpg"
+                    # Loại bỏ phần query parameters nếu có trong filename
+                    if "?" in original_filename:
+                        original_filename = original_filename.split("?")[0]
+            except HTTPException:
+                raise
+            except Exception as download_err:
+                raise HTTPException(status_code=400, detail=f"Lỗi khi tải ảnh từ URL: {str(download_err)}")
+        else:
+            raise HTTPException(status_code=400, detail="Vui lòng cung cấp file ảnh qua tham số 'file' hoặc đường dẫn ảnh qua 'image_url'.")
+            
         # 1. Upload ảnh lên Supabase Storage (bucket 'images')
         from supabase import create_client
         supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
         
         # Tạo filename unique
-        ext = os.path.splitext(file.filename)[1] or ".jpg"
+        ext = os.path.splitext(original_filename)[1] or ".jpg"
+        if len(ext) > 10 or not ext.startswith("."):  # Phòng chống các phần đuôi quá dài hoặc không hợp lệ
+            ext = ".jpg"
         filename = f"{user_id}/{uuid.uuid4()}{ext}"
         
         res_upload = supabase.storage.from_("images").upload(
             file=file_bytes, 
             path=filename, 
-            file_options={"content-type": file.content_type}
+            file_options={"content-type": content_type}
         )
         
         # Lấy URL public của ảnh

@@ -219,7 +219,7 @@ curl -X GET "http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426614174000
 
 **Ví dụ cURL:**
 ```bash
-curl -X PATCH "http://localhost:8003/sessions/123e4567-e89b-12d3-a456-426614174000/YOUR_SESSION_ID/title" \
+curl -X PATCH "http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426614174000/YOUR_SESSION_ID/title" \
      -H "Content-Type: application/json" \
      -H "X-Internal-Secret: <YOUR_AI_KEY>" \
      -d '{
@@ -230,17 +230,27 @@ curl -X PATCH "http://localhost:8003/sessions/123e4567-e89b-12d3-a456-4266141740
 ### 3.7. Gửi tin nhắn bằng Hình ảnh (Vision/Landmark)
 - **Endpoint:** `/chat/image`
 - **Method:** `POST`
-- **Chức năng:** Người dùng tải lên một bức ảnh. Server sẽ lưu ảnh vào Supabase Bucket, gọi bộ nhận diện Landmark để dự đoán địa danh, chèn bản ghi vào bảng `imageupload` & `imageidentifiedlocation` và tự động hỏi RAG Chatbot thông tin về địa danh đó. Tin nhắn lưu trong database sẽ chỉ chứa ảnh (`![Image](image_url)`), còn chatbot sẽ trả lời chi tiết về địa danh.
+- **Chức năng:** Người dùng tải lên một bức ảnh cục bộ hoặc truyền trực tiếp đường link URL của ảnh. Server sẽ lưu ảnh vào Supabase Bucket, gọi bộ nhận diện Landmark để dự đoán địa danh, chèn bản ghi vào bảng `imageupload` & `imageidentifiedlocation` và tự động hỏi RAG Chatbot thông tin về địa danh đó. Tin nhắn lưu trong database sẽ chỉ chứa ảnh (`![Image](image_url)`), còn chatbot sẽ trả lời chi tiết về địa danh.
 - **Body:** `form-data`
-  - `file`: File ảnh (`.jpg`, `.png`).
+  - `file`: (Tùy chọn) File ảnh cục bộ (`.jpg`, `.png`). Cần truyền 1 trong 2 tham số: `file` hoặc `image_url`.
+  - `image_url`: (Tùy chọn) Đường dẫn URL công khai của ảnh trên mạng. Server sẽ tự động tải xuống.
   - `user_id`: UUID của người dùng.
   - `session_id`: (Tùy chọn) UUID của phiên chat hiện tại. Nếu trống, hệ thống sẽ tạo phiên mới.
 
-**Ví dụ cURL:**
+**Ví dụ cURL 1 (Tải lên file cục bộ):**
 ```bash
-curl -X POST "http://localhost:8003/chat/image" \
+curl -X POST "http://localhost:8000/chat/image" \
      -H "X-Internal-Secret: <YOUR_AI_KEY>" \
      -F "file=@/path/to/image.jpg" \
+     -F "user_id=123e4567-e89b-12d3-a456-426614174000" \
+     -F "session_id=YOUR_SESSION_ID"
+```
+
+**Ví dụ cURL 2 (Truyền trực tiếp URL của ảnh):**
+```bash
+curl -X POST "http://localhost:8000/chat/image" \
+     -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+     -F "image_url=https://static.vinwonders.com/production/2025/02/thong-tin-ve-landmark-81.jpg" \
      -F "user_id=123e4567-e89b-12d3-a456-426614174000" \
      -F "session_id=YOUR_SESSION_ID"
 ```
