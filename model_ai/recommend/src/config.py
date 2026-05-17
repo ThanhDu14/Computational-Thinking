@@ -29,11 +29,11 @@ class Settings:
     }
 
     def __init__(self):
-        env_path = Path(__file__).resolve().parent.parent / '.env'
+        env_path = Path(__file__).resolve().parent.parent.parent / '.env'
         load_dotenv(dotenv_path=env_path)
 
         self.SUPABASE_URL = os.getenv("SUPABASE_URL")
-        self.SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+        self.SUPABASE_KEY = os.getenv("SUPABASE_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
 
         if self.SUPABASE_URL and self.SUPABASE_KEY:
             self.supabase_client = create_client(self.SUPABASE_URL, self.SUPABASE_KEY)

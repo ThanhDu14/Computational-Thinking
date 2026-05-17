@@ -1,5 +1,5 @@
 from typing import List, Dict, Any, Optional
-from src.config import settings
+from ..src.config import settings
 
 class SupabaseManager:
     def __init__(self):

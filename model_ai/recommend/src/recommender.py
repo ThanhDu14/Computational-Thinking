@@ -1,9 +1,9 @@
 from typing import Dict, Any
-from src.config import settings
-from utils.database import db_manager
-from utils.categories import expand_categories_with_semantics
-from utils.filter import filter_by_categories, sort_by_place_style, filter_by_radius
-from utils.itinerary import build_itinerary
+from .config import settings
+from ..utils.database import db_manager
+from ..utils.categories import expand_categories_with_semantics
+from ..utils.filter import filter_by_categories, sort_by_place_style, filter_by_radius
+from ..utils.itinerary import build_itinerary
 
 def recommend(input_json: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -26,26 +26,7 @@ def recommend(input_json: Dict[str, Any]) -> Dict[str, Any]:
     # ── Xác định bán kính ────────────────────────────────────────────
     radius_km = settings.TRANSPORTATION_RADIUS.get(transportation, 30.0)
 
-    # ── Step 1: Lấy tọa độ tỉnh ─────────────────────────────────────
-    province_coords = db_manager.fetch_province_coords(province)
-    if not province_coords:
-        return {
-            "status": "error",
-            "message": f"Không tìm thấy tỉnh '{province}' trong database.",
-        }
-
-    # Xác định điểm xuất phát (trung tâm hay ngoại ô)
-    if starting_point_name == "Ngoại ô":
-        start_lat = float(province_coords.get("suburb_lat") or 0)
-        start_lng = float(province_coords.get("suburb_lng") or 0)
-    else:
-        start_lat = float(province_coords.get("center_lat") or 0)
-        start_lng = float(province_coords.get("center_lng") or 0)
-
-    print(f"[Recommender] Tỉnh: {province} | Điểm xuất phát: {starting_point_name} "
-          f"({start_lat}, {start_lng}) | Bán kính: {radius_km} km")
-
-    # ── Step 2: Lấy locations của tỉnh ───────────────────────────────
+    # ── Step 1 & 2: Lấy locations của tỉnh & Tính tọa độ ─────────────
     all_locations = db_manager.fetch_locations_by_province(province)
     print(f"[Recommender] Tổng locations thuộc '{province}': {len(all_locations)}")
 
@@ -54,6 +35,29 @@ def recommend(input_json: Dict[str, Any]) -> Dict[str, Any]:
             "status": "error",
             "message": f"Không có địa điểm nào thuộc tỉnh '{province}'.",
         }
+
+    province_coords = db_manager.fetch_province_coords(province)
+
+    # Xác định điểm xuất phát (trung tâm hay ngoại ô)
+    if province_coords:
+        if starting_point_name == "Ngoại ô":
+            start_lat = float(province_coords.get("suburb_lat") or 0)
+            start_lng = float(province_coords.get("suburb_lng") or 0)
+        else:
+            start_lat = float(province_coords.get("center_lat") or 0)
+            start_lng = float(province_coords.get("center_lng") or 0)
+    else:
+        # Nếu không có province_coords, tự tính trung bình từ danh sách locations
+        valid_lats = [float(loc["latitude"]) for loc in all_locations if loc.get("latitude") is not None]
+        valid_lngs = [float(loc["longitude"]) for loc in all_locations if loc.get("longitude") is not None]
+        if valid_lats and valid_lngs:
+            start_lat = sum(valid_lats) / len(valid_lats)
+            start_lng = sum(valid_lngs) / len(valid_lngs)
+        else:
+            start_lat, start_lng = 0.0, 0.0
+
+    print(f"[Recommender] Tỉnh: {province} | Điểm xuất phát: {starting_point_name} "
+          f"({start_lat}, {start_lng}) | Bán kính: {radius_km} km")
 
     # ── Step 3: Lấy category map & location-category mapping ────────
     cat_id_to_name = db_manager.fetch_category_map()
