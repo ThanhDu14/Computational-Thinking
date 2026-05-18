@@ -90,7 +90,7 @@ func proxyMultipartToAI(c *gin.Context, aiPath string, extraFields map[string]st
 	// Copy file vào multipart với Content-Type chuẩn
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, header.Filename))
-	
+
 	contentType := header.Header.Get("Content-Type")
 	if contentType == "" {
 		contentType = "application/octet-stream"
@@ -216,8 +216,28 @@ func RenameSessionHandler() gin.HandlerFunc {
 	}
 }
 
-// 7. Gửi tin nhắn bằng hình ảnh - Vision/Landmark (Chat Image)
-func ChatImageHandler() gin.HandlerFunc {
+// 7. Gửi tin nhắn bằng hình ảnh (Dùng link URL)
+func ChatImageUrlHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := getUserID(c)
+
+		var reqBody map[string]interface{}
+		if err := c.ShouldBindJSON(&reqBody); err != nil {
+			utils.RespondError(c, http.StatusBadRequest, "Dữ liệu JSON không hợp lệ", nil)
+			return
+		}
+
+		// Ghi đè user_id bằng ID thực từ token
+		reqBody["user_id"] = userID
+		jsonBody, _ := json.Marshal(reqBody)
+
+		// Tùy chỉnh đường dẫn bên AI Server nếu cần (Ví dụ: "/chat/image")
+		proxyToAI(c, "POST", "/chat/image", jsonBody)
+	}
+}
+
+// 8. Gửi tin nhắn bằng hình ảnh (Upload file trực tiếp)
+func ChatImageUploadHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := getUserID(c)
 
@@ -232,6 +252,6 @@ func ChatImageHandler() gin.HandlerFunc {
 			extraFields["session_id"] = sessionID
 		}
 
-		proxyMultipartToAI(c, "/chat/image", extraFields)
+		proxyMultipartToAI(c, "/chat/upload-image", extraFields)
 	}
 }

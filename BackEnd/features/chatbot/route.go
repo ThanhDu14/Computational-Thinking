@@ -30,6 +30,9 @@ func SetupChatbotRoutes(rg *gin.RouterGroup, authClient *auth.Client) {
 	// 6. Đổi tên phiên trò chuyện
 	rg.PATCH("/sessions/:session_id/title", RenameSessionHandler())
 
-	// 7. Gửi tin nhắn bằng hình ảnh (Vision/Landmark)
-	rg.POST("/chat/image", ChatImageHandler())
+	// 7. Gửi tin nhắn bằng hình ảnh qua link URL (JSON)
+	rg.POST("/chat/image", ChatImageUrlHandler())
+
+	// 8. Gửi tin nhắn bằng hình ảnh qua upload file (Multipart/form-data)
+	rg.POST("/chat/upload-image", ChatImageUploadHandler())
 }
