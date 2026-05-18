@@ -71,8 +71,24 @@ func LabelsHandler() gin.HandlerFunc {
 	}
 }
 
-// 3. Nhận diện địa danh từ hình ảnh (Upload qua Cloudinary)
-func PredictHandler() gin.HandlerFunc {
+// 3. Nhận diện địa danh từ hình ảnh (Dùng link URL - JSON)
+func PredictUrlHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reqBody map[string]interface{}
+		if err := c.ShouldBindJSON(&reqBody); err != nil {
+			utils.RespondError(c, http.StatusBadRequest, "Dữ liệu JSON không hợp lệ", nil)
+			return
+		}
+
+		jsonBody, _ := json.Marshal(reqBody)
+
+		// Gọi proxy sang AI Server (AI Server nhận JSON)
+		proxyToAI(c, "POST", "/landmark/predict", jsonBody)
+	}
+}
+
+// 4. Nhận diện địa danh từ hình ảnh (Upload qua Cloudinary)
+func PredictUploadHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 1. Lấy file ảnh từ request
 		file, header, err := c.Request.FormFile("file")
@@ -83,7 +99,6 @@ func PredictHandler() gin.HandlerFunc {
 		defer file.Close()
 
 		// 2. Upload ảnh lên Cloudinary
-		// Sử dụng thời gian để tạo tên file không bị trùng
 		filename := fmt.Sprintf("landmark_%d_%s", time.Now().Unix(), header.Filename)
 		imageURL, err := utils.UploadLandmarkImageToCloudinary(file, filename)
 		if err != nil {

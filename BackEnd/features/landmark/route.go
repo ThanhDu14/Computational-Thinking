@@ -18,6 +18,9 @@ func SetupLandmarkRoutes(rg *gin.RouterGroup, authClient *auth.Client) {
 	// 2. Xem danh sách nhãn hỗ trợ
 	rg.GET("/labels", LabelsHandler())
 
-	// 3. Nhận diện địa danh qua ảnh
-	rg.POST("/predict", PredictHandler())
+	// 3. Nhận diện địa danh qua link URL (JSON)
+	rg.POST("/predict", PredictUrlHandler())
+
+	// 4. Nhận diện địa danh qua upload file trực tiếp (Multipart/form-data)
+	rg.POST("/upload-predict", PredictUploadHandler())
 }
