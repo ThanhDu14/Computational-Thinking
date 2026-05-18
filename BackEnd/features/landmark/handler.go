@@ -87,7 +87,7 @@ func PredictUrlHandler() gin.HandlerFunc {
 	}
 }
 
-// 4. Nhận diện địa danh từ hình ảnh (Upload qua Cloudinary)
+// 4. Nhận diện địa danh từ hình ảnh (Upload qua Cloudinary) - Chỉ trả về Link
 func PredictUploadHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 1. Lấy file ảnh từ request
@@ -107,14 +107,9 @@ func PredictUploadHandler() gin.HandlerFunc {
 			return
 		}
 
-		// 3. Tạo JSON payload chứa image_url để gửi sang AI Server
-		reqBody := map[string]interface{}{
+		// 3. Trả về link URL cho Frontend (Frontend sẽ tự lấy link này gọi tiếp vào /landmark/predict)
+		utils.RespondSuccess(c, http.StatusOK, "Upload ảnh thành công", gin.H{
 			"image_url": imageURL,
-		}
-		
-		jsonBody, _ := json.Marshal(reqBody)
-
-		// 4. Gọi proxy sang AI Server
-		proxyToAI(c, "POST", "/landmark/predict", jsonBody)
+		})
 	}
 }
