@@ -216,7 +216,7 @@ export default function TripPlanner({ initialData, onChange }) {
                                                                 className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-surface-container-low flex items-center justify-center pointer-events-auto border border-outline-variant/20 cursor-pointer hover:opacity-80 transition-opacity"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    const identifier = item.id || item.location_id || encodeURIComponent(item.name || item.location_name);
+                                                                    const identifier = item.location_id || (item.id && !String(item.id).includes('place') ? item.id : '') || encodeURIComponent(item.name || item.location_name);
                                                                     navigate(`/place/${identifier}`);
                                                                 }}
                                                             >
@@ -231,7 +231,7 @@ export default function TripPlanner({ initialData, onChange }) {
                                                                     className="font-bold text-sm text-on-surface line-clamp-2 leading-tight cursor-pointer hover:text-primary hover:underline"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        const identifier = item.id || item.location_id || encodeURIComponent(item.name || item.location_name);
+                                                                        const identifier = item.location_id || (item.id && !String(item.id).includes('place') ? item.id : '') || encodeURIComponent(item.name || item.location_name);
                                                                         navigate(`/place/${identifier}`);
                                                                     }}
                                                                 >

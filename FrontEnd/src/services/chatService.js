@@ -124,3 +124,49 @@ export const sendImageResult = async (token, locationName) => {
   });
   return handleResponse(res, "Image result request failed");
 };
+
+/**
+ * 6. Gửi tin nhắn bằng hình ảnh (Vision chat)
+ * Endpoint: POST /api/chatbot/chat/image
+ * @param {string} token 
+ * @param {File} file 
+ * @param {string} [session_id] 
+ * @returns {Promise<{session_id: string, reply: string, image_url: string}>}
+ */
+export const sendChatImage = async (token, file, session_id) => {
+  // Bước 1: Upload ảnh
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const uploadRes = await fetch(`${getChatbotBase()}/api/chatbot/chat/upload-image`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+    body: formData
+  });
+  
+  const uploadData = await handleResponse(uploadRes, "Image upload failed");
+  const imageUrl = uploadData?.data?.image_url;
+
+  if (!imageUrl) {
+    throw new Error("Không lấy được đường dẫn ảnh sau khi tải lên.");
+  }
+
+  // Bước 2: Gửi URL ảnh cho Chatbot xử lý
+  const payload = { image_url: imageUrl };
+  if (session_id) {
+    payload.session_id = session_id;
+  }
+
+  const chatRes = await fetch(`${getChatbotBase()}/api/chatbot/chat/image`, {
+    method: "POST",
+    headers: getHeaders(token),
+    body: JSON.stringify(payload)
+  });
+  
+  const chatData = await handleResponse(chatRes, "Chat image request failed");
+  
+  // Trả về kèm image_url để hiển thị trên UI (nếu cần)
+  return { ...chatData, image_url: imageUrl };
+};

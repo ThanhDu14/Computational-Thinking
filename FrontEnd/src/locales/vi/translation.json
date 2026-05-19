@@ -323,7 +323,8 @@
     "input_placeholder": "Hỏi AI Concierge bất cứ điều gì...",
     "chip_creative": "Chế độ Sáng tạo",
     "chip_summary": "Tóm tắt văn bản",
-    "chip_image": "Tạo hình ảnh"
+    "chip_image": "Tạo hình ảnh",
+    "sent_image": "Đã gửi một hình ảnh"
   },
   "footer": {
     "desc": "Trải nghiệm thế giới với \"Kẻ Khám Phá Thanh Khiết\". Những cảnh quan bao la, đầy cảm xúc đang chờ bạn khám phá.",

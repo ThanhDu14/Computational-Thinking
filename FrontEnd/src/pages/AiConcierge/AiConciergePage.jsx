@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   MessageSquare, History, Compass, Settings,
-  Search, UserCircle, Bot, Send, Plus,
+  Search, UserCircle, Bot, Send, Plus, X,
   Mic, Sparkles, FileText, Image as ImageIcon,
   MoreHorizontal, ChevronRight, Trash2, MapPin, ExternalLink
 } from 'lucide-react';
@@ -29,6 +29,7 @@ export default function AiConciergePage() {
     loadHistory, 
     startNewChat, 
     sendMessage,
+    sendImageMessage,
     removeSession 
   } = useChat();
 
@@ -37,8 +38,33 @@ export default function AiConciergePage() {
   const userAvatar = user?.photoURL || user?.picture || user?.avatar || null;
   const userName = user?.displayName || user?.name || user?.username || 'Khách';
   
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setInput(''); // clear input text per requirement
+    }
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   // Tự động cuộn xuống khi có tin nhắn mới hoặc AI đang trả lời
   useEffect(() => {
@@ -55,9 +81,14 @@ export default function AiConciergePage() {
   }, [messages, isTyping]);
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    sendMessage(input);
-    setInput('');
+    if (selectedFile) {
+      sendImageMessage(selectedFile);
+      clearSelectedImage();
+    } else {
+      if (!input.trim()) return;
+      sendMessage(input);
+      setInput('');
+    }
   };
 
   return (
@@ -185,7 +216,12 @@ export default function AiConciergePage() {
                 )}
               </div>
               <div className={`space-y-2 ${msg.role === 'user' ? 'text-right' : ''}`}>
-                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl`}>
+                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl flex flex-col`}>
+                  {msg.imageUrl && (
+                    <div className="mb-3 max-w-[240px] rounded-xl overflow-hidden shadow-md border border-white/20 bg-black/10 self-end">
+                      <img src={msg.imageUrl} alt="Uploaded" className="w-full h-auto object-cover max-h-60" />
+                    </div>
+                  )}
                   {renderMessageContent(msg.text, sendMessage)}
 
                   {msg.bento && (
@@ -229,8 +265,39 @@ export default function AiConciergePage() {
             {/* Visual Pulse behind input */}
             <div className="absolute inset-0 bg-primary-container blur-3xl opacity-5 rounded-full -z-10 group-focus-within:opacity-20 transition-opacity duration-500"></div>
 
+            {/* Image Preview Area */}
+            {previewUrl && (
+              <div className="absolute bottom-20 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={clearSelectedImage}
+                    className="absolute -top-1 -right-1 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
+                    title="Xóa ảnh"
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+                <div className="text-left pr-4">
+                  <p className="text-xs font-bold text-on-surface truncate max-w-[120px]">{selectedFile?.name}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Sẵn sàng gửi</p>
+                </div>
+              </div>
+            )}
+
             <div className="glass-panel p-2 rounded-full flex items-center gap-2 ethereal-glow border border-outline-variant/20 focus-within:ring-2 focus-within:ring-primary/30 transition-all">
-              <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors"
+                title="Tải ảnh lên"
+              >
                 <Plus className="w-5 h-5" />
               </button>
               <input
@@ -238,8 +305,9 @@ export default function AiConciergePage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={t('aiconcierge.input_placeholder')}
-                className="flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2"
+                placeholder={selectedFile ? "Đang gửi hình ảnh (Không thể nhập văn bản)..." : t('aiconcierge.input_placeholder')}
+                disabled={!!selectedFile}
+                className={`flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2 ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
               />
               <div className="flex items-center gap-1">
                 <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
@@ -247,7 +315,8 @@ export default function AiConciergePage() {
                 </button>
                 <button
                   onClick={handleSend}
-                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300"
+                  disabled={!selectedFile && !input.trim()}
+                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:scale-100 disabled:pointer-events-none"
                 >
                   <Send className="w-5 h-5" />
                 </button>
@@ -264,7 +333,10 @@ export default function AiConciergePage() {
                 <FileText className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_summary')}</span>
               </button>
-              <button className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10"
+              >
                 <ImageIcon className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_image')}</span>
               </button>

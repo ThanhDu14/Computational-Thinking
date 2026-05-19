@@ -46,6 +46,47 @@ export default function RecommendationsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const planIdParam = searchParams.get('planId');
 
+  // Restore planner state from sessionStorage on mount (if not loading a specific planId)
+  useEffect(() => {
+    if (planIdParam) return; // If loading a specific plan, ignore sessionStorage
+
+    const savedStateStr = sessionStorage.getItem('smarttravel_planner_state');
+    if (savedStateStr) {
+      try {
+        const savedState = JSON.parse(savedStateStr);
+        if (savedState.showResult || savedState.step > 1) {
+          setStep(savedState.step || 1);
+          setShowResult(savedState.showResult || false);
+          setPlannerData(savedState.plannerData || null);
+          setRawResponse(savedState.rawResponse || null);
+          setProvince(savedState.province || '');
+          setCategories(savedState.categories || []);
+          setPlaceStyle(savedState.placeStyle || 'must_go');
+          setStartingPoint(savedState.startingPoint || 'Trung tâm');
+          setTransportation(savedState.transportation || 'motorbike');
+        }
+      } catch (err) {
+        console.error("Error parsing restored planner state:", err);
+      }
+    }
+  }, [planIdParam]);
+
+  // Persist planner state to sessionStorage whenever states change
+  useEffect(() => {
+    const stateToSave = {
+      step,
+      showResult,
+      plannerData,
+      rawResponse,
+      province,
+      categories,
+      placeStyle,
+      startingPoint,
+      transportation
+    };
+    sessionStorage.setItem('smarttravel_planner_state', JSON.stringify(stateToSave));
+  }, [step, showResult, plannerData, rawResponse, province, categories, placeStyle, startingPoint, transportation]);
+
   useEffect(() => {
     if (!planIdParam) return;
 
@@ -81,6 +122,7 @@ export default function RecommendationsPage() {
                 title: `Day ${index + 1}`,
                 items: dayData.places.map((place, pIdx) => ({
                   ...place,
+                  location_id: place.location_id || place.id,
                   id: `${dayKey}-place-${pIdx}`,
                   tag: planCategories[0] || 'Khám phá'
                 }))
@@ -95,8 +137,6 @@ export default function RecommendationsPage() {
         showModal('error', 'Lỗi Tải Dữ Liệu', 'Không thể tải lịch trình để chỉnh sửa. Vui lòng thử lại sau.');
       } finally {
         setIsLoading(false);
-        // Clear search parameters to avoid re-triggering on fresh loads
-        setSearchParams({});
       }
     };
 
@@ -127,9 +167,9 @@ export default function RecommendationsPage() {
     }
 
     const columns = {
-      'day-1': { title: 'Day 1', items: randomItems.slice(0, 3).map((item, idx) => ({ ...item, id: `mock-day-1-place-${idx}` })) },
-      'day-2': { title: 'Day 2', items: randomItems.slice(3, 6).map((item, idx) => ({ ...item, id: `mock-day-2-place-${idx}` })) },
-      'day-3': { title: 'Day 3', items: randomItems.slice(6, 9).map((item, idx) => ({ ...item, id: `mock-day-3-place-${idx}` })) }
+      'day-1': { title: 'Day 1', items: randomItems.slice(0, 3).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-1-place-${idx}` })) },
+      'day-2': { title: 'Day 2', items: randomItems.slice(3, 6).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-2-place-${idx}` })) },
+      'day-3': { title: 'Day 3', items: randomItems.slice(6, 9).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-3-place-${idx}` })) }
     };
     setPlannerData(columns);
   };
@@ -169,8 +209,14 @@ export default function RecommendationsPage() {
           const dayKey = columnKey.replace('-', '_');
 
           if (updatedResponse.itinerary[dayKey]) {
-            // Map the sorted items back to places, stripping the unique visual IDs we generated
-            updatedResponse.itinerary[dayKey].places = plannerData[columnKey].items.map(({ id, tag, ...rest }) => rest);
+            // Map the sorted items back to places, keeping the original location_id and stripping temporary DnD fields
+            updatedResponse.itinerary[dayKey].places = plannerData[columnKey].items.map((item) => {
+              const { id, tag, ...rest } = item;
+              return {
+                ...rest,
+                location_id: item.location_id || (item.id && !String(item.id).includes('place') ? item.id : undefined)
+              };
+            });
           }
         });
       }
@@ -218,6 +264,7 @@ export default function RecommendationsPage() {
               title: `Day ${index + 1}`,
               items: dayData.places.map((place, pIdx) => ({
                 ...place,
+                location_id: place.location_id || place.id,
                 id: `${dayKey}-place-${pIdx}`,
                 tag: categories[0] || 'Khám phá'
               }))
@@ -326,7 +373,12 @@ export default function RecommendationsPage() {
 
               <div className="flex flex-col sm:flex-row gap-4 mt-12 w-full justify-center">
                 <button
-                  onClick={() => { setStep(1); setShowResult(false); }}
+                  onClick={() => {
+                    setStep(1);
+                    setShowResult(false);
+                    setSearchParams({});
+                    sessionStorage.removeItem('smarttravel_planner_state');
+                  }}
                   className="group text-on-surface-variant font-black hover:text-primary transition-all flex items-center justify-center gap-3 font-body px-10 py-5 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-2xl border border-outline-variant/30 hover:border-primary/50 shadow-sm hover:shadow-md"
                 >
                   <span className="material-symbols-outlined text-[20px] group-hover:rotate-180 transition-transform duration-500">refresh</span>

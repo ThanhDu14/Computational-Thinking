@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { sendImageResult } from '../../services/chatService';
 import './ChatCards.css';
 import renderMessageContent from './ChatRenderer';
+import chatbotLogoImg from '../../assets/images/chatbot_logo.png';
 
 export default function FloatingChatWidget() {
   const { t } = useTranslation();
@@ -25,10 +26,15 @@ export default function FloatingChatWidget() {
     loadHistory,
     startNewChat: handleNewChat,
     sendMessage: handleSend,
+    sendImageMessage,
     removeSession
   } = useChat();
 
   const [input, setInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -43,10 +49,36 @@ export default function FloatingChatWidget() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setInput(''); // clear input text per requirement
+    }
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const onSend = () => {
-    if (!input.trim()) return;
-    handleSend(input);
-    setInput('');
+    if (selectedFile) {
+      sendImageMessage(selectedFile);
+      clearSelectedImage();
+    } else {
+      if (!input.trim()) return;
+      handleSend(input);
+      setInput('');
+    }
   };
 
   // Đóng login popup khi click ra ngoài
@@ -112,8 +144,8 @@ export default function FloatingChatWidget() {
           </button>
 
           {/* Icon */}
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-3">
-            <Bot size={20} />
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-primary/10 border border-primary/20 mb-3 shadow-md shadow-primary/5">
+            <img src={chatbotLogoImg} alt="AI Concierge Logo" className="w-full h-full object-cover scale-110" />
           </div>
 
           {/* Text */}
@@ -152,10 +184,10 @@ export default function FloatingChatWidget() {
       {/* The Floating Button */}
       <button
         onClick={handleOpenChat}
-        className={`fixed bottom-6 right-6 z-[100] w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-6 right-6 z-[100] w-16 h-16 rounded-full bg-surface border border-outline-variant/30 flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
         aria-label="Open AI Concierge"
       >
-        <MessageCircle size={28} />
+        <img src={chatbotLogoImg} alt="Open AI Concierge" className="w-full h-full object-cover scale-110" />
         {/* Pulse indicator */}
         <span className="absolute top-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-surface rounded-full animate-pulse"></span>
       </button>
@@ -208,8 +240,8 @@ export default function FloatingChatWidget() {
                 <Menu size={20} />
               </button>
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary">
-                  <Bot size={20} />
+                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-surface-container-highest border border-outline-variant/20 shadow-sm">
+                  <img src={chatbotLogoImg} alt="AI Concierge Logo" className="w-full h-full object-cover scale-110" />
                 </div>
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-surface rounded-full"></span>
               </div>
@@ -241,13 +273,18 @@ export default function FloatingChatWidget() {
           <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide bg-background/30">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex flex-col gap-1 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[15px] leading-relaxed shadow-sm ${msg.role === 'user' ? 'widget-user-bubble rounded-tr-sm' : 'widget-bot-bubble text-on-surface rounded-tl-sm w-full'}`}>
+                <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[15px] leading-relaxed shadow-sm ${msg.role === 'user' ? 'widget-user-bubble rounded-tr-sm flex flex-col' : 'widget-bot-bubble text-on-surface rounded-tl-sm w-full'}`}>
+                  {msg.imageUrl && (
+                    <div className="mb-2 max-w-[200px] rounded-xl overflow-hidden shadow-md border border-white/20 bg-black/10 self-end">
+                      <img src={msg.imageUrl} alt="Uploaded" className="w-full h-auto object-cover max-h-48" />
+                    </div>
+                  )}
                   {msg.role === 'user' ? (
                     <div className="whitespace-pre-wrap">
                       {(typeof msg.text === 'string' ? msg.text : String(msg.text || '')).split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
                     </div>
                   ) : (
-                    renderMessageContent(msg.text, handleSend)
+                    renderMessageContent(msg.text, onSend)
                   )}
                 </div>
                 <span className="text-[10px] text-on-surface-variant/60 font-medium px-1">
@@ -270,26 +307,54 @@ export default function FloatingChatWidget() {
 
           {/* Input */}
           <div className="p-4 bg-surface/80 backdrop-blur-md rounded-b-3xl border-t border-outline-variant/10">
+            {previewUrl && (
+              <div className="mb-3 p-1.5 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/20 flex items-center gap-2.5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300 w-fit max-w-full">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={clearSelectedImage}
+                    className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
+                    title="Xóa ảnh"
+                  >
+                    <X size={8} />
+                  </button>
+                </div>
+                <div className="text-left pr-2 overflow-hidden">
+                  <p className="text-[11px] font-bold text-on-surface truncate max-w-[100px]">{selectedFile?.name}</p>
+                  <p className="text-[9px] text-on-surface-variant font-medium">Sẵn sàng gửi</p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center bg-surface-container border border-outline-variant/30 rounded-full p-1 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
               <button
+                onClick={() => fileInputRef.current?.click()}
                 className="p-2 text-on-surface-variant hover:text-primary transition-colors flex-shrink-0"
                 aria-label="Upload image"
+                title="Tải ảnh lên"
               >
                 <ImageIcon size={18} />
               </button>
               <input
                 type="text"
-                className="flex-1 w-full min-w-0 bg-transparent border-none focus:ring-0 text-sm px-2 py-2 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-body"
-                placeholder={t('aiconcierge.input_placeholder', 'Ask anything...')}
+                className={`flex-1 w-full min-w-0 bg-transparent border-none focus:ring-0 text-sm px-2 py-2 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-body ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
+                placeholder={selectedFile ? "Đang gửi hình ảnh (Không thể nhập văn bản)..." : t('aiconcierge.input_placeholder', 'Ask anything...')}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                onKeyDown={(e) => e.key === 'Enter' && onSend()}
+                disabled={!!selectedFile}
               />
-              {input.trim() ? (
+              {(input.trim() || selectedFile) ? (
                 <button
                   onClick={onSend}
                   className="p-2.5 bg-primary text-on-primary rounded-full hover:bg-primary-container transition-colors disabled:opacity-50 flex-shrink-0"
-                  disabled={!input.trim()}
                 >
                   <Send size={16} className="ml-px" />
                 </button>

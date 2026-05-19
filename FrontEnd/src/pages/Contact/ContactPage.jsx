@@ -55,16 +55,16 @@ export default function ContactPage() {
             </div>
             <h3 className="font-display font-bold text-xl text-on-surface">{t('contact.info.email_title')}</h3>
             <p className="text-on-surface-variant font-body text-sm">{t('contact.info.email_desc')}</p>
-            <a href="mailto:smartTravel@gmail.com" className="font-body font-semibold text-primary hover:underline mt-2">smartTravel@gmail.com</a>
+            <a href="mailto:travel36.contact@gmail.com" className="font-body font-semibold text-primary hover:underline mt-2">Travel36.contact@gmail.com</a>
           </GlassCard>
-          
+
           <GlassCard className="flex flex-col gap-4">
             <div className="w-12 h-12 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center mb-2">
               <MapPin className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-on-surface">{t('contact.info.office_title')}</h3>
             <p className="text-on-surface-variant font-body text-sm">{t('contact.info.office_desc')}</p>
-            <p className="font-body font-semibold text-primary mt-2">Trường ĐH KHTN</p>
+            <p className="font-body font-semibold text-primary mt-2">Trường Đại Học Khoa Học Tự Nhiên - Đại Học Quốc Gia Thành Phố Hồ Chí Minh</p>
           </GlassCard>
 
           <GlassCard className="flex flex-col gap-4">
@@ -73,20 +73,20 @@ export default function ContactPage() {
             </div>
             <h3 className="font-display font-bold text-xl text-on-surface">{t('contact.info.phone_title')}</h3>
             <p className="text-on-surface-variant font-body text-sm">{t('contact.info.phone_desc')}</p>
-            <a href="tel:+15550000000" className="font-body font-semibold text-primary hover:underline mt-2">+1 (555) 000-0000</a>
+            <a href="tel:+840342524161" className="font-body font-semibold text-primary hover:underline mt-2">+84 342524161</a>
           </GlassCard>
         </div>
 
         <div className="lg:col-span-2">
           <GlassCard className="h-full p-8 md:p-12">
             <h3 className="text-3xl font-display font-bold text-on-surface mb-8">{t('contact.form.title')}</h3>
-            
+
             {status === 'success' ? (
               <div className="flex flex-col items-center justify-center py-10 text-center animate-in fade-in zoom-in duration-500">
                 <CheckCircle2 className="w-16 h-16 text-emerald-500 mb-4" />
                 <h4 className="text-2xl font-bold text-on-surface mb-2">Message Sent!</h4>
                 <p className="text-on-surface-variant mb-6">We've received your inquiry and will get back to you soon.</p>
-                <button 
+                <button
                   onClick={() => setStatus('idle')}
                   className="text-primary font-bold hover:underline"
                 >
@@ -98,50 +98,50 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('contact.form.first_name')}</label>
-                    <input 
+                    <input
                       name="first_name"
                       value={formData.first_name}
                       onChange={handleChange}
                       required
-                      type="text" 
-                      className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body" 
-                      placeholder={t('contact.form.first_name_ph')} 
+                      type="text"
+                      className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body"
+                      placeholder={t('contact.form.first_name_ph')}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('contact.form.last_name')}</label>
-                    <input 
+                    <input
                       name="last_name"
                       value={formData.last_name}
                       onChange={handleChange}
                       required
-                      type="text" 
-                      className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body" 
-                      placeholder={t('contact.form.last_name_ph')} 
+                      type="text"
+                      className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body"
+                      placeholder={t('contact.form.last_name_ph')}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('contact.form.email')}</label>
-                  <input 
+                  <input
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    type="email" 
-                    className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body" 
-                    placeholder={t('contact.form.email_ph')} 
+                    type="email"
+                    className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body"
+                    placeholder={t('contact.form.email_ph')}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{t('contact.form.message')}</label>
-                  <textarea 
+                  <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    rows="4" 
-                    className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body resize-none" 
+                    rows="4"
+                    className="bg-surface-container-low border border-outline-variant/30 text-on-surface rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body resize-none"
                     placeholder={t('contact.form.message_ph')}
                   ></textarea>
                 </div>
@@ -153,13 +153,13 @@ export default function ContactPage() {
                   </div>
                 )}
 
-                <Button 
+                <Button
                   type="submit"
                   disabled={status === 'loading'}
-                  variant="primary" 
+                  variant="primary"
                   className="mt-4 w-full md:w-auto self-start"
                 >
-                  {status === 'loading' ? 'Sending...' : t('contact.form.submit')} 
+                  {status === 'loading' ? 'Sending...' : t('contact.form.submit')}
                   {status !== 'loading' && <Send className="w-4 h-4 ml-2" />}
                 </Button>
               </form>

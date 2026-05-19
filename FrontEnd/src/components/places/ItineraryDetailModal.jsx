@@ -290,7 +290,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                                       className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container-highest shrink-0 relative shadow-sm border border-outline-variant/10 cursor-pointer group/img"
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        const identifier = place.id || place.location_id || encodeURIComponent(place.name || place.location_name);
+                                        const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
                                         onClose();
                                         navigate(`/place/${identifier}`);
                                       }}
@@ -322,7 +322,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                                         className="text-lg font-bold text-on-surface font-display group-hover:text-primary transition-colors cursor-pointer hover:underline inline-flex items-center gap-1"
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          const identifier = place.id || place.location_id || encodeURIComponent(place.name || place.location_name);
+                                          const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
                                           onClose();
                                           navigate(`/place/${identifier}`);
                                         }}

@@ -331,7 +331,8 @@
     "input_placeholder": "Ask AI Concierge anything...",
     "chip_creative": "Creative Mode",
     "chip_summary": "Text Summary",
-    "chip_image": "Generate Image"
+    "chip_image": "Generate Image",
+    "sent_image": "Sent an image"
   },
   "footer": {
     "desc": "Experience the world with \"The Ethereal Explorer\". Boundless, atmospheric landscapes waiting to be discovered.",

@@ -4,7 +4,8 @@ import {
   sendChatMessage, 
   getChatHistory, 
   getChatSessions, 
-  deleteChatSession 
+  deleteChatSession,
+  sendChatImage 
 } from '../services/chatService';
 import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -130,6 +131,58 @@ export const ChatProvider = ({ children }) => {
     }
   }, [isAuthenticated, currentSessionId, getToken, startNewChat, loadSessions]);
 
+  const sendImageMessage = useCallback(async (file) => {
+    if (!isAuthenticated || !file) return;
+    
+    let sessionId = currentSessionId;
+    
+    // Auto-create session if none active
+    if (!sessionId) {
+      sessionId = await startNewChat();
+      if (!sessionId) return;
+    }
+
+    const localImageUrl = URL.createObjectURL(file);
+
+    const userMsg = { 
+      role: 'user', 
+      text: t('aiconcierge.sent_image', 'Đã gửi một hình ảnh'), 
+      imageUrl: localImageUrl,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    };
+    
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+
+    try {
+      const token = await getToken();
+      const data = await sendChatImage(token, file, sessionId);
+      
+      // Update local imageUrl with permanent URL from server
+      if (data.image_url) {
+        setMessages(prev => prev.map(m => m.imageUrl === localImageUrl ? { ...m, imageUrl: data.image_url } : m));
+      }
+
+      setMessages(prev => [...prev, {
+        role: 'bot',
+        text: data.reply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
+      
+      loadSessions();
+      
+    } catch (err) {
+      console.error("Chat image error:", err);
+      setMessages(prev => [...prev, {
+        role: 'bot',
+        text: "Xin lỗi, đã có lỗi xảy ra khi gửi ảnh tới AI. Vui lòng thử lại sau.",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
+    } finally {
+      setIsTyping(false);
+    }
+  }, [isAuthenticated, currentSessionId, getToken, startNewChat, loadSessions, t]);
+
   const removeSession = useCallback(async (sessionId) => {
     if (!isAuthenticated) return;
     try {
@@ -167,6 +220,7 @@ export const ChatProvider = ({ children }) => {
     loadHistory,
     startNewChat,
     sendMessage,
+    sendImageMessage,
     removeSession,
     setCurrentSessionId,
     setMessages

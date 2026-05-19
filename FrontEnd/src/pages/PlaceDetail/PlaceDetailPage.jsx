@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { getLocationById } from '../../services/locationService';
+import { getLocationById, searchLocations } from '../../services/locationService';
 import { getLocationReviews, deleteReview } from '../../services/reviewService';
 import SweetModal from '../../components/common/SweetModal';
 
@@ -69,26 +69,58 @@ export default function PlaceDetailPage() {
 
   // ── Fetch location ──
   const fetchLocation = useCallback(async () => {
-    if (!id) return;
+    if (!id) return null;
     setLocLoading(true);
     setLocError('');
+    let resolvedData = null;
     try {
       const data = await getLocationById(id);
       setLocation(data);
+      resolvedData = data;
     } catch (err) {
-      setLocError(err.message || 'Không tìm thấy địa điểm.');
+      console.warn(`getLocationById failed for ${id}, checking if it is a name...`, err);
+      // Check if ID is a UUID
+      const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+      if (!isUUID) {
+        try {
+          const searchData = await searchLocations(decodeURIComponent(id));
+          if (searchData && searchData.data && searchData.data.length > 0) {
+            const decodedId = decodeURIComponent(id).toLowerCase();
+            const matched = searchData.data.find(
+              loc => (loc.name || loc.location_name || '').toLowerCase() === decodedId
+            ) || searchData.data[0];
+            
+            setLocation(matched);
+            resolvedData = matched;
+          } else {
+            setLocError('Không tìm thấy địa điểm.');
+          }
+        } catch (searchErr) {
+          console.error("searchLocations failed:", searchErr);
+          setLocError(err.message || 'Không tìm thấy địa điểm.');
+        }
+      } else {
+        setLocError(err.message || 'Không tìm thấy địa điểm.');
+      }
     } finally {
       setLocLoading(false);
     }
+    return resolvedData;
   }, [id]);
 
   // ── Fetch reviews ──
-  const fetchReviews = useCallback(async () => {
-    if (!id) return;
+  const fetchReviews = useCallback(async (resolvedId) => {
+    const targetId = resolvedId || id;
+    if (!targetId) return;
+
+    // If targetId is not a UUID, skip fetching reviews
+    const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(targetId);
+    if (!isUUID) return;
+
     setRevLoading(true);
     setRevError('');
     try {
-      const data = await getLocationReviews(id);
+      const data = await getLocationReviews(targetId);
       setReviews(Array.isArray(data) ? data : []);
     } catch {
       setRevError('Không thể tải đánh giá.');
@@ -99,15 +131,24 @@ export default function PlaceDetailPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    fetchLocation();
-    fetchReviews();
+    const loadAll = async () => {
+      const resolved = await fetchLocation();
+      if (resolved) {
+        const realId = resolved.location_id || resolved.id;
+        fetchReviews(realId);
+      } else {
+        fetchReviews();
+      }
+    };
+    loadAll();
   }, [fetchLocation, fetchReviews]);
 
   // ── Handlers ──
   const handleReviewSuccess = () => {
     setShowForm(false);
     setEditingReview(null);
-    fetchReviews();
+    const realId = location?.location_id || location?.id;
+    fetchReviews(realId);
   };
 
   const handleEditReview = (review) => {
