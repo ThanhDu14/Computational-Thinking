@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"smart-travel-backend/config"
 	"smart-travel-backend/utils"
 
@@ -25,8 +26,11 @@ func GetWeatherByCityHandler() gin.HandlerFunc {
 			return
 		}
 
+		// Encode city để xử lý các tên thành phố có khoảng trắng (VD: "Can Tho" -> "Can+Tho" hoặc "Can%20Tho")
+		encodedCity := url.QueryEscape(city)
+
 		// Gọi OpenWeather, sử dụng units=metric (độ C) và lang=vi (tiếng Việt)
-		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=vi", city, apiKey)
+		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=vi", encodedCity, apiKey)
 
 		resp, err := http.Get(url)
 		if err != nil {
