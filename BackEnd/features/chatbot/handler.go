@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"smart-travel-backend/config"
 	"smart-travel-backend/utils"
@@ -137,6 +138,7 @@ func RenameSessionHandler() gin.HandlerFunc {
 }
 
 // 7. Gửi tin nhắn bằng hình ảnh (Dùng link URL)
+// AI Server nhận dạng form-data (-F image_url, -F user_id, -F session_id)
 func ChatImageUrlHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := getUserID(c)
@@ -147,12 +149,53 @@ func ChatImageUrlHandler() gin.HandlerFunc {
 			return
 		}
 
-		// Ghi đè user_id bằng ID thực từ token
-		reqBody["user_id"] = userID
-		jsonBody, _ := json.Marshal(reqBody)
+		// Lấy image_url và session_id từ body Frontend gửi lên
+		imageURL, _ := reqBody["image_url"].(string)
+		sessionID, _ := reqBody["session_id"].(string)
 
-		// Tùy chỉnh đường dẫn bên AI Server nếu cần (Ví dụ: "/chat/image")
-		proxyToAI(c, "POST", "/chat/image", jsonBody)
+		if imageURL == "" {
+			utils.RespondError(c, http.StatusBadRequest, "Thiếu trường image_url", nil)
+			return
+		}
+
+		// Tạo multipart/form-data body để gửi sang AI Server (đúng format AI yêu cầu)
+		var buf bytes.Buffer
+		writer := multipart.NewWriter(&buf)
+		writer.WriteField("image_url", imageURL)
+		writer.WriteField("user_id", userID)
+		if sessionID != "" {
+			writer.WriteField("session_id", sessionID)
+		}
+		writer.Close()
+
+		// Tạo request sang AI Server
+		aiBaseURL := config.GetEnv("AI_ENDPOINT", "http://localhost:8000")
+		req, err := http.NewRequest("POST", aiBaseURL+"/chat/image", &buf)
+		if err != nil {
+			log.Printf("[CHATBOT] ❌ Lỗi tạo request: %v", err)
+			utils.RespondError(c, http.StatusInternalServerError, "Lỗi server nội bộ", nil)
+			return
+		}
+
+		req.Header.Set("Content-Type", writer.FormDataContentType())
+		req.Header.Set("X-Internal-Secret", config.GetEnv("AI_INTERNAL_SECRET", "super_secret_key_123"))
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Printf("[CHATBOT] ❌ Lỗi kết nối AI: %v", err)
+			utils.RespondError(c, http.StatusBadGateway, "Không thể kết nối đến hệ thống AI", nil)
+			return
+		}
+		defer resp.Body.Close()
+
+		respBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			utils.RespondError(c, http.StatusInternalServerError, "Lỗi xử lý phản hồi từ AI", nil)
+			return
+		}
+
+		c.Data(resp.StatusCode, resp.Header.Get("Content-Type"), respBody)
 	}
 }
 

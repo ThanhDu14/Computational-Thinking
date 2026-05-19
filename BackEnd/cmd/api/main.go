@@ -10,7 +10,6 @@ import (
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/chatbot"
 	"smart-travel-backend/features/contact"
-	"smart-travel-backend/features/landmark"
 
 	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
@@ -47,11 +46,9 @@ func main() {
 	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
 	router.Use(cors.New(cors.Config{
 		AllowOriginFunc: func(origin string) bool {
-			// Nếu đang ở môi trường Local (Debug) -> Cho phép mọi Frontend kết nối thoải mái
 			if gin.Mode() == gin.DebugMode {
 				return true
 			}
-			// Nếu Deploy (Release) -> CHỈ cho phép tên miền Frontend hợp lệ được phép gọi
 			return origin == frontendURL || origin == "http://localhost:3000"
 		},
 		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
@@ -99,11 +96,6 @@ func main() {
 	recommendGroup := router.Group("/api/recommend")
 	{
 		recommend.SetupRecommendRoutes(recommendGroup, authClient)
-	}
-
-	landmarkGroup := router.Group("/api/landmark")
-	{
-		landmark.SetupLandmarkRoutes(landmarkGroup, authClient)
 	}
 
 	// 5. Khởi tạo Http Server
