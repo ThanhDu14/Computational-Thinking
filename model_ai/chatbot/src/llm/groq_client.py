@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 # [THAY ĐỔI] Import từ config
 from model_ai.chatbot.src.config.config import LLM_MODEL_NAME, LLM_TEMPERATURE, LLM_MAX_TOKENS
 
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), "../../../../.env")
+load_dotenv(dotenv_path=env_path)
 
 
 class GroqClient:

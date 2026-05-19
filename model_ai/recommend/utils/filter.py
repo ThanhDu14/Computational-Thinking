@@ -1,6 +1,6 @@
 from typing import Dict, List, Any
-from src.config import settings
-from utils.geo import haversine_km
+from ..src.config import settings
+from .geo import haversine_km
 
 def filter_by_categories(
     locations: List[Dict],

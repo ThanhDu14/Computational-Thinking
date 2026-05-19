@@ -5,113 +5,40 @@ from model_ai.chatbot.src.memory.chat_memory import ChatMemory
 from model_ai.chatbot.src.vectorstore.vector_store import vector_store
 
 class RAGPipeline:
-<<<<<<< HEAD
-    """
-    End-to-end RAG pipeline with session management and summarization
-    """
-
-    def __init__(
-        self,
-        index_path="embeddings/vector_db/faiss.index",
-        texts_path="embeddings/vector_db/docs.json"
-    ):
-
-        # Embedding model
-        self.embedding_model = EmbeddingModel()
-
-        # Vector database
-        self.vectordb = VectorDB(index_path, texts_path)
-
-        # Retriever
-=======
     def __init__(self, embedding_model, llm, user_id="guest", session_id=None):
         # [FIXED] Nhận embedding_model và llm từ ngoài vào để không tốn RAM khởi tạo lại
         self.embedding_model = embedding_model
         self.llm = llm
         
         self.vectordb = vector_store.get_db()
->>>>>>> main
         self.retriever = Retriever(self.embedding_model, self.vectordb)
         self.reranker = Reranker()
         self.prompt_builder = PromptTemplate()
 
-<<<<<<< HEAD
-        # LLM client
-        self.llm = GroqClient()
-
-        # Chat memory (shared for all sessions)
-        self.memory = ChatMemory()
-
-    def ask(self, query: str, session_id: str = None):
-        # 1. Get history and summary
-        history = []
-        summary = ""
-        if session_id:
-            history = self.memory.get_session_history(session_id)
-            summary = self.memory.get_summary(session_id)
-
-        # 2. Retrieve documents
-        docs = self.retriever.retrieve(query)
-
-        # 3. Rerank documents
-        docs = self.reranker.rerank(query, docs)
-
-        # 4. Build prompt (including summary and recent history)
-        # Only take last 10 messages for current context if summary exists
-        recent_history = history[-10:] if summary else history
-        
-        full_query = f"[Summary of previous conversation: {summary}]\n\nUser: {query}" if summary else query
-
-=======
         self.memory = ChatMemory(
             session_id=session_id,
             user_id=user_id
         )
 
-    def ask(self, query: str):
+    def ask(self, query: str, user_message_override: str = None):
         docs = self.retriever.retrieve(query)
         docs = self.reranker.rerank(query, docs)
         history_data = self.memory.get_context()
         
->>>>>>> main
         prompt = self.prompt_builder.build_prompt(
-            query=full_query,
+            query=query,
             contexts=docs,
-<<<<<<< HEAD
-            history=recent_history
-        )
-
-        # 5. Generate answer
-        answer = self.llm.generate(prompt)
-
-        # 6. Save history
-        if session_id:
-            self.memory.add_message(session_id, "user", query)
-            self.memory.add_message(session_id, "assistant", answer)
-            
-            # Check for title generation (after 2 user messages)
-            updated_history = self.memory.get_session_history(session_id)
-            user_msgs = [m for m in updated_history if m["role"] == "user"]
-            
-            if len(user_msgs) == 2:
-                self.auto_generate_title(session_id, updated_history)
-                
-            # Check for summarization (if history > 20 messages)
-            if len(updated_history) > 20:
-                self.auto_summarize(session_id, updated_history)
-=======
             history=history_data
         )
-
+ 
         answer = self.llm.generate(prompt)
-
+ 
         self.memory.add_chat(
-            user_message=query,
+            user_message=user_message_override if user_message_override is not None else query,
             assistant_message=answer,
             llm=self.llm
         )
->>>>>>> main
-
+ 
         return answer
 
     def auto_generate_title(self, session_id, history):

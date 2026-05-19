@@ -1,5 +1,5 @@
 from typing import Dict, List, Any
-from src.config import settings
+from ..src.config import settings
 
 def build_itinerary(
     locations: List[Dict],

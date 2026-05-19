@@ -52,3 +52,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 **/venv
+# Vector DB & Models
+model_ai/chatbot/embeddings/vector_db/
+model_ai/landmark_recognizer/weights/

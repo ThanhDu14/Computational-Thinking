@@ -1,5 +1,5 @@
 import math
-from src.config import settings
+from ..src.config import settings
 
 def haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     """Tính khoảng cách Haversine (km) giữa hai điểm tọa độ."""

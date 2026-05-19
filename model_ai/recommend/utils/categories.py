@@ -1,5 +1,5 @@
 from typing import List
-from src.config import settings
+from ..src.config import settings
 
 def expand_categories_with_semantics(categories: List[str]) -> List[str]:
     """Mở rộng danh sách category dựa trên ma trận ngữ nghĩa."""

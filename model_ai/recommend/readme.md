@@ -17,64 +17,87 @@ Quy trình (Pipeline) đề xuất địa điểm hoạt động qua các bướ
 ## Yêu cầu môi trường
 
 - Python 3.9+
-- Khởi tạo virtual environment (`venv`) và cài đặt các package.
+- Khởi tạo virtual environment (`venv`) và cài đặt các package: `fastapi uvicorn pydantic supabase python-dotenv`
 
-## Cài đặt và Khởi chạy
+## Cài đặt và Khởi chạy Độc lập (Standalone)
 
-**1. Cài đặt các thư viện cần thiết:**
-Cài đặt từ `requirements.txt` hoặc cài đặt thủ công:
-```bash
-pip install fastapi uvicorn pydantic supabase python-dotenv
-```
+Ngoài việc chạy chung với `server.py` ở thư mục gốc, bạn có thể chạy riêng lẻ module Recommend API này (mặc định mở tại port `8001`).
 
-**2. Thiết lập biến môi trường:**
-Đảm bảo bạn có file `.env` ở thư mục `recommend/` với nội dung:
+**1. Thiết lập biến môi trường:**
+Đảm bảo bạn có file `.env` ở thư mục gốc (nơi có `server.py`) với nội dung:
 ```env
 SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_KEY=your_supabase_key
 ```
-*(Lưu ý: Hệ thống ưu tiên `SUPABASE_SERVICE_ROLE_KEY` để tránh lỗi RLS khi truy vấn).*
 
-**3. Khởi chạy API Server:**
-Chạy server API bằng Uvicorn từ thư mục `recommend`:
+**2. Khởi chạy API Server:**
+Từ thư mục gốc dự án (`model_ai`), chạy file bằng module Python:
 ```bash
-uvicorn api.recommend_api:app --host 0.0.0.0 --port 8000 --reload
+python3 -m recommend.api.recommend_api
 ```
-Server sẽ chạy tại `http://0.0.0.0:8000`.
+Server sẽ chạy tại `http://0.0.0.0:8001`.
+- **Swagger UI**: `http://localhost:8001/docs`
 
-## API Documentation
+## API Endpoints
 
-Khi server đang chạy, bạn có thể xem tài liệu API qua trình duyệt:
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc**: `http://localhost:8000/redoc`0
-
-## Lệnh `curl` mẫu
-
-Dưới đây là một lệnh curl để test endpoint `/recommend`:
-
-```bash
-curl -X 'POST' \
-  'http://localhost:8000/recommend' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "destination": {
-    "province": "Khánh Hòa"
-  },
+### 1. Dự đoán lịch trình (Không lưu DB)
+- **Endpoint:** `POST /recommend`
+- **Body JSON (Mẫu):**
+```json
+{
+  "destination": { "province": "Khánh Hòa" },
   "preferences": {
-    "categories": [
-      "Khám phá",
-      "Ẩm thực"
-    ],
+    "categories": ["Khám phá", "Ẩm thực"],
     "place_style": "must_go"
   },
   "logistics": {
-    "starting_point": {
-      "type": "address",
-      "name": "Trung tâm"
-    },
+    "starting_point": { "type": "address", "name": "Trung tâm" },
     "transportation": "motorbike"
   }
-}'
+}
 ```
+- **Ví dụ Curl:**
+  ```bash
+  curl -X POST "http://localhost:8003/recommend" \
+       -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+       -H "Content-Type: application/json" \
+       -d '{
+            "destination": { "province": "Khánh Hòa" },
+            "preferences": { "categories": ["Khám phá", "Ẩm thực"], "place_style": "must_go" },
+            "logistics": { "starting_point": { "type": "address", "name": "Trung tâm" }, "transportation": "motorbike" }
+           }'
+  ```
+
+### 2. Lưu lịch trình vào DB
+- **Endpoint:** `POST /recommend/save/{user_id}`
+- **Body JSON:** Chứa object `itinerary` được trả về từ kết quả dự đoán.
+- **Ví dụ Curl:**
+  ```bash
+  curl -X POST "http://localhost:8003/recommend/save/Test_User" \
+       -H "X-Internal-Secret: <YOUR_AI_KEY>" \
+       -H "Content-Type: application/json" \
+       -d '{"itinerary": {"days": [...]}}'
+  ```
+
+### 3. Lấy toàn bộ lịch sử lịch trình
+- **Endpoint:** `GET /recommend/history/{user_id}`
+- Trả về tất cả các lịch trình đã lưu của người dùng.
+- **Ví dụ Curl:**
+  ```bash
+  curl -X GET "http://localhost:8003/recommend/history/Test_User" \
+       -H "X-Internal-Secret: <YOUR_AI_KEY>"
+  ```
+
+### 4. Lấy chi tiết & Xóa 1 lịch trình
+- **Endpoint Chi tiết:** `GET /recommend/plan/{plan_id}`
+  - **Ví dụ Curl:**
+    ```bash
+    curl -X GET "http://localhost:8003/recommend/plan/12345678-1234-1234-1234-123456789abc" \
+         -H "X-Internal-Secret: <YOUR_AI_KEY>"
+    ```
+- **Endpoint Xóa:** `DELETE /recommend/plan/{plan_id}`
+  - **Ví dụ Curl:**
+    ```bash
+    curl -X DELETE "http://localhost:8003/recommend/plan/12345678-1234-1234-1234-123456789abc" \
+         -H "X-Internal-Secret: <YOUR_AI_KEY>"
+    ```

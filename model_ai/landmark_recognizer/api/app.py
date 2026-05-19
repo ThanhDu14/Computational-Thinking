@@ -1,6 +1,5 @@
 """
-FastAPI Landmark Recognizer API
-Chạy: uvicorn api.api:app --host 0.0.0.0 --port 8000
+FastAPI Landmark Recognizer APIRouter
 """
 import os
 import sys
@@ -11,11 +10,8 @@ import logging
 import shutil
 import tempfile
 from pathlib import Path
-from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
@@ -61,9 +57,8 @@ def load_location_lookup():
 # ─── Biến global cho recognizer ───────────────────────────────────────────────
 recognizer = None
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Khởi tạo model và database khi server start, giải phóng khi shutdown."""
+def init_landmark_model():
+    """Khởi tạo model và database khi server start."""
     global recognizer
     
     logger.info("=" * 60)
@@ -76,7 +71,7 @@ async def lifespan(app: FastAPI):
     load_location_lookup()
     
     # Khởi tạo recognizer
-    from landmark_recognizer import LandmarkRecognizer
+    from landmark_recognizer.models.landmark_recognizer import LandmarkRecognizer
     recognizer = LandmarkRecognizer()
     logger.info("Device: %s", recognizer.device)
     
@@ -88,34 +83,11 @@ async def lifespan(app: FastAPI):
     
     elapsed = time.time() - start_time
     logger.info("=" * 60)
-    logger.info("  SERVER SẴN SÀNG! Tổng thời gian khởi tạo: %.2fs", elapsed)
+    logger.info("  LANDMARK SẴN SÀNG! Tổng thời gian khởi tạo: %.2fs", elapsed)
     logger.info("=" * 60)
-    
-    yield  # Server đang chạy
-    
-    # Shutdown
-    logger.info("Server đang tắt...")
-    recognizer = None
 
-# ─── Khởi tạo FastAPI ─────────────────────────────────────────────────────────
-app = FastAPI(
-    title="Landmark Recognizer API",
-    description="API nhận dạng địa điểm Việt Nam sử dụng DINOv2 + FAISS + RANSAC",
-    version="1.0.0",
-    lifespan=lifespan
-)
-
-# CORS cho phép truy cập từ mọi nguồn (phù hợp cho VPS public)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# (Ảnh lưu thẳng vào RAM, không dùng thư mục tạm nữa)
-
+# ─── Khởi tạo APIRouter ─────────────────────────────────────────────────────────
+landmark_router = APIRouter(tags=["Landmark Recognizer"])
 
 # ─── Pydantic models ─────────────────────────────────────────────────────────
 class PredictResponse(BaseModel):
@@ -132,24 +104,8 @@ class HealthResponse(BaseModel):
     total_vectors: int
     total_labels: int
 
-
 # ─── Endpoints ────────────────────────────────────────────────────────────────
-
-@app.get("/", tags=["General"])
-async def root():
-    """Trang chủ API"""
-    return {
-        "service": "Landmark Recognizer API",
-        "version": "1.0.0",
-        "endpoints": {
-            "POST /predict": "Nhận dạng địa điểm từ ảnh upload",
-            "GET /health": "Kiểm tra trạng thái hệ thống",
-            "GET /labels": "Danh sách các địa điểm trong database",
-        }
-    }
-
-
-@app.get("/health", response_model=HealthResponse, tags=["General"])
+@landmark_router.get("/landmark/health", response_model=HealthResponse)
 async def health_check():
     """Kiểm tra trạng thái hệ thống"""
     if recognizer is None:
@@ -164,8 +120,7 @@ async def health_check():
         total_labels=len(set(recognizer.labels)) if hasattr(recognizer, 'labels') else 0,
     )
 
-
-@app.get("/labels", tags=["Database"])
+@landmark_router.get("/landmark/labels")
 async def get_labels():
     """Lấy danh sách các địa điểm trong database"""
     if recognizer is None or not hasattr(recognizer, 'labels'):
@@ -185,14 +140,10 @@ async def get_labels():
         "labels": result
     }
 
-
-@app.post("/predict", response_model=PredictResponse, tags=["Prediction"])
+@landmark_router.post("/landmark/predict", response_model=PredictResponse)
 async def predict(file: UploadFile = File(...)):
     """
     Nhận dạng địa điểm từ ảnh upload.
-    
-    - **file**: File ảnh (JPG, JPEG, PNG)
-    - Trả về: Tên địa điểm, độ tin cậy (inliers), thời gian xử lý
     """
     if recognizer is None:
         raise HTTPException(status_code=503, detail="Hệ thống chưa sẵn sàng.")
@@ -251,15 +202,24 @@ async def predict(file: UploadFile = File(...)):
         logger.error("Lỗi khi predict: %s", str(e), exc_info=True)
         raise HTTPException(status_code=500, detail=f"Lỗi xử lý ảnh: {str(e)}")
 
-
-# ─── Chạy trực tiếp ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=8000,
-        reload=False,
-        log_level="info",
-        access_log=True
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
+    
+    app = FastAPI(title="Landmark Recognizer API (Standalone)")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
+    
+    # Khởi tạo model
+    init_landmark_model()
+    
+    app.include_router(landmark_router)
+    
+    print("🚀 Chạy Landmark Recognizer API độc lập trên cổng 8004...")
+    uvicorn.run(app, host="0.0.0.0", port=8004)
