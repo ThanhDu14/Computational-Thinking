@@ -10,8 +10,10 @@ import (
 	"smart-travel-backend/features/auth"
 	"smart-travel-backend/features/chatbot"
 	"smart-travel-backend/features/contact"
+
 	"smart-travel-backend/features/location"
 	"smart-travel-backend/features/profile"
+	"smart-travel-backend/features/recommend"
 	"smart-travel-backend/features/review"
 	"smart-travel-backend/features/wishlist"
 	"syscall"
@@ -34,13 +36,23 @@ func main() {
 	// 3. Khởi tạo Router Gin
 	router := gin.Default()
 
-	// Cấu hình CORS - Chỉ cho phép Frontend được khai báo gọi API
-	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
+	// Inject DB vào Context để Middleware (VerifyUserToken) có thể dùng
+	router.Use(func(c *gin.Context) {
+		c.Set("db", db)
+		c.Next()
+	})
 
+	// Cấu hình CORS - Đóng vai trò bảo vệ hệ thống khi Deploy
+	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{frontendURL, "http://localhost:3000"},
+		AllowOriginFunc: func(origin string) bool {
+			if gin.Mode() == gin.DebugMode {
+				return true
+			}
+			return origin == frontendURL || origin == "http://localhost:3000"
+		},
 		AllowMethods:  []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
+		AllowHeaders:  []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Pinggy-No-Screen", "ngrok-skip-browser-warning"},
 		ExposeHeaders: []string{"Content-Length"},
 		MaxAge:        12 * time.Hour,
 	}))
@@ -79,6 +91,11 @@ func main() {
 	chatbotGroup := router.Group("/api/chatbot")
 	{
 		chatbot.SetupChatbotRoutes(chatbotGroup, authClient)
+	}
+
+	recommendGroup := router.Group("/api/recommend")
+	{
+		recommend.SetupRecommendRoutes(recommendGroup, authClient)
 	}
 
 	// 5. Khởi tạo Http Server
