@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
+	"strings"
 	"smart-travel-backend/config"
 	"smart-travel-backend/utils"
 
@@ -26,8 +28,16 @@ func GetWeatherByCityHandler() gin.HandlerFunc {
 			return
 		}
 
-		// Encode city để xử lý các tên thành phố có khoảng trắng (VD: "Can Tho" -> "Can+Tho" hoặc "Can%20Tho")
-		encodedCity := url.QueryEscape(city)
+		// Tự động thêm khoảng trắng cho các từ viết hoa liền nhau (VD: "CanTho" -> "Can Tho", "HoChiMinh" -> "Ho Chi Minh")
+		formattedCity := city
+		if !strings.Contains(formattedCity, " ") {
+			re := regexp.MustCompile(`([a-z])([A-Z])`)
+			formattedCity = re.ReplaceAllString(formattedCity, `${1} ${2}`)
+		}
+
+		// Encode city để xử lý các tên thành phố có khoảng trắng
+		encodedCity := url.QueryEscape(formattedCity)
+
 
 		// Gọi OpenWeather, sử dụng units=metric (độ C) và lang=vi (tiếng Việt)
 		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=vi", encodedCity, apiKey)
