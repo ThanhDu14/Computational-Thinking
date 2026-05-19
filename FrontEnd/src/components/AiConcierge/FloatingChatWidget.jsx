@@ -5,307 +5,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 import { useNavigate } from 'react-router-dom';
 import { sendImageResult } from '../../services/chatService';
-
-const renderMessageContent = (text) => {
-  if (!text) return null;
-
-  const formatBold = (str) => {
-    return str.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part);
-  };
-
-  // 0. MARKDOWN INLINE JSON BLOCK FORMAT (```json ... ```)
-  if (text.includes('```json')) {
-    const blockRegex = /```json\s*([\s\S]*?)\s*```/gi;
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = blockRegex.exec(text)) !== null) {
-      let beforeText = text.substring(lastIndex, match.index);
-      
-      // Clean up the trailing item header prefix (e.g. "1. **Ngũ Hành Sơn**" or "1. Ngũ Hành Sơn")
-      beforeText = beforeText.replace(/(?:\r?\n)+\s*\d+[\.\/\s-]+\s*(?:\*\*.*?\*\*|.*?)?\s*$/g, '');
-
-      if (beforeText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mb-2">
-            {formatBold(beforeText.trim())}
-          </div>
-        );
-      }
-
-      const jsonStr = match[1];
-      try {
-        // Correct rating format if unquoted, e.g. "rating": 4.2/5 -> "rating": "4.2/5"
-        let cleaned = jsonStr.trim();
-        cleaned = cleaned.replace(/"rating"\s*:\s*(\d+(?:\.\d+)?)\s*\/\s*5/g, '"rating": "$1/5"');
-        
-        const place = JSON.parse(cleaned);
-        if (place && place.name) {
-          const cleanedName = place.name.replace(/^\d+[\.\/\s-]+\s*/, '');
-          
-          let categories = [];
-          if (Array.isArray(place.categories)) {
-            categories = place.categories;
-          } else if (Array.isArray(place.category)) {
-            categories = place.category;
-          } else if (typeof place.category === 'string') {
-            categories = place.category.split(',').map(c => c.trim()).filter(Boolean);
-          } else if (typeof place.categories === 'string') {
-            categories = place.categories.split(',').map(c => c.trim()).filter(Boolean);
-          }
-
-          const imageSrc = (place.images && place.images.length > 0) ? place.images[0] : (place.image || null);
-
-          elements.push(
-            <div key={`place-markdown-json-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-              {imageSrc && (
-                <div className="w-full h-32 overflow-hidden bg-surface-container">
-                  <img src={imageSrc} alt={cleanedName} className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="p-3">
-                <h4 className="font-display font-bold text-sm text-primary mb-1">{cleanedName}</h4>
-                {place.address && (
-                  <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-                    <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-                    <span className="line-clamp-2">{place.address}</span>
-                  </p>
-                )}
-                {categories.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {categories.map((cat, idx) => cat ? (
-                      <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                        {cat}
-                      </span>
-                    ) : null)}
-                  </div>
-                )}
-                {place.description && (
-                  <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-                    {place.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        }
-      } catch (e) {
-        console.error("Failed to parse inline markdown JSON:", e);
-        // Fallback to displaying raw code block if syntax is completely unfixable
-        elements.push(
-          <pre key={`code-block-${match.index}`} className="bg-surface-container-high p-2 rounded-lg text-xs overflow-x-auto my-1">
-            <code>{jsonStr}</code>
-          </pre>
-        );
-      }
-
-      lastIndex = blockRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // 1. FIRST FORMAT (Place Name: ...)
-  if (text.includes('Place Name:')) {
-    const placeRegex = /(?:(?:^|\n|\s)*\d+\.\s+[\s\S]*?(?=Place Name:))?Place Name:\s*([\s\S]*?)Address:\s*([\s\S]*?)Category:\s*([\s\S]*?)Description:\s*([\s\S]*?)Average Rating:\s*([\s\S]*?)(?:URL:\s*([^\s]+))?/gi;
-
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = placeRegex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        const beforeText = text.substring(lastIndex, match.index);
-        if (beforeText.trim()) {
-          elements.push(
-            <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mb-2">
-              {formatBold(beforeText.trim())}
-            </div>
-          );
-        }
-      }
-
-      const [fullMatch, name, address, categoryStr, description, rating, url] = match;
-
-      let categories = [];
-      try {
-        const cleaned = categoryStr.replace(/'/g, '"');
-        categories = JSON.parse(cleaned);
-      } catch (e) {
-        categories = categoryStr.replace(/[\[\]']/g, '').split(',').map(c => c.trim().replace(/^'|'$/g, ''));
-      }
-
-      elements.push(
-        <div key={`place-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-          <div className="p-3">
-            <h4 className="font-display font-bold text-sm text-primary mb-1">{name.trim()}</h4>
-            <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-              <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-              <span className="line-clamp-2">{address.trim()}</span>
-            </p>
-            <div className="flex flex-wrap gap-1 mb-2">
-              {categories.map((cat, idx) => cat ? (
-                <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                  {cat}
-                </span>
-              ) : null)}
-            </div>
-            <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-              {description.trim()}
-            </p>
-          </div>
-        </div>
-      );
-
-      lastIndex = placeRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // 2. SECOND FORMAT (Raw text block ending with URL: http...)
-  if (text.toLowerCase().includes('url: http')) {
-    const blockRegex = /([\s\S]+?)(?:\s*(?:URL|url):\s*(https?:\/\/[^\s\n]+))/gi;
-    const elements = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = blockRegex.exec(text)) !== null) {
-      const blockText = match[1];
-      const url = match[2];
-
-      const lines = blockText.split('\n').map(l => l.trim());
-
-      let rating = '';
-      let descLine = '';
-      let categories = [];
-      let address = '';
-      let name = '';
-      let introLines = [];
-
-      let step = 'rating';
-
-      for (let i = lines.length - 1; i >= 0; i--) {
-        const line = lines[i];
-
-        if (step === 'rating') {
-          if (line.includes('/5') || /^\d+(\.\d+)?$/.test(line)) {
-            rating = line;
-            step = 'description';
-          } else if (line !== '') {
-            descLine = line;
-            step = 'categories';
-          }
-        } else if (step === 'description') {
-          if (line !== '') {
-            descLine = line;
-            step = 'categories';
-          }
-        } else if (step === 'categories') {
-          if (line === '') {
-            step = 'address';
-          } else {
-            categories.unshift(line);
-          }
-        } else if (step === 'address') {
-          if (line !== '') {
-            address = line;
-            step = 'name';
-          }
-        } else if (step === 'name') {
-          if (line !== '') {
-            name = line;
-            step = 'intro';
-          }
-        } else if (step === 'intro') {
-          if (line !== '') {
-            introLines.unshift(line);
-          }
-        }
-      }
-
-      // Render any intro text preceding this place
-      if (introLines.length > 0) {
-        const introText = introLines.join('\n');
-        elements.push(
-          <div key={`intro-${match.index}`} className="whitespace-pre-wrap mb-2">
-            {formatBold(introText)}
-          </div>
-        );
-      }
-
-      // Render the place card
-      if (name && address) {
-        const cleanedName = name.replace(/^\d+[\.\/\s-]+\s*/, '');
-
-        elements.push(
-          <div key={`place-${match.index}`} className="my-2 bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-            <div className="p-3">
-              <h4 className="font-display font-bold text-sm text-primary mb-1">{cleanedName}</h4>
-              <p className="text-xs text-on-surface-variant mb-2 flex items-start gap-1">
-                <MapPin size={12} className="mt-0.5 flex-shrink-0" />
-                <span className="line-clamp-2">{address}</span>
-              </p>
-              <div className="flex flex-wrap gap-1 mb-2">
-                {categories.map((cat, idx) => cat ? (
-                  <span key={idx} className="text-[10px] px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full">
-                    {cat}
-                  </span>
-                ) : null)}
-              </div>
-              {descLine && (
-                <p className="text-xs text-on-surface/80 line-clamp-3 leading-relaxed">
-                  {descLine}
-                </p>
-              )}
-            </div>
-          </div>
-        );
-      }
-
-      lastIndex = blockRegex.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      const afterText = text.substring(lastIndex);
-      if (afterText.trim()) {
-        elements.push(
-          <div key={`text-${lastIndex}`} className="whitespace-pre-wrap mt-2">
-            {formatBold(afterText.trim())}
-          </div>
-        );
-      }
-    }
-
-    return elements.length > 0 ? <div className="flex flex-col">{elements}</div> : <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-  }
-
-  // Fallback for standard text
-  return <div className="whitespace-pre-wrap">{formatBold(text)}</div>;
-};
+import './ChatCards.css';
+import renderMessageContent from './ChatRenderer';
+import chatbotLogoImg from '../../assets/images/chatbot_logo.png';
 
 export default function FloatingChatWidget() {
   const { t } = useTranslation();
@@ -315,19 +17,24 @@ export default function FloatingChatWidget() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const loginPopupRef = useRef(null);
 
-  const { 
-    sessions: sessionsList, 
-    currentSessionId: sessionId, 
-    messages, 
-    isTyping, 
+  const {
+    sessions: sessionsList,
+    currentSessionId: sessionId,
+    messages,
+    isTyping,
     isLoadingHistory,
-    loadHistory, 
-    startNewChat: handleNewChat, 
-    sendMessage: handleSend, 
-    removeSession 
+    loadHistory,
+    startNewChat: handleNewChat,
+    sendMessage: handleSend,
+    sendImageMessage,
+    removeSession
   } = useChat();
 
   const [input, setInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -342,10 +49,36 @@ export default function FloatingChatWidget() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setInput(''); // clear input text per requirement
+    }
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const onSend = () => {
-    if (!input.trim()) return;
-    handleSend(input);
-    setInput('');
+    if (selectedFile) {
+      sendImageMessage(selectedFile);
+      clearSelectedImage();
+    } else {
+      if (!input.trim()) return;
+      handleSend(input);
+      setInput('');
+    }
   };
 
   // Đóng login popup khi click ra ngoài
@@ -411,8 +144,8 @@ export default function FloatingChatWidget() {
           </button>
 
           {/* Icon */}
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-3">
-            <Bot size={20} />
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-primary/10 border border-primary/20 mb-3 shadow-md shadow-primary/5">
+            <img src={chatbotLogoImg} alt="AI Concierge Logo" className="w-full h-full object-cover scale-110" />
           </div>
 
           {/* Text */}
@@ -451,10 +184,10 @@ export default function FloatingChatWidget() {
       {/* The Floating Button */}
       <button
         onClick={handleOpenChat}
-        className={`fixed bottom-6 right-6 z-[100] w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-6 right-6 z-[100] w-16 h-16 rounded-full bg-surface border border-outline-variant/30 flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
         aria-label="Open AI Concierge"
       >
-        <MessageCircle size={28} />
+        <img src={chatbotLogoImg} alt="Open AI Concierge" className="w-full h-full object-cover scale-110" />
         {/* Pulse indicator */}
         <span className="absolute top-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-surface rounded-full animate-pulse"></span>
       </button>
@@ -507,8 +240,8 @@ export default function FloatingChatWidget() {
                 <Menu size={20} />
               </button>
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary">
-                  <Bot size={20} />
+                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-surface-container-highest border border-outline-variant/20 shadow-sm">
+                  <img src={chatbotLogoImg} alt="AI Concierge Logo" className="w-full h-full object-cover scale-110" />
                 </div>
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-surface rounded-full"></span>
               </div>
@@ -540,13 +273,18 @@ export default function FloatingChatWidget() {
           <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide bg-background/30">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex flex-col gap-1 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[15px] leading-relaxed shadow-sm ${msg.role === 'user' ? 'widget-user-bubble rounded-tr-sm' : 'widget-bot-bubble text-on-surface rounded-tl-sm w-full'}`}>
+                <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[15px] leading-relaxed shadow-sm ${msg.role === 'user' ? 'widget-user-bubble rounded-tr-sm flex flex-col' : 'widget-bot-bubble text-on-surface rounded-tl-sm w-full'}`}>
+                  {msg.imageUrl && (
+                    <div className="mb-2 max-w-[200px] rounded-xl overflow-hidden shadow-md border border-white/20 bg-black/10 self-end">
+                      <img src={msg.imageUrl} alt="Uploaded" className="w-full h-auto object-cover max-h-48" />
+                    </div>
+                  )}
                   {msg.role === 'user' ? (
                     <div className="whitespace-pre-wrap">
-                      {msg.text.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
+                      {(typeof msg.text === 'string' ? msg.text : String(msg.text || '')).split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
                     </div>
                   ) : (
-                    renderMessageContent(msg.text)
+                    renderMessageContent(msg.text, onSend)
                   )}
                 </div>
                 <span className="text-[10px] text-on-surface-variant/60 font-medium px-1">
@@ -569,26 +307,54 @@ export default function FloatingChatWidget() {
 
           {/* Input */}
           <div className="p-4 bg-surface/80 backdrop-blur-md rounded-b-3xl border-t border-outline-variant/10">
+            {previewUrl && (
+              <div className="mb-3 p-1.5 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/20 flex items-center gap-2.5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300 w-fit max-w-full">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={clearSelectedImage}
+                    className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
+                    title="Xóa ảnh"
+                  >
+                    <X size={8} />
+                  </button>
+                </div>
+                <div className="text-left pr-2 overflow-hidden">
+                  <p className="text-[11px] font-bold text-on-surface truncate max-w-[100px]">{selectedFile?.name}</p>
+                  <p className="text-[9px] text-on-surface-variant font-medium">Sẵn sàng gửi</p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center bg-surface-container border border-outline-variant/30 rounded-full p-1 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
               <button
+                onClick={() => fileInputRef.current?.click()}
                 className="p-2 text-on-surface-variant hover:text-primary transition-colors flex-shrink-0"
                 aria-label="Upload image"
+                title="Tải ảnh lên"
               >
                 <ImageIcon size={18} />
               </button>
               <input
                 type="text"
-                className="flex-1 w-full min-w-0 bg-transparent border-none focus:ring-0 text-sm px-2 py-2 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-body"
-                placeholder={t('aiconcierge.input_placeholder', 'Ask anything...')}
+                className={`flex-1 w-full min-w-0 bg-transparent border-none focus:ring-0 text-sm px-2 py-2 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-body ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
+                placeholder={selectedFile ? "Đang gửi hình ảnh (Không thể nhập văn bản)..." : t('aiconcierge.input_placeholder', 'Ask anything...')}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                onKeyDown={(e) => e.key === 'Enter' && onSend()}
+                disabled={!!selectedFile}
               />
-              {input.trim() ? (
+              {(input.trim() || selectedFile) ? (
                 <button
                   onClick={onSend}
                   className="p-2.5 bg-primary text-on-primary rounded-full hover:bg-primary-container transition-colors disabled:opacity-50 flex-shrink-0"
-                  disabled={!input.trim()}
                 >
                   <Send size={16} className="ml-px" />
                 </button>

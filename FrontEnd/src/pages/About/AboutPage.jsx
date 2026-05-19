@@ -49,22 +49,22 @@ export default function AboutPage() {
                 <section className="max-w-7xl mx-auto px-6 md:px-8 -mt-24 relative z-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-primary text-[40px] mb-4">travel_explore</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">1M+</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">8</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.trips')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-secondary text-[40px] mb-4">public</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">50+</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">1</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.countries')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-tertiary-dim text-[40px] mb-4">psychology</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">99.9%</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">15</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.accuracy')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-primary text-[40px] mb-4">star</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">4.9/5</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">100%</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.rating')}</div>
                     </div>
                 </section>

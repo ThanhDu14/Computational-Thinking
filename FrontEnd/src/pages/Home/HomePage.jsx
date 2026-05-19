@@ -8,7 +8,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 500], [0, 150]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -73,13 +73,13 @@ export default function HomePage() {
       <section className="relative w-full min-h-[100vh] flex flex-col items-center justify-center pt-32 pb-20 px-6 overflow-hidden mb-24 transition-colors duration-500" style={{ background: `linear-gradient(135deg, var(--gradient-hero-start) 0%, var(--gradient-hero-end) 100%)` }}>
         {/* Floating Illustrations */}
         <div className="absolute inset-0 pointer-events-none opacity-60">
-          <motion.div 
+          <motion.div
             style={{ y: illustration1Y }}
             className="absolute top-1/4 left-5 md:left-20 w-64 h-64 glass-card-custom rounded-[2.5rem] animate-float overflow-hidden border border-white/50 shadow-2xl p-2"
           >
             <img className="w-full h-full object-cover rounded-[2rem] opacity-90" alt="travel map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz_ASohrGDDEO80TYarTvT8xLBawL3JsAoIpyYuggsmSsTadOLQybIhczQXQKtamIyiCO3iWrUuLQA2GOGgxT43woz2fRHtFhCosVbVcd2Be06pg6K_Y4sTOPnFJrNj1MpCBhZ5fLwXZyvdyGmmGrgzyc8kKgUg1iPfcWKxi4TKqAnOUTYaonR1F8S1uJ_bc3V0XFatD6FsEfKP85ejQuuL9DQmZp8-Ky-1nGfR6qg9AFzWpxYIK3XG8mYvM5JZrxAluNxKqgly4c" />
           </motion.div>
-          <motion.div 
+          <motion.div
             style={{ y: illustration2Y }}
             className="absolute bottom-10 right-5 md:right-20 w-72 h-72 glass-card-custom rounded-full animate-float-delayed overflow-hidden border border-white/50 shadow-2xl p-2"
           >
@@ -87,11 +87,11 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <motion.div 
+        <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative z-10 max-w-4xl text-center space-y-8 mt-10"
         >
-          <motion.h1 
+          <motion.h1
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -100,7 +100,7 @@ export default function HomePage() {
             {t('home.hero.title_1')} <br />
             <span className="text-primary italic">{t('home.hero.title_2')}</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -108,7 +108,7 @@ export default function HomePage() {
           >
             {t('home.hero.subtitle')}
           </motion.p>
-          <motion.div 
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -129,7 +129,7 @@ export default function HomePage() {
           </motion.div>
 
           {/* Search Bar Component */}
-          <motion.div 
+          <motion.div
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -146,11 +146,7 @@ export default function HomePage() {
                 onKeyDown={(e) => { if (e.key === 'Enter') navigate('/search?q=' + encodeURIComponent(searchQuery)) }}
               />
             </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              <button className="px-5 py-3 rounded-full bg-secondary-container text-on-secondary-container text-sm font-bold tracking-wide whitespace-nowrap hover:shadow-md active:scale-95 transition-all">{t('home.hero.tag_beach')}</button>
-              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high active:scale-95 transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_mountain')}</button>
-              <button className="px-5 py-3 rounded-full bg-surface text-on-surface-variant text-sm font-bold tracking-wide hover:bg-surface-container-high active:scale-95 transition-colors whitespace-nowrap border border-outline-variant/20">{t('home.hero.tag_culture')}</button>
-            </div>
+
             <button className="bg-on-surface text-surface px-8 py-3 rounded-full font-bold ml-2 hover:bg-on-surface/90 active:scale-95 transition-colors" onClick={() => navigate('/search?q=' + encodeURIComponent(searchQuery))}>{t('home.hero.search_btn')}
             </button>
           </motion.div>
@@ -158,7 +154,7 @@ export default function HomePage() {
       </section>
 
       {/* Trending Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
@@ -218,7 +214,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Personalized AI Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -278,7 +274,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Stats Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -287,22 +283,22 @@ export default function HomePage() {
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <motion.div variants={itemVariants} className="glass-card-custom p-12 rounded-[2rem] border border-outline-variant/10 text-center space-y-4 shadow-sm hover:shadow-md hover:-translate-y-2 transition-all">
-            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">10k+</div>
+            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">1K+</div>
             <div className="text-sm uppercase tracking-widest text-on-surface-variant font-bold font-body">{t('home.stats.destinations')}</div>
           </motion.div>
           <motion.div variants={itemVariants} className="glass-card-custom p-12 rounded-[2rem] border border-outline-variant/10 text-center space-y-4 shadow-sm hover:shadow-md hover:-translate-y-2 transition-all">
-            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">50+</div>
+            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">Việt Nam</div>
             <div className="text-sm uppercase tracking-widest text-on-surface-variant font-bold font-body">{t('home.stats.countries')}</div>
           </motion.div>
           <motion.div variants={itemVariants} className="glass-card-custom p-12 rounded-[2rem] border border-outline-variant/10 text-center space-y-4 shadow-sm hover:shadow-md hover:-translate-y-2 transition-all">
-            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">95%</div>
+            <div className="text-5xl md:text-6xl font-extrabold text-primary font-display">99%</div>
             <div className="text-sm uppercase tracking-widest text-on-surface-variant font-bold font-body">{t('home.stats.happy')}</div>
           </motion.div>
         </div>
       </motion.section>
 
       {/* Inspiration Blog Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}

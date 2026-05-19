@@ -32,7 +32,7 @@ __init__.py
 .env.test.local
 .env.production.local
 .env.docker
-
+docs
 # Firebase credentials
 serviceAccountKey.json
 firebase*.json

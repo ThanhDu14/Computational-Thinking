@@ -4,9 +4,10 @@ import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { Sun, Moon, LogOut, ChevronDown, User, Heart, Settings } from 'lucide-react';
+import { Sun, Moon, LogOut, ChevronDown, User, Heart, Settings, Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import WishlistDrawer from '../common/WishlistDrawer';
+import logoImg from '../../assets/images/logo.png';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -61,8 +62,8 @@ const Navbar = () => {
       <header className={`pointer-events-auto rounded-xl transition-all duration-500 ${isScrolled ? 'bg-surface/95 backdrop-blur-3xl shadow-[0_10px_40px_-10px_rgba(39,44,81,0.15)] translate-y-0' : 'bg-surface/60 backdrop-blur-md shadow-sm translate-y-2'}`}>
         <nav className={`container mx-auto px-6 flex items-center justify-between transition-all duration-500 ${isScrolled ? 'py-3' : 'py-5'}`}>
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-              <span className="text-white font-display font-bold text-xl tracking-tight">S</span>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden bg-surface-container-highest">
+              <img src={logoImg} alt="SmartTravel Logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-2xl font-display font-bold tracking-tight text-on-surface">
               SmartTravel
@@ -173,6 +174,13 @@ const Navbar = () => {
                     >
                       <User size={15} />
                       {t('nav.recommendations', 'Recommendations')}
+                    </button>
+                    <button
+                      onClick={() => { setShowUserMenu(false); navigate('/my-itineraries'); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <Calendar size={15} />
+                      Lịch trình của tôi
                     </button>
                     <button
                       onClick={() => { setShowUserMenu(false); setIsWishlistOpen(prev => !prev); }}

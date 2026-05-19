@@ -4,7 +4,8 @@ import {
   sendChatMessage, 
   getChatHistory, 
   getChatSessions, 
-  deleteChatSession 
+  deleteChatSession,
+  sendChatImage 
 } from '../services/chatService';
 import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 const ChatContext = createContext(null);
 
 export const ChatProvider = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, getToken } = useAuth();
   const { t } = useTranslation();
   
   const [sessions, setSessions] = useState([]);
@@ -20,17 +21,6 @@ export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-
-  // Helper to get consistent userId
-  const getUserId = useCallback(() => {
-    if (!user) return null;
-    const backendId = user.db_id || user.id || user.user_id || user.userId;
-    if (!backendId) {
-      console.warn("⚠️ Không tìm thấy backend user ID!", user);
-      return null;
-    }
-    return backendId;
-  }, [user]);
 
   const getDefaultMessages = useCallback(() => ([
     {
@@ -43,27 +33,29 @@ export const ChatProvider = ({ children }) => {
   const loadSessions = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
-      const userId = getUserId();
-      const data = await getChatSessions(userId);
+      const token = await getToken();
+      if (!token) return;
+      const data = await getChatSessions(token);
       setSessions(data.sessions || []);
     } catch (err) {
       console.error("Failed to load chat sessions:", err);
     }
-  }, [isAuthenticated, getUserId]);
+  }, [isAuthenticated, getToken]);
 
   const loadHistory = useCallback(async (sessionId) => {
     if (!isAuthenticated) return;
     setIsLoadingHistory(true);
     setIsTyping(true);
     try {
-      const userId = getUserId();
-      const data = await getChatHistory(userId, sessionId);
+      const token = await getToken();
+      if (!token) throw new Error("No token");
+      const data = await getChatHistory(token, sessionId);
       setCurrentSessionId(sessionId);
       
       if (data.messages && data.messages.length > 0) {
         const formattedMsgs = data.messages.map(m => ({
           role: m.role === 'assistant' ? 'bot' : 'user',
-          text: m.content,
+          text: m.content ?? '',
           timestamp: "" 
         }));
         setMessages(formattedMsgs);
@@ -76,13 +68,14 @@ export const ChatProvider = ({ children }) => {
       setIsLoadingHistory(false);
       setIsTyping(false);
     }
-  }, [isAuthenticated, getUserId]);
+  }, [isAuthenticated, getToken]);
 
   const startNewChat = useCallback(async () => {
     if (!isAuthenticated) return null;
     try {
-      const userId = getUserId();
-      const data = await createNewChat(userId);
+      const token = await getToken();
+      if (!token) throw new Error("No token");
+      const data = await createNewChat(token);
       setCurrentSessionId(data.session_id);
       setMessages(getDefaultMessages());
       await loadSessions();
@@ -91,12 +84,11 @@ export const ChatProvider = ({ children }) => {
       console.error("Failed to start new chat:", err);
       return null;
     }
-  }, [isAuthenticated, getUserId, loadSessions]);
+  }, [isAuthenticated, getToken, loadSessions]);
 
   const sendMessage = useCallback(async (text) => {
     if (!isAuthenticated || !text || !text.trim()) return;
     
-    const userId = getUserId();
     let sessionId = currentSessionId;
     
     // Auto-create session if none active
@@ -115,7 +107,8 @@ export const ChatProvider = ({ children }) => {
     setIsTyping(true);
 
     try {
-      const data = await sendChatMessage(text, userId, sessionId);
+      const token = await getToken();
+      const data = await sendChatMessage(token, text, sessionId);
       
       setMessages(prev => [...prev, {
         role: 'bot',
@@ -136,13 +129,66 @@ export const ChatProvider = ({ children }) => {
     } finally {
       setIsTyping(false);
     }
-  }, [isAuthenticated, currentSessionId, getUserId, startNewChat, loadSessions]);
+  }, [isAuthenticated, currentSessionId, getToken, startNewChat, loadSessions]);
+
+  const sendImageMessage = useCallback(async (file) => {
+    if (!isAuthenticated || !file) return;
+    
+    let sessionId = currentSessionId;
+    
+    // Auto-create session if none active
+    if (!sessionId) {
+      sessionId = await startNewChat();
+      if (!sessionId) return;
+    }
+
+    const localImageUrl = URL.createObjectURL(file);
+
+    const userMsg = { 
+      role: 'user', 
+      text: t('aiconcierge.sent_image', 'Đã gửi một hình ảnh'), 
+      imageUrl: localImageUrl,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    };
+    
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+
+    try {
+      const token = await getToken();
+      const data = await sendChatImage(token, file, sessionId);
+      
+      // Update local imageUrl with permanent URL from server
+      if (data.image_url) {
+        setMessages(prev => prev.map(m => m.imageUrl === localImageUrl ? { ...m, imageUrl: data.image_url } : m));
+      }
+
+      setMessages(prev => [...prev, {
+        role: 'bot',
+        text: data.reply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
+      
+      loadSessions();
+      
+    } catch (err) {
+      console.error("Chat image error:", err);
+      setMessages(prev => [...prev, {
+        role: 'bot',
+        text: "Xin lỗi, đã có lỗi xảy ra khi gửi ảnh tới AI. Vui lòng thử lại sau.",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
+    } finally {
+      setIsTyping(false);
+    }
+  }, [isAuthenticated, currentSessionId, getToken, startNewChat, loadSessions, t]);
 
   const removeSession = useCallback(async (sessionId) => {
     if (!isAuthenticated) return;
     try {
-      const userId = getUserId();
-      await deleteChatSession(userId, sessionId);
+      const token = await getToken();
+      if (!token) throw new Error("No token");
+      await deleteChatSession(token, sessionId);
       if (sessionId === currentSessionId) {
         setCurrentSessionId(null);
         setMessages([]);
@@ -151,7 +197,7 @@ export const ChatProvider = ({ children }) => {
     } catch (err) {
       console.error("Failed to delete session:", err);
     }
-  }, [isAuthenticated, getUserId, currentSessionId, loadSessions]);
+  }, [isAuthenticated, getToken, currentSessionId, loadSessions]);
 
   // Load sessions on mount or when user changes
   useEffect(() => {
@@ -174,6 +220,7 @@ export const ChatProvider = ({ children }) => {
     loadHistory,
     startNewChat,
     sendMessage,
+    sendImageMessage,
     removeSession,
     setCurrentSessionId,
     setMessages

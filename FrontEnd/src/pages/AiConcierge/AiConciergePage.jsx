@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   MessageSquare, History, Compass, Settings,
-  Search, UserCircle, Bot, Send, Plus,
+  Search, UserCircle, Bot, Send, Plus, X,
   Mic, Sparkles, FileText, Image as ImageIcon,
-  MoreHorizontal, ChevronRight, Trash2
+  MoreHorizontal, ChevronRight, Trash2, MapPin, ExternalLink
 } from 'lucide-react';
+import '../../components/AiConcierge/ChatCards.css';
+import renderMessageContent from '../../components/AiConcierge/ChatRenderer';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +15,7 @@ import { useChat } from '../../context/ChatContext';
 import { 
   sendImageResult 
 } from '../../services/chatService';
+import botAvatar from '../../assets/images/chatbot_logo.png';
 
 export default function AiConciergePage() {
   const navigate = useNavigate();
@@ -25,15 +29,42 @@ export default function AiConciergePage() {
     loadHistory, 
     startNewChat, 
     sendMessage,
+    sendImageMessage,
     removeSession 
   } = useChat();
 
   const [input, setInput] = useState('');
+  const [deleteSessionId, setDeleteSessionId] = useState(null);
   const userAvatar = user?.photoURL || user?.picture || user?.avatar || null;
   const userName = user?.displayName || user?.name || user?.username || 'Khách';
   
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setInput(''); // clear input text per requirement
+    }
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   // Tự động cuộn xuống khi có tin nhắn mới hoặc AI đang trả lời
   useEffect(() => {
@@ -50,9 +81,14 @@ export default function AiConciergePage() {
   }, [messages, isTyping]);
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    sendMessage(input);
-    setInput('');
+    if (selectedFile) {
+      sendImageMessage(selectedFile);
+      clearSelectedImage();
+    } else {
+      if (!input.trim()) return;
+      sendMessage(input);
+      setInput('');
+    }
   };
 
   return (
@@ -79,8 +115,8 @@ export default function AiConciergePage() {
       {/* Sidebar Navigation */}
       <aside className="hidden md:flex flex-col w-72 h-full py-8 px-4 bg-surface-container-low border-r border-outline-variant/30 font-medium text-sm">
         <div className="mb-12 px-4 cursor-pointer flex items-center gap-3" onClick={() => navigate('/home')}>
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-            <Bot className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden bg-surface-container-highest border border-outline-variant/20">
+            <img src={botAvatar} alt="AI Concierge" className="w-full h-full object-cover scale-110" />
           </div>
           <h1 className="text-xl font-bold text-on-surface font-display uppercase tracking-tight">AI Concierge</h1>
         </div>
@@ -121,7 +157,7 @@ export default function AiConciergePage() {
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  if(confirm("Xóa cuộc hội thoại này?")) removeSession(session.id);
+                  setDeleteSessionId(session.id);
                 }}
                 className="p-1.5 rounded-lg hover:bg-red-500/10 text-on-surface-variant/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
               >
@@ -167,8 +203,8 @@ export default function AiConciergePage() {
             <div key={idx} className={`message-item flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse max-w-[85%] ml-auto' : 'max-w-[95%]'}`}>
               <div className="flex-shrink-0 mt-1">
                 {msg.role === 'bot' ? (
-                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10">
-                    <Bot className="w-5 h-5 text-primary" />
+                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10 overflow-hidden shadow-sm">
+                    <img src={botAvatar} alt="AI Bot" className="w-full h-full object-cover scale-110" />
                   </div>
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-slate-300 overflow-hidden flex items-center justify-center">
@@ -180,10 +216,13 @@ export default function AiConciergePage() {
                 )}
               </div>
               <div className={`space-y-2 ${msg.role === 'user' ? 'text-right' : ''}`}>
-                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl`}>
-                  <p className="leading-relaxed font-body whitespace-pre-wrap text-sm">
-                    {msg.text.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
-                  </p>
+                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl flex flex-col`}>
+                  {msg.imageUrl && (
+                    <div className="mb-3 max-w-[240px] rounded-xl overflow-hidden shadow-md border border-white/20 bg-black/10 self-end">
+                      <img src={msg.imageUrl} alt="Uploaded" className="w-full h-auto object-cover max-h-60" />
+                    </div>
+                  )}
+                  {renderMessageContent(msg.text, sendMessage)}
 
                   {msg.bento && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -226,8 +265,39 @@ export default function AiConciergePage() {
             {/* Visual Pulse behind input */}
             <div className="absolute inset-0 bg-primary-container blur-3xl opacity-5 rounded-full -z-10 group-focus-within:opacity-20 transition-opacity duration-500"></div>
 
+            {/* Image Preview Area */}
+            {previewUrl && (
+              <div className="absolute bottom-20 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={clearSelectedImage}
+                    className="absolute -top-1 -right-1 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
+                    title="Xóa ảnh"
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+                <div className="text-left pr-4">
+                  <p className="text-xs font-bold text-on-surface truncate max-w-[120px]">{selectedFile?.name}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Sẵn sàng gửi</p>
+                </div>
+              </div>
+            )}
+
             <div className="glass-panel p-2 rounded-full flex items-center gap-2 ethereal-glow border border-outline-variant/20 focus-within:ring-2 focus-within:ring-primary/30 transition-all">
-              <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors"
+                title="Tải ảnh lên"
+              >
                 <Plus className="w-5 h-5" />
               </button>
               <input
@@ -235,8 +305,9 @@ export default function AiConciergePage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={t('aiconcierge.input_placeholder')}
-                className="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 font-body px-2"
+                placeholder={selectedFile ? "Đang gửi hình ảnh (Không thể nhập văn bản)..." : t('aiconcierge.input_placeholder')}
+                disabled={!!selectedFile}
+                className={`flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2 ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
               />
               <div className="flex items-center gap-1">
                 <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
@@ -244,7 +315,8 @@ export default function AiConciergePage() {
                 </button>
                 <button
                   onClick={handleSend}
-                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300"
+                  disabled={!selectedFile && !input.trim()}
+                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:scale-100 disabled:pointer-events-none"
                 >
                   <Send className="w-5 h-5" />
                 </button>
@@ -261,7 +333,10 @@ export default function AiConciergePage() {
                 <FileText className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_summary')}</span>
               </button>
-              <button className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10"
+              >
                 <ImageIcon className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_image')}</span>
               </button>
@@ -269,6 +344,17 @@ export default function AiConciergePage() {
           </div>
         </div>
       </main>
+
+      <ConfirmModal 
+        isOpen={!!deleteSessionId}
+        onClose={() => setDeleteSessionId(null)}
+        onConfirm={() => removeSession(deleteSessionId)}
+        title="Xóa cuộc hội thoại"
+        message="Bạn có chắc chắn muốn xóa cuộc hội thoại này? Lịch sử chat sẽ bị xóa vĩnh viễn."
+        confirmText="Xóa"
+        cancelText="Hủy"
+        isDanger={true}
+      />
     </div>
   );
 }

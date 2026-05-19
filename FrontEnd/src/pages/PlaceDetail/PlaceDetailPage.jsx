@@ -12,8 +12,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { getLocationById } from '../../services/locationService';
+import { getLocationById, searchLocations } from '../../services/locationService';
 import { getLocationReviews, deleteReview } from '../../services/reviewService';
+import SweetModal from '../../components/common/SweetModal';
 
 const REVIEWS_PER_PAGE = 6;
 
@@ -39,6 +40,20 @@ export default function PlaceDetailPage() {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { isAuthenticated, user, getToken } = useAuth();
 
+  // SweetModal states
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    type: 'success',
+    title: '',
+    message: '',
+    showCancel: false,
+    onConfirm: null
+  });
+
+  const showModal = (type, title, message, showCancel = false, onConfirm = null) => {
+    setModalConfig({ isOpen: true, type, title, message, showCancel, onConfirm });
+  };
+
   // ── Location state ──
   const [location, setLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(true);
@@ -54,26 +69,58 @@ export default function PlaceDetailPage() {
 
   // ── Fetch location ──
   const fetchLocation = useCallback(async () => {
-    if (!id) return;
+    if (!id) return null;
     setLocLoading(true);
     setLocError('');
+    let resolvedData = null;
     try {
       const data = await getLocationById(id);
       setLocation(data);
+      resolvedData = data;
     } catch (err) {
-      setLocError(err.message || 'Không tìm thấy địa điểm.');
+      console.warn(`getLocationById failed for ${id}, checking if it is a name...`, err);
+      // Check if ID is a UUID
+      const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+      if (!isUUID) {
+        try {
+          const searchData = await searchLocations(decodeURIComponent(id));
+          if (searchData && searchData.data && searchData.data.length > 0) {
+            const decodedId = decodeURIComponent(id).toLowerCase();
+            const matched = searchData.data.find(
+              loc => (loc.name || loc.location_name || '').toLowerCase() === decodedId
+            ) || searchData.data[0];
+            
+            setLocation(matched);
+            resolvedData = matched;
+          } else {
+            setLocError('Không tìm thấy địa điểm.');
+          }
+        } catch (searchErr) {
+          console.error("searchLocations failed:", searchErr);
+          setLocError(err.message || 'Không tìm thấy địa điểm.');
+        }
+      } else {
+        setLocError(err.message || 'Không tìm thấy địa điểm.');
+      }
     } finally {
       setLocLoading(false);
     }
+    return resolvedData;
   }, [id]);
 
   // ── Fetch reviews ──
-  const fetchReviews = useCallback(async () => {
-    if (!id) return;
+  const fetchReviews = useCallback(async (resolvedId) => {
+    const targetId = resolvedId || id;
+    if (!targetId) return;
+
+    // If targetId is not a UUID, skip fetching reviews
+    const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(targetId);
+    if (!isUUID) return;
+
     setRevLoading(true);
     setRevError('');
     try {
-      const data = await getLocationReviews(id);
+      const data = await getLocationReviews(targetId);
       setReviews(Array.isArray(data) ? data : []);
     } catch {
       setRevError('Không thể tải đánh giá.');
@@ -84,15 +131,24 @@ export default function PlaceDetailPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    fetchLocation();
-    fetchReviews();
+    const loadAll = async () => {
+      const resolved = await fetchLocation();
+      if (resolved) {
+        const realId = resolved.location_id || resolved.id;
+        fetchReviews(realId);
+      } else {
+        fetchReviews();
+      }
+    };
+    loadAll();
   }, [fetchLocation, fetchReviews]);
 
   // ── Handlers ──
   const handleReviewSuccess = () => {
     setShowForm(false);
     setEditingReview(null);
-    fetchReviews();
+    const realId = location?.location_id || location?.id;
+    fetchReviews(realId);
   };
 
   const handleEditReview = (review) => {
@@ -102,18 +158,32 @@ export default function PlaceDetailPage() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    try {
-      const token = await getToken();
-      await deleteReview(token, reviewId);
-      setReviews(prev => prev.filter(r => r.review_id !== reviewId));
-    } catch (err) {
-      alert('Xóa thất bại: ' + err.message);
-    }
+    showModal(
+      'warning',
+      'Xác Nhận Xóa',
+      'Sếp có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.',
+      true,
+      async () => {
+        try {
+          const token = await getToken();
+          await deleteReview(token, reviewId);
+          setReviews(prev => prev.filter(r => r.review_id !== reviewId));
+        } catch (err) {
+          showModal('error', 'Lỗi', 'Xóa thất bại: ' + err.message);
+        }
+      }
+    );
   };
 
   const handleWriteReview = () => {
     if (!isAuthenticated) {
-      if (window.confirm('Vui lòng đăng nhập để viết đánh giá.')) navigate('/login');
+      showModal(
+        'info',
+        'Yêu Cầu Đăng Nhập',
+        'Vui lòng đăng nhập để viết đánh giá cho địa điểm này Sếp nhé.',
+        true,
+        () => navigate('/login')
+      );
       return;
     }
     setEditingReview(null);
@@ -124,7 +194,13 @@ export default function PlaceDetailPage() {
   const handleWishlist = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      if (window.confirm('Vui lòng đăng nhập để lưu Wishlist.')) navigate('/login');
+      showModal(
+        'info',
+        'Yêu Cầu Đăng Nhập',
+        'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Sếp nhé.',
+        true,
+        () => navigate('/login')
+      );
       return;
     }
     toggleWishlist(location);
@@ -162,6 +238,9 @@ export default function PlaceDetailPage() {
   const categories = Array.isArray(location.categories)
     ? location.categories.map(c => (typeof c === 'string' ? c : c.name || c.category || '')).filter(Boolean)
     : [];
+  const latitude = location.latitude || location.lat || null;
+  const longitude = location.longitude || location.lng || location.lon || null;
+  const hasCoordinates = latitude !== null && longitude !== null && latitude !== 0 && longitude !== 0;
   const allImages = (location.images || []).map(img => typeof img === 'string' ? img : img.image).filter(Boolean);
   const displayImages = allImages.length > 0 ? allImages.slice(0, 4) : [getCityImage(city)];
   const heroImage = displayImages[0];
@@ -197,15 +276,12 @@ export default function PlaceDetailPage() {
           {displayImages.length > 1 && (
             <div className="hidden md:grid md:col-span-2 grid-cols-2 gap-1 md:gap-2 h-full">
               {displayImages.slice(1, 4).map((img, i) => (
-                <div 
-                  key={i} 
-                  className={`overflow-hidden ${
-                    i === 1 && displayImages.length === 3 ? 'col-span-2' : ''
-                  } ${
-                    i === 1 && displayImages.length === 4 ? 'rounded-tr-2xl' : ''
-                  } ${
-                    i === 2 && displayImages.length === 4 ? 'rounded-br-2xl' : ''
-                  }`}
+                <div
+                  key={i}
+                  className={`overflow-hidden ${i === 1 && displayImages.length === 3 ? 'col-span-2' : ''
+                    } ${i === 1 && displayImages.length === 4 ? 'rounded-tr-2xl' : ''
+                    } ${i === 2 && displayImages.length === 4 ? 'rounded-br-2xl' : ''
+                    }`}
                 >
                   <motion.img
                     initial={{ opacity: 0 }}
@@ -217,11 +293,11 @@ export default function PlaceDetailPage() {
                   />
                 </div>
               ))}
-              
+
               {/* If fewer than 4 images, fill with empty/pattern or just stretch others */}
               {displayImages.length === 2 && (
                 <div className="col-span-2 bg-surface-container-low flex items-center justify-center rounded-r-2xl border border-white/10">
-                   <Sparkles className="w-8 h-8 text-primary/20" />
+                  <Sparkles className="w-8 h-8 text-primary/20" />
                 </div>
               )}
             </div>
@@ -362,6 +438,7 @@ export default function PlaceDetailPage() {
                         key={review.review_id}
                         review={review}
                         currentUserId={currentUserId}
+                        currentUser={user}
                         onEdit={handleEditReview}
                         onDelete={handleDeleteReview}
                       />
@@ -425,21 +502,65 @@ export default function PlaceDetailPage() {
 
                 <button
                   onClick={handleWishlist}
-                  className={`w-full py-3.5 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all text-sm ${
-                    inWishlist
+                  className={`w-full py-3.5 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all text-sm ${inWishlist
                       ? 'border-red-500/50 bg-red-500/5 text-red-500 hover:bg-red-500/10'
                       : 'border-primary/20 text-primary hover:border-primary/50 hover:bg-primary/5'
-                  }`}
+                    }`}
                 >
                   <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500 text-red-500' : ''}`} />
                   {inWishlist ? 'Đã lưu vào Wishlist' : 'Lưu vào Wishlist'}
                 </button>
+
+                {/* ── Map Embed ── */}
+                {hasCoordinates && (
+                  <div className="pt-5 border-t border-outline-variant/20">
+                    <h3 className="text-sm font-bold text-on-surface mb-3 flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Vị trí trên bản đồ
+                    </h3>
+                    <div className="relative rounded-2xl overflow-hidden border border-outline-variant/20 shadow-md group">
+                      <iframe
+                        title={`Bản đồ ${name}`}
+                        width="100%"
+                        height="220"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                        src={`https://maps.google.com/maps?q=${latitude},${longitude}&hl=vi&z=15&output=embed`}
+                        className="w-full"
+                      />
+                      {/* Overlay link to open full map */}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-primary text-xs font-bold shadow-lg border border-white/50 hover:bg-white hover:shadow-xl transition-all hover:-translate-y-0.5"
+                      >
+                        <MapPin className="w-3 h-3" />
+                        Mở Google Maps
+                      </a>
+                    </div>
+                    <p className="text-[11px] text-on-surface-variant/60 mt-2 text-center">
+                      {latitude.toFixed(6)}, {longitude.toFixed(6)}
+                    </p>
+                  </div>
+                )}
               </GlassCard>
             </div>
           </div>
 
         </div>
       </div>
+
+      <SweetModal
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
+        type={modalConfig.type}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        showCancel={modalConfig.showCancel}
+        onConfirm={modalConfig.onConfirm}
+        confirmText={modalConfig.showCancel ? (modalConfig.type === 'warning' ? "Xác nhận xóa" : "Tiếp tục") : "Đồng ý"}
+      />
     </div>
   );
 }
