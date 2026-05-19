@@ -29,14 +29,25 @@ func proxyToAI(c *gin.Context, method string, aiPath string, customBody []byte) 
 	targetURL := aiBaseURL + aiPath
 
 	var bodyReader io.Reader
+	var debugBody string // DEBUG: lưu lại body để log
+
 	if customBody != nil {
 		bodyReader = bytes.NewBuffer(customBody)
+		debugBody = string(customBody)
 	} else if method == "POST" || method == "PUT" || method == "PATCH" {
 		bodyBytes, err := io.ReadAll(c.Request.Body)
 		if err == nil {
 			bodyReader = bytes.NewBuffer(bodyBytes)
+			debugBody = string(bodyBytes)
+		} else {
+			log.Printf("[RECOMMEND] ⚠️ Lỗi đọc request body từ client: %v", err)
+			debugBody = "(đọc body thất bại)"
 		}
 	}
+
+	// DEBUG: Log request đang được forward sang AI
+	log.Printf("[RECOMMEND] 🔄 Proxy %s %s | Content-Type từ client: %s | Body: %s",
+		method, targetURL, c.ContentType(), debugBody)
 
 	req, err := http.NewRequest(method, targetURL, bodyReader)
 	if err != nil {
@@ -61,6 +72,11 @@ func proxyToAI(c *gin.Context, method string, aiPath string, customBody []byte) 
 	if err != nil {
 		utils.RespondError(c, http.StatusInternalServerError, "Lỗi xử lý phản hồi từ AI", nil)
 		return
+	}
+
+	// DEBUG: Log response từ AI server khi có lỗi (status >= 400)
+	if resp.StatusCode >= 400 {
+		log.Printf("[RECOMMEND] ⚠️ AI Server trả lỗi %d | Response body: %s", resp.StatusCode, string(respBody))
 	}
 
 	c.Data(resp.StatusCode, resp.Header.Get("Content-Type"), respBody)
