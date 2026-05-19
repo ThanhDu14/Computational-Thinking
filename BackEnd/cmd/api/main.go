@@ -15,6 +15,7 @@ import (
 	"smart-travel-backend/features/profile"
 	"smart-travel-backend/features/recommend"
 	"smart-travel-backend/features/review"
+	"smart-travel-backend/features/weather"
 	"smart-travel-backend/features/wishlist"
 	"syscall"
 	"time"
@@ -96,6 +97,11 @@ func main() {
 	recommendGroup := router.Group("/api/recommend")
 	{
 		recommend.SetupRecommendRoutes(recommendGroup, authClient)
+	}
+
+	weatherGroup := router.Group("/api/weather")
+	{
+		weather.SetupWeatherRoutes(weatherGroup)
 	}
 
 	// 5. Khởi tạo Http Server
