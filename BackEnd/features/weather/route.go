@@ -7,5 +7,5 @@ import (
 // SetupWeatherRoutes đăng ký API lấy thông tin thời tiết
 func SetupWeatherRoutes(router *gin.RouterGroup) {
 	// Endpoint: GET /api/weather?city=Hanoi
-	router.GET("/", GetWeatherByCityHandler())
+	router.GET("", GetWeatherByCityHandler())
 }
