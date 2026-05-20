@@ -2,9 +2,11 @@ from sentence_transformers import CrossEncoder
 
 class Reranker:
     def __init__(self):
+        import torch
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = CrossEncoder(
             "BAAI/bge-reranker-v2-m3",
-            device="cuda"
+            device=device
         )
 
     def rerank(self, query, docs, top_k=5):
