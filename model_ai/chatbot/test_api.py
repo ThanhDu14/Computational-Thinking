@@ -4,11 +4,18 @@
 # Chỉ chạy testcase tiếp theo khi nhấn ENTER
 # ============================================================
 
+import os
 import requests
 import json
 from uuid import uuid4
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 BASE_URL = "http://127.0.0.1:8000"
+AI_KEY = os.getenv("AI_KEY")
+HEADERS = {"X-Internal-Secret": AI_KEY}
 
 # ============================================================
 # USER TEST
@@ -51,7 +58,8 @@ def test_create_chat():
 
     res = requests.post(
         f"{BASE_URL}/chat/new",
-        json=payload
+        json=payload,
+        headers=HEADERS
     )
 
     print_response(res)
@@ -75,7 +83,8 @@ def test_chat():
 
     res = requests.post(
         f"{BASE_URL}/chat",
-        json=payload
+        json=payload,
+        headers=HEADERS
     )
 
     print_response(res)
@@ -89,7 +98,8 @@ def test_history():
     print("\n================ TEST 3: HISTORY ================\n")
 
     res = requests.get(
-        f"{BASE_URL}/chat/{USER_ID}/{session_id}/history"
+        f"{BASE_URL}/chat/{USER_ID}/{session_id}/history",
+        headers=HEADERS
     )
 
     print_response(res)
@@ -103,7 +113,8 @@ def test_get_sessions():
     print("\n================ TEST 4: GET SESSIONS ================\n")
 
     res = requests.get(
-        f"{BASE_URL}/sessions/{USER_ID}"
+        f"{BASE_URL}/sessions/{USER_ID}",
+        headers=HEADERS
     )
 
     print_response(res)
@@ -122,7 +133,8 @@ def test_rename_session():
 
     res = requests.patch(
         f"{BASE_URL}/sessions/{USER_ID}/{session_id}/title",
-        json=payload
+        json=payload,
+        headers=HEADERS
     )
 
     print_response(res)
@@ -136,7 +148,8 @@ def test_delete_session():
     print("\n================ TEST 6: DELETE SESSION ================\n")
 
     res = requests.delete(
-        f"{BASE_URL}/chat/{USER_ID}/{session_id}"
+        f"{BASE_URL}/chat/{USER_ID}/{session_id}",
+        headers=HEADERS
     )
 
     print_response(res)

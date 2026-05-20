@@ -116,8 +116,10 @@ class ChatMemory:
         self._execute(supabase.table(SUPABASE_MESSAGES_TABLE).insert(data))
 
         if llm:
-            self.update_summary(llm)
-            self.auto_title(llm)
+            # [TẮT] Không gọi update_summary và auto_title để tránh vượt giới hạn token Groq API
+            # self.update_summary(llm)
+            # self.auto_title(llm)
+            pass
 
     def add_message(self, role: str, content: str):
         self._execute(
@@ -155,7 +157,6 @@ class ChatMemory:
         # text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
         # prompt = f"Summarize the conversation briefly but keep important context:\n\n{text}\n\nSummary:"
         # summary = llm.generate(prompt).strip()
-
         # self._execute(
         #     supabase.table(SUPABASE_SESSIONS_TABLE)
         #     .update({"summary": summary})
@@ -167,26 +168,28 @@ class ChatMemory:
     # AUTO TITLE
     # =====================================================
     def auto_title(self, llm):
-        res = self._execute(
-            supabase.table(SUPABASE_SESSIONS_TABLE)
-            .select("title")
-            .eq("id", self.session_id)
-            .single()
-        )
-
-        if res.data.get("title") != "New Chat":
-            return
-
-        messages = self.get_messages()
-        text = "\n".join([m["content"] for m in messages[:4]])
-        prompt = f"Generate a short title (max 8 words):\n\n{text}\n\nTitle:"
-        title = llm.generate(prompt).strip()
-
-        self._execute(
-            supabase.table(SUPABASE_SESSIONS_TABLE)
-            .update({"title": title})
-            .eq("id", self.session_id)
-        )
+        # [TẮT] Toàn bộ logic auto title để tránh vượt giới hạn token Groq API
+        # res = self._execute(
+        #     supabase.table(SUPABASE_SESSIONS_TABLE)
+        #     .select("title")
+        #     .eq("id", self.session_id)
+        #     .single()
+        # )
+        #
+        # if res.data.get("title") != "New Chat":
+        #     return
+        #
+        # messages = self.get_messages()
+        # text = "\n".join([m["content"] for m in messages[:4]])
+        # prompt = f"Generate a short title (max 8 words):\n\n{text}\n\nTitle:"
+        # title = llm.generate(prompt).strip()
+        #
+        # self._execute(
+        #     supabase.table(SUPABASE_SESSIONS_TABLE)
+        #     .update({"title": title})
+        #     .eq("id", self.session_id)
+        # )
+        pass
 
     # =====================================================
     # CONTEXT
@@ -194,18 +197,19 @@ class ChatMemory:
     def get_context(self):
         messages = self.get_messages()
 
-        res = self._execute(
-            supabase.table(SUPABASE_SESSIONS_TABLE)
-            .select("summary")
-            .eq("id", self.session_id)
-            .single()
-        )
+        # [TẮT] Không lấy summary để giảm token gửi lên Groq API
+        # res = self._execute(
+        #     supabase.table(SUPABASE_SESSIONS_TABLE)
+        #     .select("summary")
+        #     .eq("id", self.session_id)
+        #     .single()
+        # )
+        # summary = res.data.get("summary", "")
 
-        summary = res.data.get("summary", "")
         recent = messages[-self.max_recent:]
         recent_text = "\n".join([f"{m['role']}: {m['content']}" for m in recent])
 
-        return {"summary": summary, "recent": recent_text}
+        return {"summary": "", "recent": recent_text}
 
     # =====================================================
     # SESSION LIST
