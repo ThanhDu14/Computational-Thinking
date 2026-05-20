@@ -126,11 +126,11 @@ export default function AiConciergePage() {
           className="flex items-center gap-3 w-full px-4 py-3 mb-6 rounded-xl transition-all text-white font-bold bg-primary hover:bg-primary/90 shadow-md"
         >
           <Plus className="w-5 h-5" />
-          <span>Đoạn chat mới</span>
+          <span>{t('aiconcierge.new_chat')}</span>
         </button>
 
         <nav className="flex-1 space-y-2 overflow-y-auto scrollbar-hide">
-          <p className="px-4 text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold mb-2">Gần đây</p>
+          <p className="px-4 text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold mb-2">{t('aiconcierge.recent')}</p>
           {sessions.map((session) => (
             <div 
               key={session.id}
@@ -142,7 +142,11 @@ export default function AiConciergePage() {
               >
                 <MessageSquare className="w-5 h-5 flex-shrink-0" />
                 <div className="flex flex-col overflow-hidden">
-                  <span className="truncate text-sm">{session.title || "Cuộc hội thoại mới"}</span>
+                  <span className="truncate text-sm">
+                    {session.title === 'New Chat' || session.title === 'Cuộc hội thoại mới' 
+                      ? t('aiconcierge.new_conversation') 
+                      : (session.title || t('aiconcierge.new_conversation'))}
+                  </span>
                   <span className="text-[9px] opacity-50 font-normal">
                     {session.created_at ? new Date(session.created_at).toLocaleString('vi-VN', { 
                       day: '2-digit', 
@@ -168,7 +172,7 @@ export default function AiConciergePage() {
           
           {sessions.length === 0 && (
             <div className="px-4 py-8 text-center text-on-surface-variant/40 italic text-xs">
-              Chưa có cuộc hội thoại nào
+              {t('aiconcierge.no_conversations')}
             </div>
           )}
         </nav>
@@ -267,20 +271,20 @@ export default function AiConciergePage() {
 
             {/* Image Preview Area */}
             {previewUrl && (
-              <div className="absolute bottom-20 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="absolute bottom-full mb-3 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   <button 
                     onClick={clearSelectedImage}
                     className="absolute -top-1 -right-1 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
-                    title="Xóa ảnh"
+                    title={t('aiconcierge.clear_image')}
                   >
                     <X size={10} />
                   </button>
                 </div>
                 <div className="text-left pr-4">
                   <p className="text-xs font-bold text-on-surface truncate max-w-[120px]">{selectedFile?.name}</p>
-                  <p className="text-[10px] text-on-surface-variant font-medium">Sẵn sàng gửi</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">{t('aiconcierge.ready_to_send')}</p>
                 </div>
               </div>
             )}
@@ -296,7 +300,7 @@ export default function AiConciergePage() {
               <button 
                 onClick={() => fileInputRef.current?.click()}
                 className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors"
-                title="Tải ảnh lên"
+                title={t('aiconcierge.upload_image')}
               >
                 <Plus className="w-5 h-5" />
               </button>
@@ -305,7 +309,7 @@ export default function AiConciergePage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={selectedFile ? "Đang gửi hình ảnh (Không thể nhập văn bản)..." : t('aiconcierge.input_placeholder')}
+                placeholder={selectedFile ? t('aiconcierge.sending_image') : t('aiconcierge.input_placeholder')}
                 disabled={!!selectedFile}
                 className={`flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2 ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
               />
@@ -349,10 +353,10 @@ export default function AiConciergePage() {
         isOpen={!!deleteSessionId}
         onClose={() => setDeleteSessionId(null)}
         onConfirm={() => removeSession(deleteSessionId)}
-        title="Xóa cuộc hội thoại"
-        message="Bạn có chắc chắn muốn xóa cuộc hội thoại này? Lịch sử chat sẽ bị xóa vĩnh viễn."
-        confirmText="Xóa"
-        cancelText="Hủy"
+        title={t('aiconcierge.delete_title')}
+        message={t('aiconcierge.delete_message')}
+        confirmText={t('aiconcierge.delete_confirm')}
+        cancelText={t('aiconcierge.delete_cancel')}
         isDanger={true}
       />
     </div>

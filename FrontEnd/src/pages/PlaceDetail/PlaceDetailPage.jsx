@@ -89,7 +89,7 @@ export default function PlaceDetailPage() {
             const matched = searchData.data.find(
               loc => (loc.name || loc.location_name || '').toLowerCase() === decodedId
             ) || searchData.data[0];
-            
+
             setLocation(matched);
             resolvedData = matched;
           } else {
@@ -161,7 +161,7 @@ export default function PlaceDetailPage() {
     showModal(
       'warning',
       'Xác Nhận Xóa',
-      'Sếp có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.',
+      'Bạn có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.',
       true,
       async () => {
         try {
@@ -180,7 +180,7 @@ export default function PlaceDetailPage() {
       showModal(
         'info',
         'Yêu Cầu Đăng Nhập',
-        'Vui lòng đăng nhập để viết đánh giá cho địa điểm này Sếp nhé.',
+        'Vui lòng đăng nhập để viết đánh giá cho địa điểm này Bạn nhé.',
         true,
         () => navigate('/login')
       );
@@ -197,7 +197,7 @@ export default function PlaceDetailPage() {
       showModal(
         'info',
         'Yêu Cầu Đăng Nhập',
-        'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Sếp nhé.',
+        'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Bạn nhé.',
         true,
         () => navigate('/login')
       );
@@ -503,8 +503,8 @@ export default function PlaceDetailPage() {
                 <button
                   onClick={handleWishlist}
                   className={`w-full py-3.5 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all text-sm ${inWishlist
-                      ? 'border-red-500/50 bg-red-500/5 text-red-500 hover:bg-red-500/10'
-                      : 'border-primary/20 text-primary hover:border-primary/50 hover:bg-primary/5'
+                    ? 'border-red-500/50 bg-red-500/5 text-red-500 hover:bg-red-500/10'
+                    : 'border-primary/20 text-primary hover:border-primary/50 hover:bg-primary/5'
                     }`}
                 >
                   <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500 text-red-500' : ''}`} />

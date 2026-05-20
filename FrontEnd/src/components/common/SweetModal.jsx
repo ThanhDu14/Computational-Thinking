@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, AlertCircle, XCircle, Info, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SweetModal = ({ 
   isOpen, 
@@ -8,11 +9,14 @@ const SweetModal = ({
   type = 'info', // success, error, warning, info
   title, 
   message, 
-  confirmText = 'Đồng ý', 
-  cancelText = 'Hủy', 
+  confirmText, 
+  cancelText, 
   onConfirm, 
   showCancel = false 
 }) => {
+  const { t } = useTranslation();
+  const displayConfirmText = confirmText || t('sweet_modal.confirm', { defaultValue: 'Đồng ý' });
+  const displayCancelText = cancelText || t('sweet_modal.cancel', { defaultValue: 'Hủy' });
   
   const getIcon = () => {
     switch (type) {
@@ -30,13 +34,13 @@ const SweetModal = ({
   const getButtonClass = () => {
     switch (type) {
       case 'success':
-        return 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200';
+        return 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20';
       case 'error':
-        return 'bg-rose-500 hover:bg-rose-600 shadow-rose-200';
+        return 'bg-rose-500 hover:bg-rose-600 shadow-rose-500/20';
       case 'warning':
-        return 'bg-amber-500 hover:bg-amber-600 shadow-amber-200';
+        return 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/20';
       default:
-        return 'bg-blue-500 hover:bg-blue-600 shadow-blue-200';
+        return 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/20';
     }
   };
 
@@ -58,12 +62,12 @@ const SweetModal = ({
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl border border-white/20 dark:border-white/10"
+            className="relative bg-surface dark:bg-surface-container w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl border border-outline-variant/20 dark:border-white/10"
           >
             {/* Close Button */}
             <button 
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container-high/40 dark:hover:bg-surface-container-high/40 text-on-surface-variant/70 transition-colors"
             >
               <X size={20} />
             </button>
@@ -79,11 +83,11 @@ const SweetModal = ({
                 {getIcon()}
               </motion.div>
 
-              <h3 className="text-2xl font-display font-black text-slate-900 dark:text-white mb-3">
+              <h3 className="text-2xl font-display font-black text-on-surface mb-3">
                 {title}
               </h3>
               
-              <p className="text-slate-600 dark:text-slate-400 font-body leading-relaxed mb-8">
+              <p className="text-on-surface-variant font-body leading-relaxed mb-8">
                 {message}
               </p>
 
@@ -91,9 +95,9 @@ const SweetModal = ({
                 {showCancel && (
                   <button
                     onClick={onClose}
-                    className="flex-1 px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                    className="flex-1 px-6 py-4 rounded-2xl bg-surface-container-low text-on-surface-variant font-bold hover:bg-surface-container-high transition-all"
                   >
-                    {cancelText}
+                    {displayCancelText}
                   </button>
                 )}
                 <button
@@ -103,7 +107,7 @@ const SweetModal = ({
                   }}
                   className={`flex-1 px-6 py-4 rounded-2xl text-white font-bold transition-all shadow-lg active:scale-95 ${getButtonClass()}`}
                 >
-                  {confirmText}
+                  {displayConfirmText}
                 </button>
               </div>
             </div>

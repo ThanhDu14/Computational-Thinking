@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Star, Trash2, Edit3, X, ChevronLeft, ChevronRight, UserCircle, ImageIcon } from 'lucide-react';
-import ConfirmModal from '../common/ConfirmModal';
 
 /**
  * ReviewCard – Hiển thị 1 review với avatar, rating, bình luận và ảnh.
@@ -12,7 +11,6 @@ import ConfirmModal from '../common/ConfirmModal';
  */
 export default function ReviewCard({ review, currentUserId, currentUser, onEdit, onDelete }) {
     const [lightboxIdx, setLightboxIdx] = useState(null);
-    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
     const isOwner = currentUserId && review.user_id === currentUserId;
     const images = review.images || [];
@@ -32,11 +30,6 @@ export default function ReviewCard({ review, currentUserId, currentUser, onEdit,
         ? new Date(review.created_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
         : '';
 
-    const handleDelete = () => {
-        if (!deleteConfirm) { setDeleteConfirm(true); return; }
-        onDelete && onDelete(review.review_id);
-        setDeleteConfirm(false);
-    };
 
     return (
         <>
@@ -110,7 +103,7 @@ export default function ReviewCard({ review, currentUserId, currentUser, onEdit,
                             <Edit3 className="w-3.5 h-3.5" /> Sửa
                         </button>
                         <button
-                            onClick={() => setDeleteConfirm(true)}
+                            onClick={() => onDelete && onDelete(review.review_id)}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors text-red-500 bg-red-500/8 hover:bg-red-500/15"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -119,17 +112,6 @@ export default function ReviewCard({ review, currentUserId, currentUser, onEdit,
                     </div>
                 )}
             </div>
-
-            <ConfirmModal 
-                isOpen={deleteConfirm}
-                onClose={() => setDeleteConfirm(false)}
-                onConfirm={() => onDelete && onDelete(review.review_id)}
-                title="Xóa đánh giá"
-                message="Bạn có chắc chắn muốn xóa đánh giá này? Hành động này không thể hoàn tác."
-                confirmText="Xóa đánh giá"
-                cancelText="Hủy"
-                isDanger={true}
-            />
 
             {/* Lightbox */}
             {lightboxIdx !== null && (
