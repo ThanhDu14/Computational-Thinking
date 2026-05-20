@@ -255,17 +255,36 @@ class LandmarkRecognizer:
         elapsed = time.time() - start_time
         logger.info("RANSAC hoàn tất. Thời gian xử lý: %.2fs | Best inliers: %d", elapsed, best_inliers)
         
-        THRESHOLD = 15  
+        # [PERF] Giải pháp 1: Giảm threshold từ 15 → 8
+        # 8 inliers với geometric consistency (RANSAC) đã đủ đảm bảo độ chính xác
+        THRESHOLD = 8
+        
+        # [PERF] Giải pháp 2: Global Cosine Fallback
+        # Khi RANSAC không đủ inliers, kiểm tra cosine similarity của global feature
+        COSINE_FALLBACK_THRESHOLD = 0.55
+        top1_cosine = float(D[0][0]) if len(D[0]) > 0 else 0.0
+        
         if best_inliers < THRESHOLD:
-            logger.warning("Tỷ lệ khớp chưa đạt chuẩn (inliers=%d < threshold=%d). Query: %s",
-                           best_inliers, THRESHOLD, query_img_path)
-            return None, best_inliers
+            # Thử fallback bằng global cosine similarity
+            if top1_cosine >= COSINE_FALLBACK_THRESHOLD and best_idx >= 0:
+                logger.info(
+                    "RANSAC chưa đạt (inliers=%d < %d) nhưng Global Cosine đạt (%.4f >= %.2f). Chấp nhận kết quả.",
+                    best_inliers, THRESHOLD, top1_cosine, COSINE_FALLBACK_THRESHOLD
+                )
+                # Dùng top-1 candidate từ FAISS (global similarity cao nhất)
+                best_idx = top10_idx[0]
+            else:
+                logger.warning(
+                    "Không đạt chuẩn. RANSAC inliers=%d < %d, Global Cosine=%.4f < %.2f. Query: %s",
+                    best_inliers, THRESHOLD, top1_cosine, COSINE_FALLBACK_THRESHOLD, query_img_path
+                )
+                return None, best_inliers
  
         best_img_path = self.image_paths[best_idx]
         if "_aug_" in best_img_path:
             best_img_path = best_img_path.split("_aug_")[0]
             
         final_label = self.labels[best_idx]
-        logger.info("KẾT QUẢ: [%s] | Inliers: %d | Match: %s | Thời gian: %.2fs",
-                    final_label, best_inliers, best_img_path, elapsed)
+        logger.info("KẾT QUẢ: [%s] | Inliers: %d | Cosine: %.4f | Match: %s | Thời gian: %.2fs",
+                    final_label, best_inliers, top1_cosine, best_img_path, elapsed)
         return best_img_path, best_inliers, time.time() - start_time
