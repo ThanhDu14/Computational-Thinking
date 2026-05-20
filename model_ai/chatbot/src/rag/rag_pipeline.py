@@ -46,13 +46,20 @@ class RAGPipeline:
         t_start = time.time()
 
         # --- Step 1: Retrieve ---
+        # [FIX] Trích xuất phần text sạch để tránh làm nhiễu embedding và reranker bởi image URL dài
+        search_query = query
+        if query.startswith("![Image]"):
+            close_paren_idx = query.find(")")
+            if close_paren_idx != -1:
+                search_query = query[close_paren_idx + 1:].strip()
+
         t0 = time.time()
-        docs = self.retriever.retrieve(query)
+        docs = self.retriever.retrieve(search_query)
         t_retrieve = time.time() - t0
 
         # --- Step 2: Rerank ---
         t0 = time.time()
-        docs = self.reranker.rerank(query, docs)
+        docs = self.reranker.rerank(search_query, docs)
         t_rerank = time.time() - t0
 
         # [PERF] Loại bỏ get_context() — trước đây query Supabase
