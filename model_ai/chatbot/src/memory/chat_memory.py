@@ -151,22 +151,20 @@ class ChatMemory:
     # SUMMARY
     # =====================================================
     def update_summary(self, llm):
-        # [TẮT] Toàn bộ logic tóm tắt để tránh vượt giới hạn token Groq API
         # messages = self.get_messages()
         # if len(messages) < self.max_recent:
         #     return
-        #
+
         # old_messages = messages[:-self.max_recent]
         # text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
         # prompt = f"Summarize the conversation briefly but keep important context:\n\n{text}\n\nSummary:"
         # summary = llm.generate(prompt).strip()
-        #
         # self._execute(
         #     supabase.table(SUPABASE_SESSIONS_TABLE)
         #     .update({"summary": summary})
         #     .eq("id", self.session_id)
         # )
-        pass
+        pass  # [THAY ĐỔI] Tạm thời không tự động update summary nữa, để tránh tốn token và chi phí
 
     # =====================================================
     # AUTO TITLE

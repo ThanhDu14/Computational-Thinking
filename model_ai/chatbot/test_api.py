@@ -76,7 +76,7 @@ def test_chat():
     print("\n================ TEST 2: CHAT ================\n")
 
     payload = {
-        "message": "Hãy gợi ý cho tôi 4 địa điểm du lịch ở Huế có sông nước đẹp và đồ ăn ngon",
+        "message": "Xin chào",
         "user_id": USER_ID,
         "session_id": session_id
     }

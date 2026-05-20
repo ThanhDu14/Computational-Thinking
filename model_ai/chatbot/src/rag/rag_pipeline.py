@@ -23,12 +23,13 @@ class RAGPipeline:
     def ask(self, query: str, user_message_override: str = None):
         docs = self.retriever.retrieve(query)
         docs = self.reranker.rerank(query, docs)
+        
         history_data = self.memory.get_context()
         
         prompt = self.prompt_builder.build_prompt(
             query=query,
             contexts=docs,
-            history=history_data
+            history=None
         )
  
         answer = self.llm.generate(prompt)
