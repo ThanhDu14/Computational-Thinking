@@ -14,7 +14,7 @@ from model_ai.chatbot.src.config.config import EMBEDDING_MODEL_NAME, EMBEDDING_B
 class EmbeddingModel:
     def __init__(self, model_name: str = EMBEDDING_MODEL_NAME):
         # [THAY ĐỔI] model_name default lấy từ config
-        self.device = torch.device("cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print("Using device:", self.device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
