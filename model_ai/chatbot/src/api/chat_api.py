@@ -1,18 +1,22 @@
 # ============================================================
 # chat_api.py
-# [THAY ĐỔI] user_id đổi từ str → UUID (khớp Supabase Auth)
-#            → Bỏ default "guest", require truyền UUID thật
-#            → Validate UUID ở tầng Pydantic, trả 422 nếu sai
 # ============================================================
 
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Header, UploadFile, File, Form
 from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-from uuid import UUID   # [THAY ĐỔI] import UUID
+from uuid import UUID
+import os
 import logging
 import re
 import ast
+import io
+import uuid
+from dotenv import load_dotenv
+
+# Load environment variables
+env_path = os.path.join(os.path.dirname(__file__), "../../../../.env")
+load_dotenv(dotenv_path=env_path)
 
 from model_ai.chatbot.src.rag.rag_pipeline import RAGPipeline
 from model_ai.chatbot.src.vectorstore.vector_store import vector_store
@@ -25,25 +29,16 @@ from model_ai.chatbot.src.config.config import SUPABASE_SESSIONS_TABLE
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Nha Trang Travel Chatbot API")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+chat_router = APIRouter(tags=["Chatbot"])
 
 global_embedding_model = None
 global_llm = None
 
 
 # =====================================================================
-# STARTUP
+# STARTUP INIT FUNCTION (Called from server.py lifespan)
 # =====================================================================
-@app.on_event("startup")
-async def startup_event():
+def init_chat_models():
     global global_embedding_model, global_llm
     try:
         logger.info("⏳ [STARTUP] Đang nạp Vector DB...")
@@ -53,136 +48,88 @@ async def startup_event():
         global_embedding_model = EmbeddingModel()
         global_llm = GroqClient()
 
-        logger.info("✅ [STARTUP] Hệ thống AI đã sẵn sàng!")
+        logger.info("✅ [STARTUP] Hệ thống AI Chatbot đã sẵn sàng!")
     except Exception as e:
-        logger.error(f"❌ Lỗi khởi động: {str(e)}")
+        logger.error(f"❌ Lỗi khởi động Chatbot: {str(e)}")
 
 
 # =====================================================================
 # REQUEST MODELS
-# [THAY ĐỔI] user_id: str → UUID, bỏ default "guest"
 # =====================================================================
 class ChatRequest(BaseModel):
     message: str
-    user_id: UUID           # [THAY ĐỔI] UUID bắt buộc, Pydantic tự validate format
+    user_id: UUID
     session_id: Optional[str] = None
 
 class NewChatRequest(BaseModel):
-    user_id: UUID           # [THAY ĐỔI] UUID bắt buộc
+    user_id: UUID
 
 class RenameSessionRequest(BaseModel):
     title: str
 
-
 # =====================================================================
-# HELPER — validate UUID cho path params
+# HELPER
 # =====================================================================
 def _validate_uuid(value: str):
-    """
-    [THAY ĐỔI] Path params vẫn là str nên cần validate thủ công.
-    Ném ValueError → API trả 422 nếu không phải UUID hợp lệ.
-    """
     try:
         UUID(value)
     except ValueError:
         raise ValueError(f"user_id '{value}' không phải UUID hợp lệ")
 
 def parse_ai_response_to_json(text: str):
-
     result = {
         "message": "",
         "data": []
     }
-
     current_location = None
-
-    # normalize xuống dòng
     text = text.replace("\r\n", "\n")
-
     lines = text.split("\n")
-
     for raw_line in lines:
-
         line = raw_line.strip()
-
         if not line:
             continue
-
-        # match key: value
         match = re.match(r"^([a-zA-Z_ ]+)\s*:\s*(.*)$", line)
-
         if not match:
             continue
-
-        key = match.group(1).strip().lower()
+        key = match.group(1).strip().lower().replace(" ", "_")
         value = match.group(2).strip()
 
-        # normalize key
-        key = key.replace(" ", "_")
-
-        # =====================================================
-        # MESSAGE
-        # =====================================================
         if key == "message":
             result["message"] = value
             continue
 
-        # =====================================================
-        # LOCATION START
-        # =====================================================
         if key in ["location", "location_name"]:
-
-            # push object cũ
             if current_location:
                 result["data"].append(current_location)
-
-            current_location = {
-                "location": value
-            }
-
+            current_location = {"location": value}
             continue
 
-        # =====================================================
-        # FIELD CỦA LOCATION
-        # =====================================================
         if current_location is not None:
-
-            # category
             if key == "category":
-
                 try:
                     parsed_category = ast.literal_eval(value)
-
                     if isinstance(parsed_category, list):
                         current_location[key] = parsed_category
                     else:
                         current_location[key] = [str(parsed_category)]
-
                 except:
-                    current_location[key] = [
-                        x.strip()
-                        for x in value.split(",")
-                    ]
-
-            # null
+                    current_location[key] = [x.strip() for x in value.split(",")]
             elif value.upper() == "NULL":
                 current_location[key] = None
-
             else:
                 current_location[key] = value
 
-    # append cuối
     if current_location:
         result["data"].append(current_location)
 
     return result
+
 # =====================================================================
 # 1. TẠO PHIÊN CHAT MỚI
 # =====================================================================
-@app.post("/chat/new")
+@chat_router.post("/chat/new")
 async def create_new_chat(req: NewChatRequest):
     try:
-        # [THAY ĐỔI] str(req.user_id) — Pydantic parse UUID object, cần convert lại str
         memory = ChatMemory(user_id=str(req.user_id), session_id=None)
         return {
             "status": "success",
@@ -192,17 +139,15 @@ async def create_new_chat(req: NewChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # =====================================================================
 # 2. CHAT (RAG)
 # =====================================================================
-@app.post("/chat")
+@chat_router.post("/chat")
 async def chat_text(req: ChatRequest):
     if not req.message:
         raise HTTPException(status_code=400, detail="Tin nhắn không được để trống")
 
     try:
-        # [THAY ĐỔI] str(req.user_id) convert UUID object → string
         rag = RAGPipeline(
             embedding_model=global_embedding_model,
             llm=global_llm,
@@ -219,11 +164,10 @@ async def chat_text(req: ChatRequest):
         logger.error(f"Lỗi API /chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # =====================================================================
 # 3. LẤY LỊCH SỬ TIN NHẮN
 # =====================================================================
-@app.get("/chat/{user_id}/{session_id}/history")
+@chat_router.get("/chat/{user_id}/{session_id}/history")
 async def get_chat_history(user_id: str, session_id: str):
     try:
         _validate_uuid(user_id)
@@ -240,11 +184,10 @@ async def get_chat_history(user_id: str, session_id: str):
         logger.error(f"Lỗi API /history: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database Error: {str(e)}")
 
-
 # =====================================================================
 # 4. XÓA PHIÊN CHAT
 # =====================================================================
-@app.delete("/chat/{user_id}/{session_id}")
+@chat_router.delete("/chat/{user_id}/{session_id}")
 async def delete_chat_session(user_id: str, session_id: str):
     try:
         _validate_uuid(user_id)
@@ -256,11 +199,10 @@ async def delete_chat_session(user_id: str, session_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # =====================================================================
 # 5. LẤY TẤT CẢ PHIÊN CHAT CỦA USER (SIDEBAR)
 # =====================================================================
-@app.get("/sessions/{user_id}")
+@chat_router.get("/sessions/{user_id}")
 async def get_user_sessions(user_id: str):
     try:
         _validate_uuid(user_id)
@@ -271,11 +213,10 @@ async def get_user_sessions(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # =====================================================================
 # 6. ĐỔI TÊN PHIÊN CHAT
 # =====================================================================
-@app.patch("/sessions/{user_id}/{session_id}/title")
+@chat_router.patch("/sessions/{user_id}/{session_id}/title")
 async def rename_session(user_id: str, session_id: str, req: RenameSessionRequest):
     try:
         _validate_uuid(user_id)
@@ -299,3 +240,148 @@ async def rename_session(user_id: str, session_id: str, req: RenameSessionReques
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# =====================================================================
+# 7. CHAT VỚI ẢNH (LANDMARK RECOGNIZER + RAG)
+# =====================================================================
+@chat_router.post("/chat/image")
+async def chat_with_image(
+    file: Optional[UploadFile] = File(None),
+    image_url: Optional[str] = Form(None),
+    user_id: str = Form(...),
+    session_id: Optional[str] = Form(None)
+):
+    try:
+        _validate_uuid(user_id)
+        
+        if file is not None:
+            file_bytes = await file.read()
+            original_filename = file.filename
+            content_type = file.content_type or "image/jpeg"
+        elif image_url:
+            import httpx
+            from urllib.parse import urlparse
+            try:
+                async with httpx.AsyncClient() as client:
+                    resp = await client.get(image_url, timeout=15.0)
+                    if resp.status_code != 200:
+                        raise HTTPException(status_code=400, detail=f"Không thể tải ảnh từ URL: HTTP {resp.status_code}")
+                    file_bytes = resp.content
+                    content_type = resp.headers.get("content-type", "image/jpeg")
+                    
+                    parsed_url = urlparse(image_url)
+                    original_filename = os.path.basename(parsed_url.path) or "image.jpg"
+                    # Loại bỏ phần query parameters nếu có trong filename
+                    if "?" in original_filename:
+                        original_filename = original_filename.split("?")[0]
+            except HTTPException:
+                raise
+            except Exception as download_err:
+                raise HTTPException(status_code=400, detail=f"Lỗi khi tải ảnh từ URL: {str(download_err)}")
+        else:
+            raise HTTPException(status_code=400, detail="Vui lòng cung cấp file ảnh qua tham số 'file' hoặc đường dẫn ảnh qua 'image_url'.")
+            
+        # 1. Upload ảnh lên Supabase Storage (bucket 'images')
+        from supabase import create_client
+        supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+        
+        # Tạo filename unique
+        ext = os.path.splitext(original_filename)[1] or ".jpg"
+        if len(ext) > 10 or not ext.startswith("."):  # Phòng chống các phần đuôi quá dài hoặc không hợp lệ
+            ext = ".jpg"
+        filename = f"{user_id}/{uuid.uuid4()}{ext}"
+        
+        res_upload = supabase.storage.from_("images").upload(
+            file=file_bytes, 
+            path=filename, 
+            file_options={"content-type": content_type}
+        )
+        
+        # Lấy URL public của ảnh
+        image_url = supabase.storage.from_("images").get_public_url(filename)
+        
+        # 2. Gọi model Landmark Recognizer để dự đoán
+        from landmark_recognizer.api.app import recognizer, location_lookup
+        
+        if recognizer is None:
+            raise HTTPException(status_code=503, detail="Landmark Recognizer chưa được khởi tạo. Hãy chạy qua server.py hoặc port 8004.")
+            
+        result = recognizer.predict(io.BytesIO(file_bytes))
+        
+        if result is None or result[0] is None:
+            location_name = "Không xác định"
+        else:
+            matched_img, inliers, elapsed = result
+            label = str(recognizer.labels[recognizer.image_paths.tolist().index(matched_img)] 
+                         if matched_img in recognizer.image_paths else "unknown")
+            location_name = location_lookup.get(label, "Không xác định")
+
+        # 3. Chèn vào bảng imageupload và imageidentifiedlocation
+        upload_data = supabase.table("imageupload").insert({
+            "user_id": user_id,
+            "image_url": image_url,
+            "status": "processed"
+        }).execute()
+        
+        image_id = upload_data.data[0]["image_id"]
+        
+        if location_name != "Không xác định":
+            supabase.table("imageidentifiedlocation").insert({
+                "image_id": image_id,
+                "detected_landmark_name": location_name,
+                "confidence_score": float(inliers) if result else 0.0,
+                "detected_by": "AI_DINOv2"
+            }).execute()
+
+        # 4. Gửi câu hỏi vào Chatbot (RAG)
+        user_message_saved = f"![Image]({image_url})"
+
+        if location_name != "Không xác định":
+            prompt = f"![Image]({image_url})\n\nHãy cho tôi thêm thông tin về địa điểm {location_name} sau."
+        else:
+            prompt = f"![Image]({image_url})\n\n[Hệ thống: Không nhận diện được địa danh từ ảnh này]. Hãy phản hồi người dùng bằng câu xin lỗi rằng bạn không thể dự đoán được địa danh từ ảnh này và yêu cầu họ gửi lại ảnh khác rõ ràng hơn."
+            
+        rag = RAGPipeline(
+            embedding_model=global_embedding_model,
+            llm=global_llm,
+            user_id=str(user_id),
+            session_id=session_id
+        )
+        answer = rag.ask(query=prompt, user_message_override=user_message_saved)
+
+        return {
+            "session_id": rag.memory.session_id,
+            "image_url": image_url,
+            "location_name": location_name,
+            "reply": parse_ai_response_to_json(answer)
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        logger.error(f"Lỗi API /chat/image: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
+    
+    app = FastAPI(title="Chatbot API (Standalone)")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
+    # Khởi tạo model trước khi chạy
+    @app.on_event("startup")
+    async def startup_event():
+        init_chat_models()
+        
+    app.include_router(chat_router)
+    
+    print("🚀 Chạy Chatbot API độc lập trên cổng 8002...")
+    uvicorn.run(app, host="0.0.0.0", port=8002)
