@@ -43,6 +43,7 @@ export const loginLocalBackend = async (username, password) => {
     throw new Error(errorData.message || `Login error: ${response.status}`);
   }
   const json = await response.json();
+  console.log(json);
   return json.data || json;
 };
 

@@ -6,7 +6,7 @@ import { getRecommendationDetail, saveRecommendation } from '../../services/reco
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import SweetModal from '../common/SweetModal';
-
+import WeatherWidget from './WeatherWidget';
 export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSuccess }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
         const data = await getRecommendationDetail(planId, token);
         const planData = data.plan || data;
         setPlan(planData);
-        
+
         // Find first day that has places to make it active by default
         if (planData?.itinerary) {
           const days = Object.keys(planData.itinerary).sort();
@@ -52,7 +52,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
         }
       } catch (err) {
         console.error("Fetch Plan Detail Error:", err);
-        setError(t('itinerary_detail_modal.error_load'));
+        setError("Không thể tải chi tiết lịch trình này. Vui lòng thử lại sau.");
       } finally {
         setLoading(false);
       }
@@ -120,13 +120,13 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
       const token = await getToken();
       await saveRecommendation(plan, token);
       setHasChanges(false);
-      showModal('success', t('itinerary_detail_modal.save_success_title'), t('itinerary_detail_modal.save_success_msg'));
+      showModal('success', 'Đã Cập Nhật', 'Thứ tự các địa điểm trong lịch trình của Sếp đã được lưu lại thành công!');
       if (onSaveSuccess) {
         onSaveSuccess();
       }
     } catch (err) {
       console.error("Save plan changes error:", err);
-      showModal('error', t('itinerary_detail_modal.save_error_title'), t('itinerary_detail_modal.save_error_msg'));
+      showModal('error', 'Lỗi', 'Không thể lưu thay đổi lúc này. Sếp vui lòng thử lại sau nhé.');
     } finally {
       setIsSaving(false);
     }
@@ -144,14 +144,14 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
       {/* Glassmorphic Backdrop overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Modal Card Content */}
-      <div className="relative w-full max-w-3xl bg-surface/90 dark:bg-surface-container-high/90 backdrop-blur-2xl border border-outline-variant/30 rounded-3xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
-        
+      <div className="relative w-full max-w-6xl bg-surface/90 dark:bg-surface-container-high/90 backdrop-blur-2xl border border-outline-variant/30 rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+
         {/* Top Header Section */}
         <div className="p-6 border-b border-outline-variant/20 flex justify-between items-start">
           <div className="space-y-1 pr-6">
@@ -181,8 +181,8 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               )}
             </div>
           </div>
-          
-          <button 
+
+          <button
             onClick={onClose}
             className="p-2.5 rounded-full hover:bg-surface-variant/50 transition-colors text-on-surface-variant hover:text-on-surface"
             aria-label="Close modal"
@@ -218,7 +218,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
             <div className="text-center py-12 space-y-4">
               <span className="material-symbols-outlined text-5xl text-red-500">error</span>
               <p className="text-on-surface-variant font-medium">{error}</p>
-              <button 
+              <button
                 onClick={onClose}
                 className="bg-primary text-white font-bold px-6 py-2.5 rounded-full hover:bg-primary-dim transition-colors"
               >
@@ -236,11 +236,10 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                       <button
                         key={dayKey}
                         onClick={() => setActiveDay(dayKey)}
-                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold transition-all shrink-0 ${
-                          isActive 
-                            ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105' 
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold transition-all shrink-0 ${isActive
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
                             : 'bg-surface-variant/40 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface'
-                        }`}
+                          }`}
                       >
                         <Calendar className="w-4 h-4" />
                         {t('itinerary_detail_modal.day', { day: index + 1 })}
@@ -250,118 +249,189 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                 </div>
               )}
 
-              {/* Interactive Places Timeline with Drag & Drop */}
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="timeline-places">
-                  {(provided) => (
-                    <div 
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className="space-y-0 relative pl-4 md:pl-6 border-l-2 border-primary/10 ml-2 py-2"
-                    >
-                      {dayData.places && dayData.places.length > 0 ? (
-                        dayData.places.map((place, index) => {
-                          const ratingVal = cleanRating(place.rating || place.overall_rating);
-                          const draggableId = place.name || place.location_name || `place-${index}`;
-                          
-                          return (
-                            <Draggable 
-                              key={draggableId} 
-                              draggableId={draggableId} 
-                              index={index}
-                            >
-                              {(dragProvided, dragSnapshot) => (
-                                <div 
-                                  ref={dragProvided.innerRef}
-                                  {...dragProvided.draggableProps}
-                                  {...dragProvided.dragHandleProps}
-                                  className={`relative pb-10 last:pb-2 group transition-all select-none ${
-                                    dragSnapshot.isDragging ? 'scale-102 opacity-90 z-50' : ''
-                                  }`}
+              {/* Layout Container for Timeline & Map (50/50 Split on Desktop) */}
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative">
+
+                {/* Left side: Timeline (50%) */}
+                <div className="w-full lg:w-1/2">
+                  {/* Interactive Places Timeline with Drag & Drop */}
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="timeline-places">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="space-y-0 relative pl-4 md:pl-6 border-l-2 border-primary/10 ml-2 py-2"
+                        >
+                          {dayData.places && dayData.places.length > 0 ? (
+                            dayData.places.map((place, index) => {
+                              const ratingVal = cleanRating(place.rating || place.overall_rating);
+                              const draggableId = place.name || place.location_name || `place-${index}`;
+
+                              return (
+                                <Draggable
+                                  key={draggableId}
+                                  draggableId={draggableId}
+                                  index={index}
                                 >
-                                  {/* Bullet Marker Pin */}
-                                  <div className="absolute -left-[27px] md:-left-[31px] top-1.5 w-6 h-6 rounded-full bg-surface dark:bg-surface-container-high border-2 border-primary flex items-center justify-center shadow-md shadow-primary/10 group-hover:scale-110 transition-transform duration-200">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-primary" />
-                                  </div>
-
-                                  {/* Place Card Content */}
-                                  <div className="bg-surface-container/40 dark:bg-surface-container-high/40 hover:bg-surface-container/60 dark:hover:bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/20 rounded-2xl p-4 md:p-5 ml-4 transition-all duration-300 hover:shadow-md hover:border-primary/20 flex flex-col md:flex-row gap-4 items-start cursor-grab active:cursor-grabbing">
-                                    
-                                    {/* Attraction Image */}
-                                    <div 
-                                      className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container-highest shrink-0 relative shadow-sm border border-outline-variant/10 cursor-pointer group/img"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
-                                        onClose();
-                                        navigate(`/place/${identifier}`);
-                                      }}
+                                  {(dragProvided, dragSnapshot) => (
+                                    <div
+                                      ref={dragProvided.innerRef}
+                                      {...dragProvided.draggableProps}
+                                      {...dragProvided.dragHandleProps}
+                                      className={`relative pb-10 last:pb-2 group transition-all select-none ${dragSnapshot.isDragging ? 'scale-102 opacity-90 z-50' : ''
+                                        }`}
                                     >
-                                      {place.image_url || place.image || place.images?.[0] ? (
-                                        <img 
-                                          src={place.image_url || place.image || place.images?.[0]} 
-                                          alt={place.name || place.location_name} 
-                                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
-                                          draggable="false"
-                                        />
-                                      ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant/40 bg-surface-container transition-transform duration-500 group-hover/img:scale-110">
-                                          <ImageIcon className="w-8 h-8 stroke-[1.2]" />
-                                          <span className="text-[10px] mt-1 font-body">No Photo</span>
-                                        </div>
-                                      )}
+                                      {/* Bullet Marker Pin */}
+                                      <div className="absolute -left-[27px] md:-left-[31px] top-1.5 w-6 h-6 rounded-full bg-surface dark:bg-surface-container-high border-2 border-primary flex items-center justify-center shadow-md shadow-primary/10 group-hover:scale-110 transition-transform duration-200">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+                                      </div>
 
-                                      {/* Rating Badge Overlay */}
-                                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-yellow-400 text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                                        <Star className="w-3 h-3 fill-yellow-400 stroke-yellow-400" />
-                                        {ratingVal}
+                                      {/* Place Card Content */}
+                                      <div className="bg-surface-container/40 dark:bg-surface-container-high/40 hover:bg-surface-container/60 dark:hover:bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/20 rounded-2xl p-4 md:p-5 ml-4 transition-all duration-300 hover:shadow-md hover:border-primary/20 flex flex-col md:flex-row gap-4 items-start cursor-grab active:cursor-grabbing">
+
+                                        {/* Attraction Image */}
+                                        <div
+                                          className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container-highest shrink-0 relative shadow-sm border border-outline-variant/10 cursor-pointer group/img"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
+                                            onClose();
+                                            navigate(`/place/${identifier}`);
+                                          }}
+                                        >
+                                          {place.image_url || place.image || place.images?.[0] ? (
+                                            <img
+                                              src={place.image_url || place.image || place.images?.[0]}
+                                              alt={place.name || place.location_name}
+                                              className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
+                                              draggable="false"
+                                            />
+                                          ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant/40 bg-surface-container transition-transform duration-500 group-hover/img:scale-110">
+                                              <ImageIcon className="w-8 h-8 stroke-[1.2]" />
+                                              <span className="text-[10px] mt-1 font-body">No Photo</span>
+                                            </div>
+                                          )}
+
+                                          {/* Rating Badge Overlay */}
+                                          <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-yellow-400 text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                                            <Star className="w-3 h-3 fill-yellow-400 stroke-yellow-400" />
+                                            {ratingVal}
+                                          </div>
+                                        </div>
+
+                                        {/* Attraction Description Text */}
+                                        <div className="flex-1 space-y-2">
+                                          <h4
+                                            className="text-lg font-bold text-on-surface font-display group-hover:text-primary transition-colors cursor-pointer hover:underline inline-flex items-center gap-1"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
+                                              onClose();
+                                              navigate(`/place/${identifier}`);
+                                            }}
+                                          >
+                                            {place.name || place.location_name}
+                                            <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                          </h4>
+
+                                          {place.description && (
+                                            <p className="text-sm text-on-surface-variant font-body leading-relaxed select-none line-clamp-3">
+                                              {place.description}
+                                            </p>
+                                          )}
+
+                                          {place.recommended_time && (
+                                            <div className="flex items-center gap-1.5 text-xs text-primary font-semibold bg-primary/5 py-1 px-2.5 rounded-md inline-flex border border-primary/10">
+                                              <span className="material-symbols-outlined text-[14px]">schedule</span>
+                                              {t('itinerary_detail_modal.recommended_time', { time: place.recommended_time })}
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
-
-                                    {/* Attraction Description Text */}
-                                    <div className="flex-1 space-y-2">
-                                      <h4 
-                                        className="text-lg font-bold text-on-surface font-display group-hover:text-primary transition-colors cursor-pointer hover:underline inline-flex items-center gap-1"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          const identifier = place.location_id || (place.id && !String(place.id).includes('place') ? place.id : '') || encodeURIComponent(place.name || place.location_name);
-                                          onClose();
-                                          navigate(`/place/${identifier}`);
-                                        }}
-                                      >
-                                        {place.name || place.location_name}
-                                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                      </h4>
-                                      
-                                      {place.description && (
-                                        <p className="text-sm text-on-surface-variant font-body leading-relaxed select-none">
-                                          {place.description}
-                                        </p>
-                                      )}
-
-                                      {place.recommended_time && (
-                                        <div className="flex items-center gap-1.5 text-xs text-primary font-semibold bg-primary/5 py-1 px-2.5 rounded-md inline-flex border border-primary/10">
-                                          <span className="material-symbols-outlined text-[14px]">schedule</span>
-                                          {t('itinerary_detail_modal.recommended_time', { time: place.recommended_time })}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        })
-                      ) : (
-                        <div className="text-center py-8 text-on-surface-variant font-body">
-                          {t('itinerary_detail_modal.no_places')}
+                                  )}
+                                </Draggable>
+                              );
+                            })
+                          ) : (
+                            <div className="text-center py-8 text-on-surface-variant font-body">
+                              {t('itinerary_detail_modal.no_places')}
+                            </div>
+                          )}
+                          {provided.placeholder}
                         </div>
                       )}
-                      {provided.placeholder}
+                    </Droppable>
+                  </DragDropContext>
+                </div>
+
+                {/* Right side: Map Preview Iframe & Weather (50% and sticky) */}
+                <div className="w-full lg:w-1/2 lg:sticky lg:top-0">
+                  <WeatherWidget province={province} />
+
+                  {dayData.places && dayData.places.length > 0 && (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
+                      <div className="flex items-center gap-2 mb-3 text-on-surface">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        <h3 className="font-display font-bold text-lg">Bản đồ lộ trình trong ngày</h3>
+                      </div>
+                      <div className="w-full h-[300px] lg:h-[500px] rounded-2xl overflow-hidden border border-outline-variant/30 shadow-lg relative group bg-surface-container">
+                        {/* Google Maps Iframe (Text-based search trick) */}
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={(() => {
+                            const locString = (place) => encodeURIComponent(`${place.name || place.location_name}, ${province}`);
+                            if (dayData.places.length === 1) {
+                              return `https://maps.google.com/maps?q=${locString(dayData.places[0])}&output=embed`;
+                            }
+                            const saddr = locString(dayData.places[0]);
+                            const daddrParts = [];
+                            for (let i = 1; i < dayData.places.length; i++) {
+                              daddrParts.push(locString(dayData.places[i]));
+                            }
+                            const daddr = daddrParts.join('+to:');
+                             
+                             // Ánh xạ phương tiện di chuyển sang tham số dirflg của Google Maps
+                             // d: driving, w: walking, r: transit (công cộng), b: bicycling (xe đạp)
+                             let dirflg = 'd';
+                             const formatMode = String(transMode || '').toLowerCase();
+                             if (formatMode.includes('walk') || formatMode.includes('đi bộ') || formatMode.includes('foot')) {
+                               dirflg = 'w';
+                             } else if (formatMode.includes('transit') || formatMode.includes('công cộng') || formatMode.includes('bus') || formatMode.includes('train')) {
+                               dirflg = 'r';
+                             } else if (formatMode.includes('bike') && (formatMode.includes('đạp') || formatMode.includes('bicycle'))) {
+                               // Phân biệt xe máy (motorbike/xe máy) là lái xe (d) với xe đạp (bicycle/xe đạp) là (b)
+                               dirflg = 'b';
+                             }
+                             
+                             return `https://maps.google.com/maps?saddr=${saddr}&daddr=${daddr}&dirflg=${dirflg}&output=embed`;
+                          })()}
+                          style={{ border: 0 }}
+                          allowFullScreen=""
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title={`Route Map for ${activeDay}`}
+                        ></iframe>
+
+                        {/* Overlay warning/info */}
+                        <div className="absolute top-3 left-3 bg-surface/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant shadow-sm border border-outline-variant/20 flex items-center gap-1.5">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                          </span>
+                          Bản đồ tương tác
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-on-surface-variant/60 mt-2 italic text-center px-4">
+                        * Lộ trình được vẽ tự động dựa trên tên địa điểm. Sếp có thể kéo thả địa điểm ở bên trái để thay đổi vị trí.
+                      </p>
                     </div>
                   )}
-                </Droppable>
-              </DragDropContext>
+                </div>
+              </div>
             </>
           )}
         </div>
@@ -369,7 +439,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
         {/* Modal Bottom Footer Actions */}
         <div className="p-4 border-t border-outline-variant/10 bg-surface-container/20 flex justify-end gap-3 rounded-b-3xl">
           {hasChanges ? (
-            <button 
+            <button
               onClick={handleSave}
               disabled={isSaving}
               className="px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-600/60 text-white font-bold transition-all text-sm font-body flex items-center gap-1.5 shadow-md shadow-emerald-600/20 hover:-translate-y-0.5"
@@ -387,7 +457,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               )}
             </button>
           ) : (
-            <button 
+            <button
               onClick={() => {
                 onClose();
                 navigate(`/recommendations?planId=${planId}`);
@@ -398,7 +468,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               {t('itinerary_detail_modal.edit_itinerary')}
             </button>
           )}
-          <button 
+          <button
             onClick={onClose}
             className="px-6 py-2.5 rounded-full border border-outline-variant/40 hover:bg-surface-variant/50 text-on-surface-variant font-bold transition-all text-sm font-body"
           >

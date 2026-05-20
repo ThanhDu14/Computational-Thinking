@@ -53,11 +53,31 @@ export const ChatProvider = ({ children }) => {
       setCurrentSessionId(sessionId);
       
       if (data.messages && data.messages.length > 0) {
-        const formattedMsgs = data.messages.map(m => ({
-          role: m.role === 'assistant' ? 'bot' : 'user',
-          text: m.content ?? '',
-          timestamp: "" 
-        }));
+        const formattedMsgs = data.messages.map(m => {
+          let text = m.content ?? '';
+          let imageUrl = null;
+
+          // Parse markdown image ![alt](url)
+          const imgMatch = text.match(/!\[(.*?)\]\((https?:\/\/.*?)\)/);
+          if (imgMatch) {
+            imageUrl = imgMatch[2];
+            text = text.replace(imgMatch[0], '').trim();
+          } else {
+            // Parse raw Supabase / Cloudinary image URLs or standard image extensions
+            const rawUrlMatch = text.match(/(https?:\/\/[^\s)]+(?:supabase\.co|cloudinary\.com|storage\/v1\/object\/public\/images\/)[^\s)]+|https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp|gif|bmp|svg)(?:\?[^\s)]*)?)/i);
+            if (rawUrlMatch) {
+              imageUrl = rawUrlMatch[1];
+              text = text.replace(imageUrl, '').trim();
+            }
+          }
+
+          return {
+            role: m.role === 'assistant' ? 'bot' : 'user',
+            text: text,
+            imageUrl: imageUrl,
+            timestamp: "" 
+          };
+        });
         setMessages(formattedMsgs);
       } else {
         setMessages(getDefaultMessages());

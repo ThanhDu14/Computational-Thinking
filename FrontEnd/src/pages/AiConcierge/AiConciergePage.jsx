@@ -271,7 +271,7 @@ export default function AiConciergePage() {
 
             {/* Image Preview Area */}
             {previewUrl && (
-              <div className="absolute bottom-20 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="absolute bottom-full mb-3 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   <button 

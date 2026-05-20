@@ -27,6 +27,7 @@ const handleResponse = async (res, defaultErrorMsg) => {
     throw new Error(errorData.error || JSON.stringify(errorData.detail) || `${defaultErrorMsg} (status ${res.status})`);
   }
   const data = await res.json();
+  console.log(data);
   if (data.error) {
     throw new Error(data.error);
   }
@@ -145,7 +146,7 @@ export const sendChatImage = async (token, file, session_id) => {
     },
     body: formData
   });
-  
+
   const uploadData = await handleResponse(uploadRes, "Image upload failed");
   const imageUrl = uploadData?.data?.image_url;
 
@@ -164,9 +165,9 @@ export const sendChatImage = async (token, file, session_id) => {
     headers: getHeaders(token),
     body: JSON.stringify(payload)
   });
-  
+
   const chatData = await handleResponse(chatRes, "Chat image request failed");
-  
+
   // Trả về kèm image_url để hiển thị trên UI (nếu cần)
   return { ...chatData, image_url: imageUrl };
 };
