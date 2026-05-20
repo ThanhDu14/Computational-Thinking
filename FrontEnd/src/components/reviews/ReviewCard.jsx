@@ -9,26 +9,27 @@ import { Star, Trash2, Edit3, X, ChevronLeft, ChevronRight, UserCircle, ImageIco
  *   onEdit     – callback(review) khi nhấn nút sửa
  *   onDelete   – callback(reviewId) khi nhấn nút xóa
  */
-export default function ReviewCard({ review, currentUserId, onEdit, onDelete }) {
+export default function ReviewCard({ review, currentUserId, currentUser, onEdit, onDelete }) {
     const [lightboxIdx, setLightboxIdx] = useState(null);
-    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
     const isOwner = currentUserId && review.user_id === currentUserId;
     const images = review.images || [];
     const rating = Number(review.rating) || 0;
 
-    const displayName = review.user_name || review.reviewer_name || `User #${String(review.user_id).slice(-4)}`;
+    let displayName = review.user_name || review.reviewer_name;
+    if (isOwner && currentUser) {
+        displayName = currentUser.name || currentUser.display_name || currentUser.username || displayName;
+    }
+    if (!displayName) {
+        displayName = `User #${String(review.user_id).slice(-4)}`;
+    }
+
     const avatarLetter = displayName.charAt(0).toUpperCase();
 
     const formattedDate = review.created_at
         ? new Date(review.created_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
         : '';
 
-    const handleDelete = () => {
-        if (!deleteConfirm) { setDeleteConfirm(true); return; }
-        onDelete && onDelete(review.review_id);
-        setDeleteConfirm(false);
-    };
 
     return (
         <>
@@ -96,30 +97,18 @@ export default function ReviewCard({ review, currentUserId, onEdit, onDelete }) 
                 {isOwner && (
                     <div className="flex items-center gap-2 pt-1 border-t border-outline-variant/10">
                         <button
-                            onClick={() => { setDeleteConfirm(false); onEdit && onEdit(review); }}
+                            onClick={() => { onEdit && onEdit(review); }}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-primary bg-primary/8 hover:bg-primary/15 transition-colors"
                         >
                             <Edit3 className="w-3.5 h-3.5" /> Sửa
                         </button>
                         <button
-                            onClick={handleDelete}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
-                                deleteConfirm
-                                    ? 'text-white bg-red-500 hover:bg-red-600'
-                                    : 'text-red-500 bg-red-500/8 hover:bg-red-500/15'
-                            }`}
+                            onClick={() => onDelete && onDelete(review.review_id)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors text-red-500 bg-red-500/8 hover:bg-red-500/15"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
-                            {deleteConfirm ? 'Xác nhận xóa?' : 'Xóa'}
+                            Xóa
                         </button>
-                        {deleteConfirm && (
-                            <button
-                                onClick={() => setDeleteConfirm(false)}
-                                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant bg-surface-container hover:bg-surface-container-high transition-colors"
-                            >
-                                <X className="w-3.5 h-3.5" /> Huỷ
-                            </button>
-                        )}
                     </div>
                 )}
             </div>

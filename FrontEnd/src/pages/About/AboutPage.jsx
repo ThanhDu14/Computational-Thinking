@@ -9,6 +9,8 @@ import Dat from '../../assets/images/Dat.png'
 import Hien from '../../assets/images/Hien.png'
 import Hung from '../../assets/images/Hung.png'
 import Nguyen from '../../assets/images/Nguyen.png'
+import ChibiDevTeam from '../../assets/images/chibi_dev_team.jpg';
+
 export default function AboutPage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -49,22 +51,22 @@ export default function AboutPage() {
                 <section className="max-w-7xl mx-auto px-6 md:px-8 -mt-24 relative z-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-primary text-[40px] mb-4">travel_explore</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">1M+</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">8</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.trips')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-secondary text-[40px] mb-4">public</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">50+</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">1</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.countries')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-tertiary-dim text-[40px] mb-4">psychology</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">99.9%</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">15</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.accuracy')}</div>
                     </div>
                     <div className="glass-panel-about shimmer-border-about rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-lg transition-transform hover:-translate-y-2">
                         <span className="material-symbols-outlined text-primary text-[40px] mb-4">star</span>
-                        <div className="text-4xl font-display font-extrabold text-on-background">4.9/5</div>
+                        <div className="text-4xl font-display font-extrabold text-on-background">100%</div>
                         <div className="text-sm font-body font-bold text-on-surface-variant uppercase tracking-widest mt-2">{t('about.stats.rating')}</div>
                     </div>
                 </section>
@@ -85,7 +87,7 @@ export default function AboutPage() {
                     <div className="relative group">
                         <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-secondary/30 rounded-3xl blur-3xl group-hover:blur-2xl transition-all duration-700 opacity-70"></div>
                         <div className="relative rounded-3xl overflow-hidden shadow-2xl shimmer-border-about">
-                            <img alt="Futuristic AI interface" className="w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCblTnE6tu2FgRKs9jk1C0VPw9eOMBhQiGjLCyI0v_Tp2so5CN1TqzNqxzSQ_Zqj02x8UFj5zNTzCExiC4M_gcVo7jrVjFXte4I10aF-IZIlL2y7Id2H8Q-vavhhVEhLGJg-lg02XxRj100zKUsxciEtq0mVO5y2NIemYVtMp9N3VFp7IAWsE4twyBQapCj5Z3TFDUr7ZfGpIAhAbtqfiSBPrIX64nxSi8hpxBE3voEpUjBFTyoKn_q-1Xh53l3rYNKf1thDPQaEwA" />
+                            <img alt="Our developer team working together" className="w-full aspect-square object-cover" src={ChibiDevTeam} />
                         </div>
                     </div>
                 </section>
@@ -217,18 +219,18 @@ export default function AboutPage() {
 
                 {/* CTA Section */}
                 <section className="py-24 max-w-7xl mx-auto px-6 md:px-8">
-                    <div className="relative rounded-[3rem] bg-inverse-surface p-12 md:p-20 overflow-hidden shadow-2xl">
-                        <div className="absolute top-0 right-0 w-1/2 h-full opacity-30 pointer-events-none mix-blend-screen">
-                            <img alt="Global connectivity" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO4fcxo80SRIu7bG0L4-oMmA4co-69CInj_BrvZoAvfbO5UbkJA_-Drey2q8ag3WjBlm3RrtaUMlhrjTcpghhCLgJxTLzrUJTFFqQuvceONbReAhM-GP2XCjYXrkORYm48ubK0_vtlOYs8kkEHCwsIgbiKHZghUJmV4bj6t_sv4vcgfyEdvBpnY7HzGn4vSr55DkEaWtppurofVPoxURrW1yc-5J3UhEPSkOaCUPtpMHEh-_PPgH1l_f6pRgCpcs5shD61vypzfZI" />
+                    <div className="relative rounded-[3rem] bg-surface-container p-12 md:p-20 overflow-hidden shadow-2xl border border-outline-variant/30 dark:bg-slate-950 dark:border-white/5">
+                        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full opacity-80 dark:opacity-40 pointer-events-none mix-blend-screen">
+                            <img alt="Global connectivity" className="w-full h-full object-cover md:object-right" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO4fcxo80SRIu7bG0L4-oMmA4co-69CInj_BrvZoAvfbO5UbkJA_-Drey2q8ag3WjBlm3RrtaUMlhrjTcpghhCLgJxTLzrUJTFFqQuvceONbReAhM-GP2XCjYXrkORYm48ubK0_vtlOYs8kkEHCwsIgbiKHZghUJmV4bj6t_sv4vcgfyEdvBpnY7HzGn4vSr55DkEaWtppurofVPoxURrW1yc-5J3UhEPSkOaCUPtpMHEh-_PPgH1l_f6pRgCpcs5shD61vypzfZI" />
                         </div>
                         <div className="relative z-10 max-w-2xl">
-                            <h2 className="font-display text-4xl md:text-5xl font-bold text-surface mb-6 leading-tight">{t('about.cta.heading')}</h2>
-                            <p className="text-surface-dim text-lg mb-10 leading-relaxed font-body">{t('about.cta.subtitle')}</p>
+                            <h2 className="font-display text-4xl md:text-5xl font-extrabold text-on-surface dark:text-white mb-6 leading-tight">{t('about.cta.heading')}</h2>
+                            <p className="text-on-surface-variant dark:text-slate-300 text-lg mb-10 leading-relaxed font-body">{t('about.cta.subtitle')}</p>
                             <div className="flex flex-col sm:flex-row gap-4 font-body">
                                 <button onClick={() => navigate('/search')} className="bg-gradient-to-br from-primary to-secondary text-on-primary px-10 py-4 rounded-full font-bold text-lg shadow-2xl hover:scale-105 active:scale-95 transition-all text-center">
                                     {t('about.cta.start')}
                                 </button>
-                                <button onClick={() => navigate('/contact')} className="glass-panel-about text-on-surface px-10 py-4 rounded-full font-bold text-lg shimmer-border-about hover:opacity-80 transition-all text-center">
+                                <button onClick={() => navigate('/contact')} className="border border-outline-variant text-on-surface hover:bg-on-surface/5 dark:border-white/20 dark:text-white dark:hover:bg-white/5 px-10 py-4 rounded-full font-bold text-lg transition-all text-center">
                                     {t('about.cta.contact')}
                                 </button>
                             </div>

@@ -13,7 +13,9 @@
     "register": "Đăng ký",
     "get_recommendations": "Nhận gợi ý",
     "wishlist": "Yêu thích",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "my_itineraries": "Lịch trình của tôi",
+    "logout": "Đăng xuất"
   },
   "home": {
     "hero": {
@@ -82,27 +84,27 @@
     }
   },
   "about": {
-    "hero_title_1": "Kiến tạo",
-    "hero_title_2": "Tương lai Du lịch",
-    "hero_subtitle": "Chúng tôi không chỉ là nền tảng đặt vé. Chúng tôi là cánh cổng kỹ thuật số đưa bạn đến với những chuyến thám hiểm sang trọng bậc nhất, được vận hành bởi AI tiên tiến nhất hành tinh.",
+    "hero_title_1": "Đồ án môn học",
+    "hero_title_2": "Tư Duy Tính Toán",
+    "hero_subtitle": "SmartTravel là một sản phẩm thực hành do nhóm sinh viên phát triển. Chúng tôi xây dựng nền tảng này nhằm ứng dụng công nghệ AI và các kiến thức lập trình để giải quyết bài toán thực tế trong lĩnh vực du lịch.",
     "stats": {
-      "trips": "Lịch Trình Tạo Ra",
-      "countries": "Quốc Gia Đã Đi",
-      "accuracy": "Độ Chính Xác Hàng Đầu",
-      "rating": "Điểm Đánh Giá"
+      "trips": "Thành viên",
+      "countries": "Môn học",
+      "accuracy": "Tuần phát triển",
+      "rating": "Nhiệt huyết"
     },
     "mission": {
-      "title": "Sứ mệnh của chúng tôi",
-      "heading_1": "Cá nhân hóa ở mức",
-      "heading_2": "Tốc độ Tư duy.",
-      "p1": "Trong kỷ nguyên của vô số hạn mục, sự xa xỉ thực sự là tính phù hợp. SmartTravel được thành lập với niềm tin rằng du lịch không nên là việc lướt qua các danh sách chung chung—mà là khám phá những chặng đường tạo ra sự cộng hưởng với tâm hồn bạn.",
-      "p2": "Công cụ AI độc quyền của chúng tôi xử lý hàng triệu điểm dữ liệu, từ thời tiết theo thời gian thực đến các lễ hội văn hóa địa phương, đảm bảo mọi lịch trình chúng tôi tạo ra đều độc nhất như dấu vân tay. Chúng tôi xóa nhòa khoảng cách giữa trực giác con người và sự chuẩn xác của máy móc.",
-      "p3": "Cho dù bạn tìm kiếm một nơi tĩnh tâm trên dãy Andes hay một tour ẩm thực tràn đầy năng lượng qua Tokyo, Trợ lý Ảo của chúng tôi thấu hiểu mọi sắc thái mong muốn của bạn trước cả khi bạn nói ra."
+      "title": "Mục tiêu đồ án",
+      "heading_1": "Học hỏi &",
+      "heading_2": "Ứng dụng thực tế.",
+      "p1": "Trong quá trình học tập, chúng tôi nhận ra rằng kiến thức lý thuyết sẽ có giá trị nhất khi được áp dụng vào thực tiễn. Đồ án này là nỗ lực của cả nhóm nhằm kết nối lý thuyết trên giảng đường với công nghệ hiện đại.",
+      "p2": "Sản phẩm tích hợp các tính năng thông minh như AI gợi ý lịch trình, quản lý người dùng và đánh giá địa điểm. Hệ thống được phát triển toàn diện từ Front-End đến Back-End với tiêu chuẩn cao, chú trọng vào tính tối ưu và trải nghiệm người dùng.",
+      "p3": "Dù vẫn còn nhiều điểm cần hoàn thiện, SmartTravel chính là cột mốc đáng nhớ và là bước đệm để chúng tôi tiến xa hơn trên con đường trở thành những kỹ sư phần mềm chuyên nghiệp."
     },
     "team": {
       "title": "Đội Ngũ",
-      "heading": "Những Kiến trúc sư Hành trình",
-      "subtitle": "Gặp gỡ những người nhìn xa trông rộng kết hợp kỹ thuật hàng không vũ trụ với ngành dịch vụ nhà hàng khách sạn để định nghĩa lại sự di chuyển của bạn.",
+      "heading": "Những Gương Mặt Phát Triển",
+      "subtitle": "Gặp gỡ 8 thành viên của nhóm đã cùng nhau làm việc chăm chỉ ngày đêm để hoàn thiện sản phẩm này.",
       "members": {
         "du": {
           "role": "Lập Trình Viên Front-End",
@@ -130,7 +132,7 @@
         },
         "hieu": {
           "role": "Quản Lý Sản Phẩm",
-          "desc": "Nhạc trưởng của team, chuyên cân bằng giữa những ý tưởng bay bổng của dev và yêu cầu thực tế của người dùng."
+          "desc": "Nhạc trưởng của team, chuyên cân bằng giữa những ý tưởng bay bổng của dev và yêu cầu thực tế của đồ án."
         },
         "nguyen": {
           "role": "Đảm Bảo Chất Lượng",
@@ -139,10 +141,10 @@
       }
     },
     "cta": {
-      "heading": "Sẵn sàng vượt qua sự tầm thường?",
-      "subtitle": "Trợ lý ảo của chúng tôi luôn túc trực để xây dựng hành trình không gian bứt phá tiếp theo cho bạn. Hãy liên hệ với đội ngũ hỗ trợ toàn cầu hoặc bắt đầu hành trình khám phá ngay hôm nay.",
-      "start": "Bắt đầu Lên lịch",
-      "contact": "Liên hệ Chúng tôi"
+      "heading": "Khám phá kết quả của chúng tôi",
+      "subtitle": "Dành vài phút trải nghiệm thử ứng dụng để xem những gì chúng tôi đã xây dựng nhé. Rất mong nhận được những góp ý từ các bạn!",
+      "start": "Dùng Thử Ứng Dụng",
+      "contact": "Gửi Phản Hồi"
     }
   },
   "destinations": {
@@ -211,21 +213,22 @@
     "step1": "Bước 1 của 3",
     "step2": "Bước 2 của 3",
     "step3": "Bước 3 của 3",
-    "vibe_selection": "Chọn Phong Cách",
-    "companion_selection": "Bạn Đồng Hành",
-    "budget_selection": "Dự Trù Ngân Sách",
-    "title": "Phong cách của bạn là gì?",
-    "subtitle": "Hãy cho chúng tôi biết bạn muốn cảm nhận điều gì trong chuyến đi này. Chúng tôi sẽ gợi ý những điểm đến phù hợp nhất.",
-    "title_step2": "Bạn đi du lịch cùng ai?",
-    "subtitle_step2": "Một chuyến hành trình tuyệt vời phụ thuộc rất nhiều vào người đồng hành.",
-    "title_step3": "Ngân sách bạn vạch ra là bao nhiêu?",
-    "subtitle_step3": "Chúng tôi sẽ tìm kiếm những trải nghiệm vừa vặn với ví tiền của bạn nhất.",
+    "vibe_selection": "Điểm đến & Sở thích",
+    "place_style_selection": "Phong cách địa điểm",
+    "logistics_selection": "Di chuyển & Hậu cần",
+    "title": "Bạn muốn đến đâu và trải nghiệm gì?",
+    "subtitle": "Chọn tỉnh thành và những hoạt động bạn yêu thích nhất.",
+    "title_step2": "Bạn ưu tiên những địa điểm như thế nào?",
+    "subtitle_step2": "Mỗi người có một gu khám phá riêng, hãy cho chúng tôi biết gu của bạn.",
+    "title_step3": "Chi tiết chuyến đi của bạn?",
+    "subtitle_step3": "Cung cấp thêm thông tin về điểm xuất phát và phương tiện di chuyển.",
+    "province_ph": "Nhập tỉnh/thành phố (VD: Khánh Hòa, Hồ Chí Minh...)",
     "chilling": {
       "title": "Thư giãn",
       "desc": "Nhịp sống chậm, hoàng hôn và chân trời tĩnh lặng."
     },
     "adventure": {
-      "title": "Phiêu lưu",
+      "title": "Khám phá",
       "desc": "Tìm kiếm cảm giác mạnh và những lối mòn hoang sơ."
     },
     "culture": {
@@ -236,40 +239,48 @@
       "title": "Ẩm thực",
       "desc": "Hành trình vị giác và những hương vị tiềm ẩn."
     },
-    "solo": {
-      "title": "Cá nhân",
-      "desc": "Một mình một chân trời, tự do khám phá."
+    "must_go": {
+      "title": "Địa điểm biểu tượng",
+      "desc": "Những nơi nổi tiếng nhất, 'phải đến' của tỉnh."
     },
-    "couple": {
-      "title": "Cặp đôi",
-      "desc": "Trải nghiệm lãng mạn cho hai người."
+    "high_quality": {
+      "title": "Chất lượng cao",
+      "desc": "Những nơi có đánh giá (rating) cực tốt và ổn định."
     },
-    "family": {
-      "title": "Gia đình",
-      "desc": "An toàn, vui vẻ và gắn kết mọi thế hệ."
+    "hidden_gem": {
+      "title": "Viên ngọc ẩn",
+      "desc": "Ít người biết nhưng có chất lượng trải nghiệm tuyệt vời."
     },
-    "friends": {
-      "title": "Bạn bè",
-      "desc": "Khuấy đảo mọi giới hạn với hội nhóm."
-    },
-    "budget_eco": {
-      "title": "Tiết kiệm",
-      "desc": "Tối đa trải nghiệm, tối thiểu chi phí."
-    },
-    "budget_mid": {
-      "title": "Tầm trung",
-      "desc": "Tiện nghi tốt, giữ cân bằng chi tiêu."
-    },
-    "budget_lux": {
-      "title": "Sang trọng",
-      "desc": "Nghỉ dưỡng đẳng cấp cùng dịch vụ 5 sao."
-    },
+    "starting_point_label": "Điểm xuất phát trong tỉnh:",
+    "center": "Trung tâm",
+    "suburb": "Ngoại ô",
+    "transport_label": "Phương tiện di chuyển:",
+    "motorbike": "Xe máy",
+    "car": "Ô tô",
+    "public_transport": "Phương tiện công cộng",
     "btn_next": "Tiếp tục",
     "btn_generate": "Tạo lịch trình hoàn hảo",
     "btn_skip": "Bỏ qua lần này",
     "btn_view_itinerary": "Xem Lịch Trình Chi Tiết",
     "btn_restart": "Làm Lại Từ Đầu",
     "loading_ai": "AI đang phân tích và thiết kế chuyến đi hoàn hảo cho bạn...",
+    "result_title": "Lịch trình đề xuất",
+    "result_title_days": "{{days}} Ngày {{nights}} Đêm",
+    "result_desc": "Chúng tôi đã thiết kế một hành trình hoàn hảo dựa trên sở thích của Sếp. Sếp có thể tự do ",
+    "result_desc_drag": "KÉO & THẢ",
+    "result_desc_after": " để tinh chỉnh các điểm đến nhé!",
+    "btn_recreate": "Tạo lại lịch trình",
+    "btn_saving": "ĐANG LƯU HÀNH TRÌNH...",
+    "btn_save": "LƯU CHUYẾN ĐI {{days}}N{{nights}}Đ",
+    "day_title": "Ngày {{index}}",
+    "save_warning_title": "Thông báo",
+    "save_warning_msg": "Không có lịch trình nào để lưu. Vui lòng tạo lịch trình trước!",
+    "save_success_title": "Thành Công!",
+    "save_success_msg": "Lưu lịch trình thành công vào My Itinerary. Sếp có thể xem lại trong mục Lịch Trình Của Tôi nhé!",
+    "save_error_title": "Thất Bại",
+    "save_error_msg": "Không thể lưu lịch trình. Vui lòng đăng nhập và thử lại.",
+    "load_error_title": "Lỗi Tải Dữ Liệu",
+    "load_error_msg": "Không thể tải lịch trình để chỉnh sửa. Vui lòng thử lại sau.",
     "mock_result": {
       "title": "Chuyến Đi Dành Riêng Cho Bạn",
       "dest_name": "Phố cổ Hội An",
@@ -331,7 +342,20 @@
     "input_placeholder": "Hỏi AI Concierge bất cứ điều gì...",
     "chip_creative": "Chế độ Sáng tạo",
     "chip_summary": "Tóm tắt văn bản",
-    "chip_image": "Tạo hình ảnh"
+    "chip_image": "Tạo hình ảnh",
+    "sent_image": "Đã gửi một hình ảnh",
+    "new_chat": "Đoạn chat mới",
+    "recent": "Gần đây",
+    "new_conversation": "Cuộc hội thoại mới",
+    "no_conversations": "Chưa có cuộc hội thoại nào",
+    "delete_title": "Xóa cuộc hội thoại",
+    "delete_message": "Bạn có chắc chắn muốn xóa cuộc hội thoại này? Lịch sử chat sẽ bị xóa vĩnh viễn.",
+    "delete_confirm": "Xóa",
+    "delete_cancel": "Hủy",
+    "sending_image": "Đang gửi hình ảnh (Không thể nhập văn bản)...",
+    "ready_to_send": "Sẵn sàng gửi",
+    "clear_image": "Xóa ảnh",
+    "upload_image": "Tải ảnh lên"
   },
   "footer": {
     "desc": "Trải nghiệm thế giới với \"Kẻ Khám Phá Thanh Khiết\". Những cảnh quan bao la, đầy cảm xúc đang chờ bạn khám phá.",
@@ -404,5 +428,64 @@
       "pw_error": "Đổi mật khẩu thất bại."
     },
     "save_changes": "Lưu Thay Đổi"
+  },
+  "my_itineraries_page": {
+    "title_1": "Lịch Trình",
+    "title_2": "Của Tôi",
+    "subtitle": "Quản lý và xem lại hành trình du lịch thông minh do Quản gia AI thiết kế riêng cho Sếp",
+    "total": "Tổng số",
+    "unit": "Lịch trình",
+    "updating": "Đang cập nhật...",
+    "loading": "Đang nạp dữ liệu từ kho lưu trữ...",
+    "no_itineraries": "Chưa có lịch trình nào!",
+    "no_itineraries_desc": "Kế hoạch du lịch của Sếp đang trống trơn. Hãy để Quản gia AI đồng hành và thiết kế cho Sếp những hành trình đáng nhớ nhất.",
+    "create_now": "Tạo lịch trình ngay",
+    "days_nights": "3 Ngày 2 Đêm",
+    "days": "{{count}} Ngày",
+    "time": "Thời gian",
+    "locations": "Địa điểm",
+    "stops": "{{count}} Điểm dừng",
+    "view_detail": "XEM CHI TIẾT LỊCH TRÌNH",
+    "transport": {
+      "motorbike": "Xe máy",
+      "car": "Ô tô",
+      "walk": "Đi bộ"
+    },
+    "delete_confirm": {
+      "title": "Xác Nhận Xóa",
+      "message": "Bạn có chắc chắn muốn xóa lịch trình đi {{province}} không? Hành động này không thể hoàn tác.",
+      "error_title": "Lỗi",
+      "error_message": "Không thể xóa lịch trình lúc này. Vui lòng thử lại sau.",
+      "confirm_btn": "Xác nhận xóa",
+      "agree_btn": "Đồng ý"
+    }
+  },
+  "itinerary_detail_modal": {
+    "error_load": "Không thể tải chi tiết lịch trình này. Vui lòng thử lại sau.",
+    "transport": {
+      "motorbike": "Xe máy",
+      "car": "Ô tô / Taxi",
+      "walk": "Đi bộ / Công cộng"
+    },
+    "save_success_title": "Đã Cập Nhật",
+    "save_success_msg": "Thứ tự các địa điểm trong lịch trình của Sếp đã được lưu lại thành công!",
+    "save_error_title": "Lỗi",
+    "save_error_msg": "Không thể lưu thay đổi lúc này. Sếp vui lòng thử lại sau nhé.",
+    "ai_suggestion": "Gợi ý từ AI Concierge",
+    "title": "Lịch trình {{province}}",
+    "transport_by": "Di chuyển bằng",
+    "drag_hint": "💡 Giữ và kéo thả để đổi vị trí",
+    "close_btn": "Đóng lại",
+    "day": "Ngày {{day}}",
+    "recommended_time": "Thời gian gợi ý: {{time}}",
+    "no_places": "Không có địa điểm nào được gợi ý cho ngày này.",
+    "saving": "Đang lưu...",
+    "save_changes": "Lưu thay đổi",
+    "edit_itinerary": "Chỉnh sửa lịch trình",
+    "close": "Đóng"
+  },
+  "sweet_modal": {
+    "confirm": "Đồng ý",
+    "cancel": "Hủy"
   }
 }

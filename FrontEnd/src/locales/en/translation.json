@@ -13,7 +13,9 @@
     "register": "Register",
     "get_recommendations": "Get recommendations",
     "wishlist": "Wishlist",
-    "settings": "Settings"
+    "settings": "Settings",
+    "my_itineraries": "My Itineraries",
+    "logout": "Logout"
   },
   "home": {
     "hero": {
@@ -82,47 +84,47 @@
     }
   },
   "about": {
-    "hero_title_1": "Engineering the",
-    "hero_title_2": "Future of Travel",
-    "hero_subtitle": "We're not just a booking platform. We're your digital gateway to the stratosphere of luxury exploration, powered by the most sophisticated AI on the planet.",
+    "hero_title_1": "Course Project",
+    "hero_title_2": "Computational Thinking",
+    "hero_subtitle": "SmartTravel is a practical project developed by a group of students. We built this platform to apply AI technology and programming knowledge to solve real-world problems in the tourism industry.",
     "stats": {
-      "trips": "Trips Curated",
-      "countries": "Countries",
-      "accuracy": "AI Accuracy",
-      "rating": "User Rating"
+      "trips": "Members",
+      "countries": "Course",
+      "accuracy": "Weeks of Development",
+      "rating": "Enthusiasm"
     },
     "mission": {
-      "title": "Our Purpose",
-      "heading_1": "Personalization at the",
-      "heading_2": "Speed of Thought.",
-      "p1": "In an era of endless options, the true luxury is relevance. SmartTravel was founded on the belief that travel shouldn't be about scrolling through generic listings—it should be about discovering experiences that resonate with your soul.",
-      "p2": "Our proprietary AI engines process millions of data points, from real-time climate patterns to local cultural festivals, ensuring that every itinerary we generate is as unique as a fingerprint. We bridge the gap between human intuition and machine precision.",
-      "p3": "Whether you're seeking a silent retreat in the Andes or a high-energy culinary tour through Tokyo, our Digital Concierge understands the nuance of your desires before you even voice them."
+      "title": "Project Goals",
+      "heading_1": "Learning &",
+      "heading_2": "Practical Application.",
+      "p1": "During our studies, we realized that theoretical knowledge is most valuable when applied in practice. This project is our team's effort to connect classroom theory with modern technology.",
+      "p2": "The product integrates smart features like AI itinerary suggestions, user management, and location reviews. The system was comprehensively developed from Front-End to Back-End with high standards, focusing on optimization and user experience.",
+      "p3": "Although there is still room for improvement, SmartTravel is a memorable milestone and a stepping stone for us to go further on our path to becoming professional software engineers."
     },
     "team": {
       "title": "The Team",
-      "heading": "The Architects of Journey",
-      "subtitle": "Meet the visionaries blending aerospace engineering with hospitality to redefine your transit.",
+      "heading": "The Faces Behind the Project",
+      "subtitle": "Meet the 8 team members who worked hard day and night to complete this product.",
       "members": {
         "du": {
           "role": "Front-End Developer",
           "desc": "Passionate about creating seamless experiences with every click. Designs interfaces with the motto: Beautiful, intuitive, and bug-free."
         },
         "dat": {
-          "role": "Leader-AI Engineer",
-          "desc": "Guiding the team through endless deadlines. Spends most of his time teaching AI to understand human nuances better than code."
+          "role": "Team Leader - AI Engineer",
+          "desc": "Guiding the team through endless deadlines. Spends most of his time teaching AI to understand users better than coding."
         },
         "duy": {
-          "role": "BackEnd Developer",
+          "role": "Back-End Developer",
           "desc": "The wizard behind the curtain, managing the entire backend architecture to ensure the app always runs lightning fast."
         },
         "hien": {
-          "role": "FrontEnd Developer",
-          "desc": "Addicted to CSS and smooth animations. The one responsible for turning wild design ideas into living, breathing UI."
+          "role": "Front-End Developer",
+          "desc": "Addicted to CSS and smooth animations. Responsible for turning design ideas on paper into living, breathing UI."
         },
         "hung": {
-          "role": "BackEnd Developer",
-          "desc": "Loves solving complex logic puzzles. Transforms messy raw data into clean, stable, and efficient APIs."
+          "role": "Back-End Developer",
+          "desc": "Loves solving complex logic puzzles, transforming messy raw data into clean and stable APIs."
         },
         "anh": {
           "role": "Data Scientist",
@@ -130,19 +132,19 @@
         },
         "hieu": {
           "role": "Product Manager",
-          "desc": "The orchestrator of the team, perfectly balancing the developer's wildest ideas with actual project requirements."
+          "desc": "The orchestrator of the team, perfectly balancing the developer's wild ideas with the actual requirements of the project."
         },
         "nguyen": {
           "role": "Quality Assurance",
-          "desc": "The team's bug hunter, living by the rule that it's better to break things locally than let a single bug reach the user."
+          "desc": "The team's bug hunter, living by the motto that it's better to force devs to fix things locally than let a single bug reach the user."
         }
       }
     },
     "cta": {
-      "heading": "Ready to transcend the ordinary?",
-      "subtitle": "Our concierge is standing by to build your next stratosphere journey. Reach out to our global support team or start your exploration today.",
-      "start": "Start Planning",
-      "contact": "Contact Us"
+      "heading": "Explore our results",
+      "subtitle": "Take a few minutes to try the app and see what we have built. We look forward to receiving your feedback!",
+      "start": "Try the App",
+      "contact": "Send Feedback"
     }
   },
   "destinations": {
@@ -211,69 +213,78 @@
     "step1": "Step 1 of 3",
     "step2": "Step 2 of 3",
     "step3": "Step 3 of 3",
-    "vibe_selection": "Vibe Selection",
-    "companion_selection": "Travel Companions",
-    "budget_selection": "Budget Planning",
-    "title": "What's your vibe?",
-    "subtitle": "Tell us how you want to feel on this journey. We'll curate destinations that match your frequency.",
-    "title_step2": "Who's travelling with you?",
-    "subtitle_step2": "The best journeys are shared with the right people.",
-    "title_step3": "What's your trip budget?",
-    "subtitle_step3": "We'll find experiences that perfectly match your wallet.",
+    "vibe_selection": "Destination & Vibes",
+    "place_style_selection": "Place Style",
+    "logistics_selection": "Logistics & Transport",
+    "title": "Where do you want to go and experience?",
+    "subtitle": "Choose a province and the activities you love most.",
+    "title_step2": "What kind of places do you prefer?",
+    "subtitle_step2": "Everyone has their own travel style, tell us yours.",
+    "title_step3": "Trip Details",
+    "subtitle_step3": "Provide more information about your starting point and transportation.",
+    "province_ph": "Enter province/city (e.g. Khanh Hoa, Ho Chi Minh...)",
     "chilling": {
-      "title": "chilling",
+      "title": "Chilling",
       "desc": "Slow living, sunsets, and serene horizons."
     },
     "adventure": {
-      "title": "adventure",
+      "title": "Adventure",
       "desc": "Thrill-seeking and off-the-beaten-path."
     },
     "culture": {
-      "title": "culture",
+      "title": "Culture",
       "desc": "History, art, and local traditions."
     },
     "food": {
-      "title": "food",
+      "title": "Food",
       "desc": "Culinary journeys and hidden flavors."
     },
-    "solo": {
-      "title": "Solo Adventure",
-      "desc": "Just me, myself, and I."
+    "must_go": {
+      "title": "Iconic Places",
+      "desc": "The most famous, 'must-go' places of the province."
     },
-    "couple": {
-      "title": "Couple",
-      "desc": "A romantic getaway for two."
+    "high_quality": {
+      "title": "High Quality",
+      "desc": "Places with excellent and consistent ratings."
     },
-    "family": {
-      "title": "Family",
-      "desc": "Fun and safe for all ages."
+    "hidden_gem": {
+      "title": "Hidden Gems",
+      "desc": "Lesser-known but offer amazing experiences."
     },
-    "friends": {
-      "title": "Friends",
-      "desc": "Making memories with the squad."
-    },
-    "budget_eco": {
-      "title": "Budget-friendly",
-      "desc": "Backpacking and affordable finds."
-    },
-    "budget_mid": {
-      "title": "Mid-range",
-      "desc": "Comfortable and balanced."
-    },
-    "budget_lux": {
-      "title": "Luxury",
-      "desc": "Premium experiences and stays."
-    },
+    "starting_point_label": "Starting point in the province:",
+    "center": "Center",
+    "suburb": "Suburb",
+    "transport_label": "Transportation:",
+    "motorbike": "Motorbike",
+    "car": "Car",
+    "public_transport": "Public Transport",
     "btn_next": "Next Step",
-    "btn_generate": "Generate my perfect journey",
+    "btn_generate": "Generate perfect itinerary",
     "btn_skip": "Skip for now",
     "btn_view_itinerary": "View Full Itinerary",
     "btn_restart": "Start Over",
-    "loading_ai": "AI is crafting your perfect itinerary...",
+    "loading_ai": "AI is analyzing and designing the perfect trip for you...",
+    "result_title": "Suggested Itinerary",
+    "result_title_days": "{{days}} Days {{nights}} Nights",
+    "result_desc": "We have designed the perfect itinerary based on your preferences. You can freely ",
+    "result_desc_drag": "DRAG & DROP",
+    "result_desc_after": " to fine-tune the destinations!",
+    "btn_recreate": "Recreate Itinerary",
+    "btn_saving": "SAVING ITINERARY...",
+    "btn_save": "SAVE {{days}}D{{nights}}N TRIP",
+    "day_title": "Day {{index}}",
+    "save_warning_title": "Notice",
+    "save_warning_msg": "No itinerary available to save. Please generate an itinerary first!",
+    "save_success_title": "Success!",
+    "save_success_msg": "Itinerary saved successfully to My Itinerary. You can review it in My Itineraries page!",
+    "save_error_title": "Failure",
+    "save_error_msg": "Failed to save itinerary. Please login and try again.",
+    "load_error_title": "Data Load Error",
+    "load_error_msg": "Could not load the itinerary for editing. Please try again later.",
     "mock_result": {
       "title": "Your Curated Journey",
-      "dest_name": "Hoi An, Vietnam",
-      "summary": "Based on your choices, we recommend a 3-day healing journey to Hoi An. Experience the ancient town's slow pace, rich culture, and incredible local cuisine."
+      "dest_name": "Hoi An Ancient Town",
+      "summary": "Based on your choices, we recommend a 3-day 'Healing' journey in Hoi An. Experience the slow pace in the ancient town, rich culture, and incredible traditional cuisine."
     }
   },
   "blog": {
@@ -331,7 +342,20 @@
     "input_placeholder": "Ask AI Concierge anything...",
     "chip_creative": "Creative Mode",
     "chip_summary": "Text Summary",
-    "chip_image": "Generate Image"
+    "chip_image": "Generate Image",
+    "sent_image": "Sent an image",
+    "new_chat": "New Chat",
+    "recent": "RECENT",
+    "new_conversation": "New Conversation",
+    "no_conversations": "No conversations yet",
+    "delete_title": "Delete Conversation",
+    "delete_message": "Are you sure you want to delete this conversation? Chat history will be permanently deleted.",
+    "delete_confirm": "Delete",
+    "delete_cancel": "Cancel",
+    "sending_image": "Sending image (Text input disabled)...",
+    "ready_to_send": "Ready to send",
+    "clear_image": "Clear image",
+    "upload_image": "Upload image"
   },
   "footer": {
     "desc": "Experience the world with \"The Ethereal Explorer\". Boundless, atmospheric landscapes waiting to be discovered.",
@@ -404,5 +428,64 @@
       "pw_error": "Failed to change password."
     },
     "save_changes": "Save Changes"
+  },
+  "my_itineraries_page": {
+    "title_1": "My",
+    "title_2": "Itineraries",
+    "subtitle": "Manage and review the smart travel itineraries designed specifically for you by the AI Concierge",
+    "total": "Total",
+    "unit": "Itineraries",
+    "updating": "Updating...",
+    "loading": "Loading data from storage...",
+    "no_itineraries": "No itineraries yet!",
+    "no_itineraries_desc": "Your travel plan is empty. Let the AI Concierge accompany you and design the most memorable journeys.",
+    "create_now": "Create Itinerary Now",
+    "days_nights": "3 Days 2 Nights",
+    "days": "{{count}} Days",
+    "time": "Time",
+    "locations": "Locations",
+    "stops": "{{count}} Stops",
+    "view_detail": "VIEW ITINERARY DETAILS",
+    "transport": {
+      "motorbike": "Motorbike",
+      "car": "Car",
+      "walk": "Walk"
+    },
+    "delete_confirm": {
+      "title": "Confirm Delete",
+      "message": "Are you sure you want to delete the itinerary to {{province}}? This action cannot be undone.",
+      "error_title": "Error",
+      "error_message": "Cannot delete itinerary at this time. Please try again later.",
+      "confirm_btn": "Confirm Delete",
+      "agree_btn": "Agree"
+    }
+  },
+  "itinerary_detail_modal": {
+    "error_load": "Failed to load itinerary details. Please try again later.",
+    "transport": {
+      "motorbike": "Motorbike",
+      "car": "Car / Taxi",
+      "walk": "Walk / Public Transport"
+    },
+    "save_success_title": "Updated",
+    "save_success_msg": "The order of places in your itinerary has been saved successfully!",
+    "save_error_title": "Error",
+    "save_error_msg": "Cannot save changes at this time. Please try again later.",
+    "ai_suggestion": "Suggested by AI Concierge",
+    "title": "Itinerary for {{province}}",
+    "transport_by": "Transportation",
+    "drag_hint": "💡 Hold and drag to reorder",
+    "close_btn": "Close",
+    "day": "Day {{day}}",
+    "recommended_time": "Suggested time: {{time}}",
+    "no_places": "No suggested places for this day.",
+    "saving": "Saving...",
+    "save_changes": "Save Changes",
+    "edit_itinerary": "Edit Itinerary",
+    "close": "Close"
+  },
+  "sweet_modal": {
+    "confirm": "OK",
+    "cancel": "Cancel"
   }
 }

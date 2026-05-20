@@ -7,6 +7,7 @@ import TopProgressBar from './components/common/TopProgressBar'
 import HomePage from './pages/Home/HomePage'
 import PlaceDetailPage from './pages/PlaceDetail/PlaceDetailPage'
 import RecommendationsPage from './pages/Recommendations/RecommendationsPage'
+import MyItinerariesPage from './pages/MyItineraries/MyItinerariesPage'
 import SearchPage from './pages/Search/SearchPage'
 import AboutPage from './pages/About/AboutPage'
 import DestinationsPage from './pages/Destinations/DestinationsPage'
@@ -38,6 +39,7 @@ function App() {
           {/* Protected routes — yêu cầu đăng nhập */}
           <Route element={<ProtectedRoute />}>
             <Route path="/recommendations" element={<RecommendationsPage />} />
+            <Route path="/my-itineraries" element={<MyItinerariesPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/ai-concierge" element={<AiConciergePage />} />
             <Route path="/wishlist" element={<WishlistPage />} />

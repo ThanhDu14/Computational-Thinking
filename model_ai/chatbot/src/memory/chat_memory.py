@@ -11,8 +11,10 @@ import os
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
 from uuid import UUID
+import os
 
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), "../../../../.env")
+load_dotenv(dotenv_path=env_path)
 
 from model_ai.chatbot.src.config.config import (
     SUPABASE_SESSIONS_TABLE,

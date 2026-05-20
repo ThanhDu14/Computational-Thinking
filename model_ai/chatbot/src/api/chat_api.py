@@ -2,27 +2,21 @@
 # chat_api.py
 # ============================================================
 
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends, Header, UploadFile, File, Form
 from pydantic import BaseModel
 from typing import Optional
-from uuid import UUID   # [THAY ĐỔI] import UUID
+from uuid import UUID
 import os
 import logging
 import re
 import ast
+import io
+import uuid
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
-
-AI_KEY = os.getenv("AI_KEY")
-
-def verify_internal_call(x_internal_secret: str = Header(None)):
-    if x_internal_secret != AI_KEY:
-        raise HTTPException(
-            status_code=403, 
-            detail="Cấm truy cập! Chỉ hệ thống trung gian mới được phép gọi AI."
-        )
+env_path = os.path.join(os.path.dirname(__file__), "../../../../.env")
+load_dotenv(dotenv_path=env_path)
 
 from model_ai.chatbot.src.rag.rag_pipeline import RAGPipeline
 from model_ai.chatbot.src.vectorstore.vector_store import vector_store

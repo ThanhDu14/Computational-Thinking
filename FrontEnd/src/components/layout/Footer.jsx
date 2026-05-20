@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import logoImg from '../../assets/images/logo.png';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -10,12 +11,12 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 mb-16">
           <div className="flex flex-col gap-4 max-w-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/20">
-                <span className="text-white font-display font-bold text-xl tracking-tight">S</span>
+            <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md shadow-primary/20 overflow-hidden bg-surface-container-highest">
+                <img src={logoImg} alt="SmartTravel Logo" className="w-full h-full object-cover" />
               </div>
               <span className="text-2xl font-display font-bold tracking-tight text-on-surface">SmartTravel</span>
-            </div>
+            </Link>
             <p className="text-sm leading-relaxed">
               {t('footer.desc')}
             </p>

@@ -62,6 +62,28 @@ export const getLocationById = async (id) => {
 
     const json = await response.json();
     // Backend trả về { code, status, message, data: { ... } } hoặc data trực tiếp
-    console.log(json.data);
     return json.data || json;
+};
+/**
+ * Tìm kiếm địa điểm theo tên, có thể kết hợp filter city/category.
+ * @param {string} keyword - Từ khóa tìm kiếm (bắt buộc)
+ * @param {string} city - Lọc theo thành phố (tùy chọn)
+ * @param {string} category - Lọc theo danh mục (tùy chọn)
+ * @param {number} page - Số trang (mặc định: 1)
+ * @param {number} limit - Số kết quả mỗi trang (mặc định: 20)
+ */
+export const searchLocations = async (keyword, city = '', category = '', page = 1, limit = 20) => {
+    const params = new URLSearchParams({ q: keyword, page, limit });
+    if (city) params.append('city', city);
+    if (category) params.append('category', category);
+
+    const response = await fetch(`${API_BASE_URL}/api/location/search?${params.toString()}`);
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to search locations: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data;
 };

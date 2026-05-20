@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { getAllLocations, filterLocations } from '../../services/locationService';
+import { getAllLocations, filterLocations, searchLocations } from '../../services/locationService';
 import { Loader2, MapPin, Star, Clock, Search, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react';
 import { Skeleton } from '../../components/common/Skeleton';
+import CustomSelect from '../../components/common/CustomSelect';
+import { VIETNAM_PROVINCES } from '../../data/vietnamProvinces';
+import SweetModal from '../../components/common/SweetModal';
 
 const CITY_IMAGES = {
     'thành phố hồ chí minh': 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800',
@@ -24,22 +27,13 @@ function getCityImage(city = '') {
 
 const ITEMS_PER_PAGE = 5;
 
-const CITIES = [
-    { label: 'Tất cả', value: '' },
-    { label: 'Hà Nội', value: 'ha noi' },
-    { label: 'Hồ Chí Minh', value: 'ho chi minh' },
-    { label: 'Đà Lạt', value: 'da lat' },
-    { label: 'Hội An', value: 'hoi an' },
-    { label: 'Thanh Hóa', value: 'thanh hoa' },
-];
-
 const CATEGORIES = [
     { label: 'Tất cả', value: '' },
-    { label: 'Ẩm Thực', value: 'Ẩm Thực' },
+    { label: 'Ẩm Thực', value: 'Vui chơi' },
     { label: 'Văn Hóa', value: 'Văn Hóa' },
     { label: 'Khám Phá', value: 'Khám Phá' },
     { label: 'Thư Giãn', value: 'Thư Giãn' },
-    { lable: 'Phiêu Lưu', value: 'Phiêu Lưu' },
+    { label: 'Phiêu Lưu', value: 'Phiêu Lưu' },
 ];
 
 export default function DestinationsPage() {
@@ -55,6 +49,20 @@ export default function DestinationsPage() {
     const [totalItems, setTotalItems] = useState(0);
     const [isImmersiveMode, setIsImmersiveMode] = useState(false);
 
+    // SweetModal states
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        type: 'success',
+        title: '',
+        message: '',
+        showCancel: false,
+        onConfirm: null
+    });
+
+    const showModal = (type, title, message, showCancel = false, onConfirm = null) => {
+        setModalConfig({ isOpen: true, type, title, message, showCancel, onConfirm });
+    };
+
     // Filters
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -68,22 +76,33 @@ export default function DestinationsPage() {
         setError('');
         try {
             let result;
-            const hasFilter = selectedCity || selectedCategory || appliedSearch;
 
-            if (hasFilter) {
+            if (appliedSearch) {
+                // Có keyword → dùng searchLocations
+                result = await searchLocations(
+                    appliedSearch,
+                    selectedCity || '',
+                    selectedCategory || '',
+                    currentPage,
+                    ITEMS_PER_PAGE
+                );
+            } else if (selectedCity || selectedCategory) {
+                // Chỉ có filter → dùng filterLocations
                 result = await filterLocations({
-                    city: appliedSearch || selectedCity || undefined,
+                    city: selectedCity || undefined,
                     category: selectedCategory || undefined,
                     page: currentPage,
                     limit: ITEMS_PER_PAGE,
                 });
             } else {
+                // Không có gì → lấy tất cả
                 result = await getAllLocations(currentPage, ITEMS_PER_PAGE);
             }
 
             setLocations(result?.data || []);
             setTotalItems(result?.total || 0);
         } catch (err) {
+            console.error('❌ fetchData error:', err);
             setError(err.message || 'Không thể tải dữ liệu địa điểm.');
             setLocations([]);
         } finally {
@@ -108,9 +127,13 @@ export default function DestinationsPage() {
         e.preventDefault();
         e.stopPropagation();
         if (!isAuthenticated) {
-            if (window.confirm('Vui lòng đăng nhập để lưu vào Wishlist. Bạn có muốn tới trang đăng nhập không?')) {
-                navigate('/login');
-            }
+            showModal(
+                'info',
+                'Yêu Cầu Đăng Nhập',
+                'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Sếp nhé. Sếp có muốn chuyển tới trang đăng nhập không?',
+                true,
+                () => navigate('/login')
+            );
             return;
         }
         toggleWishlist(item);
@@ -193,7 +216,7 @@ export default function DestinationsPage() {
                 </header>
 
                 {/* Filter Bar */}
-                <section className="mb-12">
+                <section className="mb-12 relative z-50">
                     <div className="glass-card-dest rounded-[2rem] p-6 flex flex-wrap items-end gap-5 shadow-[0_20px_40px_-10px_rgba(39,44,81,0.04)] border border-white/40 dark:border-outline-variant/30">
 
                         {/* Search */}
@@ -215,33 +238,33 @@ export default function DestinationsPage() {
                         </div>
 
                         {/* City Filter */}
-                        <div className="flex-1 min-w-[160px]">
+                        <div className="flex-1 min-w-[160px] relative z-20">
                             <label className="block font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase mb-2 ml-1">Thành phố</label>
-                            <div className="relative">
-                                <select
-                                    className="w-full bg-surface-container-low border-none rounded-2xl py-3 px-4 text-on-surface appearance-none focus:ring-2 focus:ring-primary/20 outline-none font-body text-sm"
-                                    value={selectedCity}
-                                    onChange={(e) => setSelectedCity(e.target.value)}
-                                >
-                                    {CITIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
-                            </div>
+                            <CustomSelect 
+                                options={VIETNAM_PROVINCES}
+                                value={selectedCity}
+                                onChange={(e) => setSelectedCity(e.target.value)}
+                                placeholder="Chọn thành phố"
+                                buttonClassName="w-full bg-surface-container-low border-none rounded-2xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/20 outline-none font-body text-sm flex justify-between items-center"
+                                dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl"
+                                optionClassName="text-on-surface hover:bg-surface-container-high"
+                                activeOptionClassName="bg-primary/10 text-primary font-bold"
+                            />
                         </div>
 
                         {/* Category Filter */}
-                        <div className="flex-1 min-w-[160px]">
+                        <div className="flex-1 min-w-[160px] relative z-10">
                             <label className="block font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase mb-2 ml-1">Danh mục</label>
-                            <div className="relative">
-                                <select
-                                    className="w-full bg-surface-container-low border-none rounded-2xl py-3 px-4 text-on-surface appearance-none focus:ring-2 focus:ring-primary/20 outline-none font-body text-sm"
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                >
-                                    {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
-                            </div>
+                            <CustomSelect 
+                                options={CATEGORIES}
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                placeholder="Chọn danh mục"
+                                buttonClassName="w-full bg-surface-container-low border-none rounded-2xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/20 outline-none font-body text-sm flex justify-between items-center"
+                                dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl"
+                                optionClassName="text-on-surface hover:bg-surface-container-high"
+                                activeOptionClassName="bg-primary/10 text-primary font-bold"
+                            />
                         </div>
 
                         {/* Immersive Mode button */}
@@ -340,8 +363,8 @@ export default function DestinationsPage() {
                                         >
                                             <span className={`material-symbols-outlined ${isInWishlist(item) ? 'text-red-500' : ''}`} style={{ fontVariationSettings: isInWishlist(item) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                                         </button>
-
-                                        {item.rating > 4.5 && (
+                                        
+                                        {getItemRating(item) > 4.5 && (
                                             <div className="absolute bottom-4 left-4 px-3 py-1 bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-tighter rounded-md flex items-center gap-1 shadow-xl">
                                                 <TrendingUp className="w-3 h-3" /> Xu hướng
                                             </div>
@@ -500,6 +523,17 @@ export default function DestinationsPage() {
                     })}
                 </div>
             )}
+
+            <SweetModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
+                type={modalConfig.type}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                showCancel={modalConfig.showCancel}
+                onConfirm={modalConfig.onConfirm}
+                confirmText={modalConfig.showCancel ? "Tiếp tục" : "Đồng ý"}
+            />
         </div>
     );
 }

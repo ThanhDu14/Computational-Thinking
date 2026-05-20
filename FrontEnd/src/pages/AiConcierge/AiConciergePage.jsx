@@ -1,86 +1,98 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   MessageSquare, History, Compass, Settings,
-  Search, UserCircle, Bot, Send, Plus,
+  Search, UserCircle, Bot, Send, Plus, X,
   Mic, Sparkles, FileText, Image as ImageIcon,
-  MoreHorizontal, ChevronRight
+  MoreHorizontal, ChevronRight, Trash2, MapPin, ExternalLink
 } from 'lucide-react';
+import '../../components/AiConcierge/ChatCards.css';
+import renderMessageContent from '../../components/AiConcierge/ChatRenderer';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import { useChat } from '../../context/ChatContext';
+import { 
+  sendImageResult 
+} from '../../services/chatService';
+import botAvatar from '../../assets/images/chatbot_logo.png';
 
 export default function AiConciergePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { 
+    sessions, 
+    currentSessionId, 
+    messages, 
+    isTyping, 
+    loadHistory, 
+    startNewChat, 
+    sendMessage,
+    sendImageMessage,
+    removeSession 
+  } = useChat();
 
-  const userAvatar = user?.photoURL || user?.picture || null;
-  const userName = user?.displayName || user?.name || user?.email?.split('@')[0] || 'Khách';
-  const getDefaultMessages = () => ([
-    {
-      role: 'bot',
-      text: t('aiconcierge.greeting'),
-      timestamp: "09:41 AM"
-    },
-    {
-      role: 'user',
-      text: t('aiconcierge.user_msg_1'),
-      timestamp: "09:42 AM"
-    },
-    {
-      role: 'bot',
-      text: t('aiconcierge.bot_msg_1'),
-      timestamp: "09:43 AM",
-      bento: [
-        {
-          title: t('aiconcierge.bento_1_title'),
-          desc: t('aiconcierge.bento_1_desc'),
-          image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBdqQfrN_7P3KExVi90-KVCRh--TLzeEpafRypdQoAfPN40HMfqX-n9mukgaXaaBeRIbAd281qF8wz67nMbNTWG9em-WFQNeewzC5nzea3hSaG3jsgEdMXJgWnHgAuF-MbWcs7GGZa6PBktj9m__Ai6Z1fmY_-aTkMECG7HfbAInfV8GfBDq650J2XeEzV8wRqqiH2d7h7ii5-GuF5FVZqtLU8i8NsGrfRY-XlibwFARPEFOJ5eo68UgzxuceW9q3Vz-s7yhvRhKbHi"
-        },
-        {
-          title: t('aiconcierge.bento_2_title'),
-          desc: t('aiconcierge.bento_2_desc'),
-          image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAmXyTYv-lNJnebpV7dr9B6OR_Kpz2tk3s6Hgj47A5VJFN_k3wZDudtI2jT_ZXPsh5DOCNFIrt_B07N-gMN2YuO3Sn-OTImSpKMIenrKtW1aAIm3JXwfk4QrAJF-yEurvYiJ5lbG8V2wsDdXO24QTZQTBVxz1miCjoIpqgE9Syk2km8KpMeu1NFGDc7AvMupfseI0UFSnLYglbQryYqCHISlX8ljRKOD5SlPE5rNy7xZA4IpCydIGKrwlZ_Ygwsbs9mQiacRJF_yFdw"
-        }
-      ]
-    }
-  ]);
-
-  const [messages, setMessages] = useState(getDefaultMessages());
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [deleteSessionId, setDeleteSessionId] = useState(null);
+  const userAvatar = user?.photoURL || user?.picture || user?.avatar || null;
+  const userName = user?.displayName || user?.name || user?.username || 'Khách';
+  
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setInput(''); // clear input text per requirement
+    }
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Tự động cuộn xuống khi có tin nhắn mới hoặc AI đang trả lời
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    // Ngưỡng rộng hơn để nhận diện người dùng đang ở vùng dưới cùng
+    const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 500;
+    
+    if (isAtBottom) {
+      // Cuộn xuống cuối cùng để thấy nội dung mới nhất
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   }, [messages, isTyping]);
 
-  useEffect(() => {
-    setMessages(prev => {
-      if (prev.length === 3) return getDefaultMessages();
-      return prev;
-    });
-  }, [t]);
-
   const handleSend = () => {
-    if (!input.trim()) return;
-    const userMsg = { role: 'user', text: input, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-    setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setIsTyping(true);
-
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        text: t('aiconcierge.bot_msg_2'),
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }]);
-      setIsTyping(false);
-    }, 1500);
+    if (selectedFile) {
+      sendImageMessage(selectedFile);
+      clearSelectedImage();
+    } else {
+      if (!input.trim()) return;
+      sendMessage(input);
+      setInput('');
+    }
   };
 
   return (
-    <div className="flex h-screen w-full bg-background text-on-surface overflow-hidden font-body pt-24">
+    <div className="flex h-[calc(100vh-96px)] mt-[96px] w-full bg-background text-on-surface overflow-hidden font-body">
       <style>{`
         .glass-panel {
           background: var(--bg-glass);
@@ -103,29 +115,66 @@ export default function AiConciergePage() {
       {/* Sidebar Navigation */}
       <aside className="hidden md:flex flex-col w-72 h-full py-8 px-4 bg-surface-container-low border-r border-outline-variant/30 font-medium text-sm">
         <div className="mb-12 px-4 cursor-pointer flex items-center gap-3" onClick={() => navigate('/home')}>
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-            <Bot className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden bg-surface-container-highest border border-outline-variant/20">
+            <img src={botAvatar} alt="AI Concierge" className="w-full h-full object-cover scale-110" />
           </div>
           <h1 className="text-xl font-bold text-on-surface font-display uppercase tracking-tight">AI Concierge</h1>
         </div>
 
-        <nav className="flex-1 space-y-2">
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-primary font-bold border-r-2 border-primary bg-primary/10">
-            <MessageSquare className="w-5 h-5" />
-            <span>{t('aiconcierge.nav_chat')}</span>
-          </button>
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-on-surface-variant hover:bg-surface-container-high">
-            <History className="w-5 h-5" />
-            <span>{t('aiconcierge.nav_history')}</span>
-          </button>
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-on-surface-variant hover:bg-surface-container-high">
-            <Compass className="w-5 h-5" />
-            <span>{t('aiconcierge.nav_explore')}</span>
-          </button>
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all text-on-surface-variant hover:bg-surface-container-high">
-            <Settings className="w-5 h-5" />
-            <span>{t('aiconcierge.nav_settings')}</span>
-          </button>
+        <button 
+          onClick={startNewChat}
+          className="flex items-center gap-3 w-full px-4 py-3 mb-6 rounded-xl transition-all text-white font-bold bg-primary hover:bg-primary/90 shadow-md"
+        >
+          <Plus className="w-5 h-5" />
+          <span>{t('aiconcierge.new_chat')}</span>
+        </button>
+
+        <nav className="flex-1 space-y-2 overflow-y-auto scrollbar-hide">
+          <p className="px-4 text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold mb-2">{t('aiconcierge.recent')}</p>
+          {sessions.map((session) => (
+            <div 
+              key={session.id}
+              className={`group flex items-center gap-2 w-full px-4 py-3 rounded-xl transition-all text-left mb-1 ${currentSessionId === session.id ? 'text-primary font-bold bg-primary/10 border-r-2 border-primary' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+            >
+              <button 
+                onClick={() => loadHistory(session.id)}
+                className="flex items-center gap-3 flex-1 overflow-hidden"
+              >
+                <MessageSquare className="w-5 h-5 flex-shrink-0" />
+                <div className="flex flex-col overflow-hidden">
+                  <span className="truncate text-sm">
+                    {session.title === 'New Chat' || session.title === 'Cuộc hội thoại mới' 
+                      ? t('aiconcierge.new_conversation') 
+                      : (session.title || t('aiconcierge.new_conversation'))}
+                  </span>
+                  <span className="text-[9px] opacity-50 font-normal">
+                    {session.created_at ? new Date(session.created_at).toLocaleString('vi-VN', { 
+                      day: '2-digit', 
+                      month: '2-digit', 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    }) : ""}
+                  </span>
+                </div>
+              </button>
+              
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteSessionId(session.id);
+                }}
+                className="p-1.5 rounded-lg hover:bg-red-500/10 text-on-surface-variant/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          
+          {sessions.length === 0 && (
+            <div className="px-4 py-8 text-center text-on-surface-variant/40 italic text-xs">
+              {t('aiconcierge.no_conversations')}
+            </div>
+          )}
         </nav>
 
         <div className="mt-auto px-4 pt-6">
@@ -150,13 +199,16 @@ export default function AiConciergePage() {
         {/* Header */}
 
         {/* Chat Conversation Area */}
-        <div className="flex-1 overflow-y-auto px-6 py-10 space-y-10 max-w-5xl mx-auto w-full scrollbar-hide">
+        <div 
+          ref={chatContainerRef}
+          className="flex-1 overflow-y-auto px-6 py-10 space-y-10 max-w-5xl mx-auto w-full scrollbar-hide"
+        >
           {messages.map((msg, idx) => (
-            <div key={idx} className={`flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse max-w-[85%] ml-auto' : 'max-w-[95%]'}`}>
+            <div key={idx} className={`message-item flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse max-w-[85%] ml-auto' : 'max-w-[95%]'}`}>
               <div className="flex-shrink-0 mt-1">
                 {msg.role === 'bot' ? (
-                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10">
-                    <Bot className="w-5 h-5 text-primary" />
+                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/10 overflow-hidden shadow-sm">
+                    <img src={botAvatar} alt="AI Bot" className="w-full h-full object-cover scale-110" />
                   </div>
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-slate-300 overflow-hidden flex items-center justify-center">
@@ -168,10 +220,13 @@ export default function AiConciergePage() {
                 )}
               </div>
               <div className={`space-y-2 ${msg.role === 'user' ? 'text-right' : ''}`}>
-                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl`}>
-                  <p className="leading-relaxed font-body whitespace-pre-wrap text-sm">
-                    {msg.text.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
-                  </p>
+                <div className={`${msg.role === 'bot' ? 'ai-bubble text-on-surface border-outline-variant/10 rounded-tl-none' : 'user-bubble text-white rounded-tr-none ethereal-glow'} p-6 rounded-xl flex flex-col`}>
+                  {msg.imageUrl && (
+                    <div className="mb-3 max-w-[240px] rounded-xl overflow-hidden shadow-md border border-white/20 bg-black/10 self-end">
+                      <img src={msg.imageUrl} alt="Uploaded" className="w-full h-auto object-cover max-h-60" />
+                    </div>
+                  )}
+                  {renderMessageContent(msg.text, sendMessage)}
 
                   {msg.bento && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -214,8 +269,39 @@ export default function AiConciergePage() {
             {/* Visual Pulse behind input */}
             <div className="absolute inset-0 bg-primary-container blur-3xl opacity-5 rounded-full -z-10 group-focus-within:opacity-20 transition-opacity duration-500"></div>
 
+            {/* Image Preview Area */}
+            {previewUrl && (
+              <div className="absolute bottom-full mb-3 left-4 z-20 p-2 bg-surface-container/90 backdrop-blur-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-outline-variant/20 shadow-inner bg-black/10">
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={clearSelectedImage}
+                    className="absolute -top-1 -right-1 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md flex items-center justify-center"
+                    title={t('aiconcierge.clear_image')}
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+                <div className="text-left pr-4">
+                  <p className="text-xs font-bold text-on-surface truncate max-w-[120px]">{selectedFile?.name}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">{t('aiconcierge.ready_to_send')}</p>
+                </div>
+              </div>
+            )}
+
             <div className="glass-panel p-2 rounded-full flex items-center gap-2 ethereal-glow border border-outline-variant/20 focus-within:ring-2 focus-within:ring-primary/30 transition-all">
-              <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors"
+                title={t('aiconcierge.upload_image')}
+              >
                 <Plus className="w-5 h-5" />
               </button>
               <input
@@ -223,8 +309,9 @@ export default function AiConciergePage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={t('aiconcierge.input_placeholder')}
-                className="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 font-body px-2"
+                placeholder={selectedFile ? t('aiconcierge.sending_image') : t('aiconcierge.input_placeholder')}
+                disabled={!!selectedFile}
+                className={`flex-1 bg-transparent border-none focus:ring-0 outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body px-2 ${selectedFile ? 'opacity-50 cursor-not-allowed' : ''}`}
               />
               <div className="flex items-center gap-1">
                 <button className="p-3 rounded-full hover:bg-surface-container-highest/50 text-on-surface-variant transition-colors">
@@ -232,7 +319,8 @@ export default function AiConciergePage() {
                 </button>
                 <button
                   onClick={handleSend}
-                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300"
+                  disabled={!selectedFile && !input.trim()}
+                  className="bg-gradient-to-r from-primary to-primary/60 text-white p-3 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:scale-100 disabled:pointer-events-none"
                 >
                   <Send className="w-5 h-5" />
                 </button>
@@ -249,7 +337,10 @@ export default function AiConciergePage() {
                 <FileText className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_summary')}</span>
               </button>
-              <button className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 bg-surface-container/40 px-3 py-1.5 rounded-full border border-outline-variant/10"
+              >
                 <ImageIcon className="w-3.5 h-3.5" />
                 <span>{t('aiconcierge.chip_image')}</span>
               </button>
@@ -257,6 +348,17 @@ export default function AiConciergePage() {
           </div>
         </div>
       </main>
+
+      <ConfirmModal 
+        isOpen={!!deleteSessionId}
+        onClose={() => setDeleteSessionId(null)}
+        onConfirm={() => removeSession(deleteSessionId)}
+        title={t('aiconcierge.delete_title')}
+        message={t('aiconcierge.delete_message')}
+        confirmText={t('aiconcierge.delete_confirm')}
+        cancelText={t('aiconcierge.delete_cancel')}
+        isDanger={true}
+      />
     </div>
   );
 }

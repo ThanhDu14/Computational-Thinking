@@ -4,10 +4,10 @@ import { useSearchParams } from 'react-router-dom';
 import Button from '../../components/common/Button';
 import PlaceCard from '../../components/places/PlaceCard';
 import { useTranslation } from 'react-i18next';
+import CustomSelect from '../../components/common/CustomSelect';
+import { VIETNAM_PROVINCES } from '../../data/vietnamProvinces';
 
-import datadalat from '../../data/data_da_lat_final.json';
-import dataha from '../../data/data_HA_final.json';
-import datathanhhoa from '../../data/data_thanh_hoa_final.json';
+import { searchLocations } from '../../services/locationService';
 
 export default function SearchPage() {
   const { t } = useTranslation();
@@ -16,29 +16,82 @@ export default function SearchPage() {
   
   const [query, setQuery] = useState(initialQuery);
   const [activeQuery, setActiveQuery] = useState(initialQuery);
+  const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchResults, setSearchResults] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const ITEMS_PER_PAGE = 8;
 
-  // Combine datasets
-  const allData = useMemo(() => {
-      const dalat = datadalat.map(item => ({ ...item, region: 'Da Lat' }));
-      const ha = dataha.map(item => ({ ...item, region: 'Hoi An' }));
-      const th = datathanhhoa.map(item => ({ ...item, region: 'Thanh Hoa' }));
-      return [...dalat, ...ha, ...th];
-  }, []);
+  const CATEGORIES = [
+    { label: 'Tất cả danh mục', value: '' },
+    { label: 'Ẩm Thực', value: 'Ẩm Thực' },
+    { label: 'Văn Hóa', value: 'Văn Hóa' },
+    { label: 'Khám Phá', value: 'Khám Phá' },
+    { label: 'Thư Giãn', value: 'Thư Giãn' },
+  ];
 
-  // Update query state if URL parameter changes (e.g. searching from Home Page again)
+  // Update query state if URL parameter changes
   useEffect(() => {
       const q = searchParams.get('q') || '';
+      const city = searchParams.get('city') || '';
+      const cat = searchParams.get('category') || '';
       setQuery(q);
       setActiveQuery(q);
+      setSelectedCity(city);
+      setSelectedCategory(cat);
+      setCurrentPage(1);
   }, [searchParams]);
+
+  // Fetch results from API
+  useEffect(() => {
+    const fetchResults = async () => {
+      // Cho phép fetch nếu có keyword HOẶC có filter
+      if (!activeQuery.trim() && !selectedCity && !selectedCategory) {
+        setSearchResults([]);
+        setTotalItems(0);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const data = await searchLocations(activeQuery, selectedCity, selectedCategory, currentPage, ITEMS_PER_PAGE);
+        
+        // Map API data to PlaceCard format
+        const formattedResults = (data.data || []).map(item => ({
+          id: item.id,
+          name: item.name,
+          location: item.city,
+          description: item.description,
+          price: 0,
+          rating: item.rating || 4.5,
+          image: item.images && item.images.length > 0 ? item.images[0].image : 'https://placehold.co/600x400?text=No+Image'
+        }));
+
+        setSearchResults(formattedResults);
+        setTotalItems(data.total || 0);
+      } catch (error) {
+        console.error('Search failed:', error);
+        setSearchResults([]);
+        setTotalItems(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [activeQuery, selectedCity, selectedCategory, currentPage]);
 
   const handleSearch = useCallback(() => {
       setActiveQuery(query);
       setCurrentPage(1);
-      setSearchParams(query ? { q: query } : {});
-  }, [query, setSearchParams]);
+      const params = {};
+      if (query) params.q = query;
+      if (selectedCity) params.city = selectedCity;
+      if (selectedCategory) params.category = selectedCategory;
+      setSearchParams(params);
+  }, [query, selectedCity, selectedCategory, setSearchParams]);
 
   const handleTagClick = useCallback((tag) => {
       setQuery(tag);
@@ -47,63 +100,64 @@ export default function SearchPage() {
       setSearchParams({ q: tag });
   }, [setSearchParams]);
 
-  const searchResults = useMemo(() => {      
-      if (!activeQuery.trim()) return [];
-      const lowerQuery = activeQuery.toLowerCase();
-      // Filter dataset
-      const filtered = allData.filter(item => {
-          return (item.location_name && item.location_name.toLowerCase().includes(lowerQuery)) ||
-                 (item.description && item.description.toLowerCase().includes(lowerQuery)) ||
-                 (item.region && item.region.toLowerCase().includes(lowerQuery));
-      });
-      // Map to PlaceCard format
-      return filtered.map((item, index) => {
-          const extractedRating = item.overall_rating ? parseFloat(item.overall_rating.split('/')[0].trim()) : 4.5;
-          const imageSrc = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/600x400?text=No+Image';
-          return {
-              id: `search-${index}`,
-              title: item.location_name, // fallback internally based on what PlaceCard accepts. usually name or title
-              name: item.location_name,  
-              location: item.region,
-              price: 0, 
-              rating: extractedRating,
-              image: imageSrc,
-              originalItem: item // passing if necessary later
-          };
-      });
-  }, [allData, activeQuery]);
-
-  const totalPages = Math.ceil(searchResults.length / ITEMS_PER_PAGE);
-  const paginatedResults = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return searchResults.slice(start, start + ITEMS_PER_PAGE);
-  }, [searchResults, currentPage, ITEMS_PER_PAGE]);
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
     <div className="w-full pt-32 pb-20 px-6 max-w-7xl mx-auto">
       {/* Search hero area */}
-      <div className="bg-gradient-to-br from-primary to-primary-container rounded-[3rem] p-10 md:p-20 mb-16 text-center text-white relative overflow-hidden shadow-xl shadow-primary/20">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200')] bg-cover mix-blend-overlay"></div>
-        <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm"></div>
-        <div className="relative z-10 max-w-3xl mx-auto">
+      <div className="bg-gradient-to-br from-primary to-primary-container rounded-[3rem] p-10 md:p-20 mb-16 text-center text-white relative shadow-xl shadow-primary/20">
+        <div className="absolute inset-0 rounded-[3rem] overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200')] bg-cover mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm"></div>
+        </div>
+        <div className="relative z-50 max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-display font-bold mb-10 tracking-tighter drop-shadow-md">{t('search_page.hero_title')}</h1>
           
-          {/* Search Input */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <div className="flex-grow bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl flex items-center px-6 py-4 shadow-lg border border-white/40 group focus-within:ring-2 focus-within:ring-white">
-              <Search className="w-6 h-6 text-on-surface-variant mr-3 group-focus-within:text-primary transition-colors" />
-              <input 
-                type="text" 
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder={t('search_page.search_placeholder')} 
-                className="w-full bg-transparent border-none outline-none text-on-surface text-lg placeholder-on-surface-variant/70 font-body font-medium"
-              />
+          {/* Search Inputs & Filters */}
+          <div className="flex flex-col gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-grow bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl flex items-center px-6 py-4 shadow-lg border border-white/40 group focus-within:ring-2 focus-within:ring-white">
+                <Search className="w-6 h-6 text-on-surface-variant mr-3 group-focus-within:text-primary transition-colors" />
+                <input 
+                    type="text" 
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    placeholder={t('search_page.search_placeholder')} 
+                    className="w-full bg-transparent border-none outline-none text-on-surface text-lg placeholder-on-surface-variant/70 font-body font-medium"
+                />
+                </div>
+                <Button onClick={handleSearch} variant="primary" className="py-4 px-10 text-lg shadow-lg hover:shadow-xl bg-white text-primary hover:text-primary-dim border-none">
+                {t('search_page.search_btn')}
+                </Button>
             </div>
-            <Button onClick={handleSearch} variant="primary" className="py-4 px-10 text-lg shadow-lg hover:shadow-xl bg-white text-primary hover:text-primary-dim border-none">
-              {t('search_page.search_btn')}
-            </Button>
+
+            <div className="flex flex-wrap gap-4 justify-center">
+                <div className="w-48 relative z-20">
+                    <CustomSelect 
+                        options={[{label: 'Tất cả thành phố', value: ''}, ...VIETNAM_PROVINCES.slice(1)]}
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        placeholder="Thành phố"
+                        buttonClassName="w-full bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm flex justify-between items-center"
+                        dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl text-on-surface"
+                        optionClassName="text-on-surface hover:bg-surface-container-high"
+                        activeOptionClassName="bg-primary/10 text-primary font-bold"
+                    />
+                </div>
+                <div className="w-48 relative z-10">
+                    <CustomSelect 
+                        options={CATEGORIES}
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        placeholder="Danh mục"
+                        buttonClassName="w-full bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-white/50 font-body text-sm flex justify-between items-center"
+                        dropdownClassName="absolute z-50 w-full mt-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl text-on-surface"
+                        optionClassName="text-on-surface hover:bg-surface-container-high"
+                        activeOptionClassName="bg-primary/10 text-primary font-bold"
+                    />
+                </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 py-2 font-body text-[15px] font-semibold text-primary-container">
@@ -122,13 +176,13 @@ export default function SearchPage() {
             <h2 className="text-3xl font-display font-bold text-on-surface mb-1">{t('search_page.results_title')}</h2>
             {activeQuery && <p className="text-on-surface-variant font-body">{t('search_page.results_for', 'Kết quả cho: ')}<span className="font-bold text-primary">"{activeQuery}"</span></p>}
           </div>
-          <span className="text-on-surface-variant font-body font-bold text-sm uppercase tracking-wider bg-surface-container-low px-4 py-1.5 rounded-full">{searchResults.length} {t('search_page.places_count')}</span>
+          <span className="text-on-surface-variant font-body font-bold text-sm uppercase tracking-wider bg-surface-container-low px-4 py-1.5 rounded-full">{totalItems} {t('search_page.places_count')}</span>
         </div>
         
         {searchResults.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {paginatedResults.map((place) => (
+            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
+              {searchResults.map((place) => (
                 <PlaceCard key={place.id} place={place} />
               ))}
             </div>
@@ -168,6 +222,11 @@ export default function SearchPage() {
               </div>
             )}
           </>
+        ) : isLoading ? (
+          <div className="w-full py-20 text-center flex flex-col items-center">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-on-surface-variant font-body font-medium">{t('search_page.loading', 'Đang tìm kiếm...')}</p>
+          </div>
         ) : (
           <div className="w-full py-20 text-center flex flex-col items-center">
              <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6">

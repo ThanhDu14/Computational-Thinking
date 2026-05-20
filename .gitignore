@@ -32,6 +32,10 @@ __init__.py
 .env.test.local
 .env.production.local
 .env.docker
+docs
+# Firebase credentials
+serviceAccountKey.json
+firebase*.json
 
 # logs
 npm-debug.log*
@@ -48,3 +52,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 **/venv
+# Vector DB & Models
+model_ai/chatbot/embeddings/vector_db/
+model_ai/landmark_recognizer/weights/
