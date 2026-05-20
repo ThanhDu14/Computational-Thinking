@@ -147,20 +147,21 @@ class ChatMemory:
     # SUMMARY
     # =====================================================
     def update_summary(self, llm):
-        messages = self.get_messages()
-        if len(messages) < self.max_recent:
-            return
+        # messages = self.get_messages()
+        # if len(messages) < self.max_recent:
+        #     return
 
-        old_messages = messages[:-self.max_recent]
-        text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
-        prompt = f"Summarize the conversation briefly but keep important context:\n\n{text}\n\nSummary:"
-        summary = llm.generate(prompt).strip()
+        # old_messages = messages[:-self.max_recent]
+        # text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
+        # prompt = f"Summarize the conversation briefly but keep important context:\n\n{text}\n\nSummary:"
+        # summary = llm.generate(prompt).strip()
 
-        self._execute(
-            supabase.table(SUPABASE_SESSIONS_TABLE)
-            .update({"summary": summary})
-            .eq("id", self.session_id)
-        )
+        # self._execute(
+        #     supabase.table(SUPABASE_SESSIONS_TABLE)
+        #     .update({"summary": summary})
+        #     .eq("id", self.session_id)
+        # )
+        pass  # [THAY ĐỔI] Tạm thời không tự động update summary nữa, để tránh tốn token và chi phí
 
     # =====================================================
     # AUTO TITLE
