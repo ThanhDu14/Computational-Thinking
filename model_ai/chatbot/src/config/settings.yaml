@@ -25,7 +25,7 @@ paths:
 
 embedding:
   # [MODEL] Tên model embedding từ HuggingFace
-  model_name: "intfloat/multilingual-e5-base"
+  model_name: "BAAI/bge-m3"
 
   # [BATCH] Số lượng docs mỗi batch khi embed
   batch_size: 16
@@ -41,7 +41,7 @@ llm:
   temperature: 0.2
 
   # [MAX TOKENS] Số token tối đa trong response
-  max_tokens: 1500
+  max_tokens: 2500
 
 vector_store:
   # [HF REPO] HuggingFace repo chứa vector DB
