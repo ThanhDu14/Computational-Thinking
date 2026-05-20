@@ -4,9 +4,11 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { X, Calendar, MapPin, Compass, Star, Image as ImageIcon, Bike, Car, Footprints, Edit, Save, Loader2, ArrowRight } from 'lucide-react';
 import { getRecommendationDetail, saveRecommendation } from '../../services/recommendationService';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import SweetModal from '../common/SweetModal';
 
 export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSuccess }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const [plan, setPlan] = useState(null);
@@ -50,7 +52,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
         }
       } catch (err) {
         console.error("Fetch Plan Detail Error:", err);
-        setError("Không thể tải chi tiết lịch trình này. Vui lòng thử lại sau.");
+        setError(t('itinerary_detail_modal.error_load'));
       } finally {
         setLoading(false);
       }
@@ -75,9 +77,9 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
 
   const getTransportLabel = (mode) => {
     const formatMode = String(mode || '').toLowerCase();
-    if (formatMode.includes('bike') || formatMode.includes('xe máy') || formatMode.includes('moto')) return 'Xe máy';
-    if (formatMode.includes('car') || formatMode.includes('ô tô') || formatMode.includes('taxi')) return 'Ô tô / Taxi';
-    return 'Đi bộ / Công cộng';
+    if (formatMode.includes('bike') || formatMode.includes('xe máy') || formatMode.includes('moto')) return t('itinerary_detail_modal.transport.motorbike');
+    if (formatMode.includes('car') || formatMode.includes('ô tô') || formatMode.includes('taxi')) return t('itinerary_detail_modal.transport.car');
+    return t('itinerary_detail_modal.transport.walk');
   };
 
   // Helper to clean ratings (e.g. "4.8/5" -> "4.8")
@@ -118,13 +120,13 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
       const token = await getToken();
       await saveRecommendation(plan, token);
       setHasChanges(false);
-      showModal('success', 'Đã Cập Nhật', 'Thứ tự các địa điểm trong lịch trình của Sếp đã được lưu lại thành công!');
+      showModal('success', t('itinerary_detail_modal.save_success_title'), t('itinerary_detail_modal.save_success_msg'));
       if (onSaveSuccess) {
         onSaveSuccess();
       }
     } catch (err) {
       console.error("Save plan changes error:", err);
-      showModal('error', 'Lỗi', 'Không thể lưu thay đổi lúc này. Sếp vui lòng thử lại sau nhé.');
+      showModal('error', t('itinerary_detail_modal.save_error_title'), t('itinerary_detail_modal.save_error_msg'));
     } finally {
       setIsSaving(false);
     }
@@ -156,7 +158,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
             <div className="flex flex-wrap gap-2 items-center text-xs text-on-surface-variant mb-2">
               <span className="flex items-center gap-1 bg-primary/10 text-primary font-bold px-2.5 py-1 rounded-full">
                 <Compass className="w-3.5 h-3.5" />
-                Gợi ý từ AI Concierge
+                {t('itinerary_detail_modal.ai_suggestion')}
               </span>
               {categories.map((cat, idx) => (
                 <span key={idx} className="bg-surface-variant text-on-surface-variant font-medium px-2.5 py-1 rounded-full">
@@ -165,16 +167,16 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               ))}
             </div>
             <h2 className="text-2xl md:text-3xl font-display font-bold text-on-surface flex items-center gap-2">
-              Lịch trình {province}
+              {t('itinerary_detail_modal.title', { province })}
             </h2>
             <div className="flex items-center gap-2 text-sm text-on-surface-variant">
               <div className="flex items-center gap-1.5 py-1">
                 {getTransportIcon(transMode)}
-                <span>Di chuyển bằng: <strong>{getTransportLabel(transMode)}</strong></span>
+                <span>{t('itinerary_detail_modal.transport_by')}: <strong>{getTransportLabel(transMode)}</strong></span>
               </div>
               {!loading && !error && (
                 <span className="text-xs text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full select-none">
-                  💡 Giữ và kéo thả để đổi vị trí
+                  {t('itinerary_detail_modal.drag_hint')}
                 </span>
               )}
             </div>
@@ -220,7 +222,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                 onClick={onClose}
                 className="bg-primary text-white font-bold px-6 py-2.5 rounded-full hover:bg-primary-dim transition-colors"
               >
-                Đóng lại
+                {t('itinerary_detail_modal.close_btn')}
               </button>
             </div>
           ) : (
@@ -241,7 +243,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                         }`}
                       >
                         <Calendar className="w-4 h-4" />
-                        Ngày {index + 1}
+                        {t('itinerary_detail_modal.day', { day: index + 1 })}
                       </button>
                     );
                   })}
@@ -340,7 +342,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                                       {place.recommended_time && (
                                         <div className="flex items-center gap-1.5 text-xs text-primary font-semibold bg-primary/5 py-1 px-2.5 rounded-md inline-flex border border-primary/10">
                                           <span className="material-symbols-outlined text-[14px]">schedule</span>
-                                          Thời gian gợi ý: {place.recommended_time}
+                                          {t('itinerary_detail_modal.recommended_time', { time: place.recommended_time })}
                                         </div>
                                       )}
                                     </div>
@@ -352,7 +354,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                         })
                       ) : (
                         <div className="text-center py-8 text-on-surface-variant font-body">
-                          Không có địa điểm nào được gợi ý cho ngày này.
+                          {t('itinerary_detail_modal.no_places')}
                         </div>
                       )}
                       {provided.placeholder}
@@ -375,12 +377,12 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               {isSaving ? (
                 <>
                   <Loader2 className="w-4.5 h-4.5 animate-spin" />
-                  Đang lưu...
+                  {t('itinerary_detail_modal.saving')}
                 </>
               ) : (
                 <>
                   <Save className="w-4.5 h-4.5" />
-                  Lưu thay đổi
+                  {t('itinerary_detail_modal.save_changes')}
                 </>
               )}
             </button>
@@ -393,14 +395,14 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
               className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-dim text-white font-bold transition-all text-sm font-body flex items-center gap-1.5 shadow-md shadow-primary/20 hover:-translate-y-0.5"
             >
               <Edit className="w-4.5 h-4.5" />
-              Chỉnh sửa lịch trình
+              {t('itinerary_detail_modal.edit_itinerary')}
             </button>
           )}
           <button 
             onClick={onClose}
             className="px-6 py-2.5 rounded-full border border-outline-variant/40 hover:bg-surface-variant/50 text-on-surface-variant font-bold transition-all text-sm font-body"
           >
-            Đóng
+            {t('itinerary_detail_modal.close')}
           </button>
         </div>
 

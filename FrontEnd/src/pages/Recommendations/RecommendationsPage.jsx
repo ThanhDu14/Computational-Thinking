@@ -24,6 +24,9 @@ export default function RecommendationsPage() {
   const [rawResponse, setRawResponse] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const daysCount = plannerData ? Object.keys(plannerData).length : 3;
+  const nightsCount = Math.max(0, daysCount - 1);
+
   // SweetModal states
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -119,7 +122,7 @@ export default function RecommendationsPage() {
             Object.keys(planData.itinerary).forEach((dayKey, index) => {
               const dayData = planData.itinerary[dayKey];
               columns[`day-${index + 1}`] = {
-                title: `Day ${index + 1}`,
+                title: t('recommendations.day_title', { index: index + 1 }),
                 items: dayData.places.map((place, pIdx) => ({
                   ...place,
                   location_id: place.location_id || place.id,
@@ -134,7 +137,7 @@ export default function RecommendationsPage() {
         }
       } catch (err) {
         console.error("Error loading plan in workspace:", err);
-        showModal('error', 'Lỗi Tải Dữ Liệu', 'Không thể tải lịch trình để chỉnh sửa. Vui lòng thử lại sau.');
+        showModal('error', t('recommendations.load_error_title'), t('recommendations.load_error_msg'));
       } finally {
         setIsLoading(false);
       }
@@ -167,9 +170,9 @@ export default function RecommendationsPage() {
     }
 
     const columns = {
-      'day-1': { title: 'Day 1', items: randomItems.slice(0, 3).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-1-place-${idx}` })) },
-      'day-2': { title: 'Day 2', items: randomItems.slice(3, 6).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-2-place-${idx}` })) },
-      'day-3': { title: 'Day 3', items: randomItems.slice(6, 9).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-3-place-${idx}` })) }
+      'day-1': { title: t('recommendations.day_title', { index: 1 }), items: randomItems.slice(0, 3).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-1-place-${idx}` })) },
+      'day-2': { title: t('recommendations.day_title', { index: 2 }), items: randomItems.slice(3, 6).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-2-place-${idx}` })) },
+      'day-3': { title: t('recommendations.day_title', { index: 3 }), items: randomItems.slice(6, 9).map((item, idx) => ({ ...item, location_id: item.location_id || item.id, id: `mock-day-3-place-${idx}` })) }
     };
     setPlannerData(columns);
   };
@@ -182,7 +185,7 @@ export default function RecommendationsPage() {
 
   const handleSave = async () => {
     if (!rawResponse) {
-      showModal('warning', 'Thông báo', 'Không có lịch trình nào để lưu. Vui lòng tạo lịch trình trước!');
+      showModal('warning', t('recommendations.save_warning_title'), t('recommendations.save_warning_msg'));
       return;
     }
     setIsSaving(true);
@@ -224,10 +227,10 @@ export default function RecommendationsPage() {
       console.log("🚀 Payload gửi lên lưu API /recommend/save:", updatedResponse);
       const token = await getToken();
       await saveRecommendation(updatedResponse, token);
-      showModal('success', 'Thành Công!', 'Lưu lịch trình thành công vào My Itinerary. Sếp có thể xem lại trong mục Lịch Trình Của Tôi nhé!');
+      showModal('success', t('recommendations.save_success_title'), t('recommendations.save_success_msg'));
     } catch (err) {
       console.error("Save Recommendation Error:", err);
-      showModal('error', 'Thất Bại', err.message || "Không thể lưu lịch trình. Vui lòng đăng nhập và thử lại.");
+      showModal('error', t('recommendations.save_error_title'), err.message || t('recommendations.save_error_msg'));
     } finally {
       setIsSaving(false);
     }
@@ -363,8 +366,17 @@ export default function RecommendationsPage() {
                 <span className="material-symbols-outlined text-4xl text-primary font-bold">auto_awesome</span>
               </div>
               <div className="text-center max-w-2xl px-4">
-                <h2 className="text-3xl md:text-4xl font-display font-black text-on-surface mb-4">Lịch trình đề xuất <span className="text-primary">3 Ngày 2 Đêm</span></h2>
-                <p className="text-on-surface-variant font-body leading-relaxed text-lg">Chúng tôi đã thiết kế một hành trình hoàn hảo dựa trên sở thích của Sếp. Sếp có thể tự do <strong className="text-primary font-bold">KÉO & THẢ</strong> để tinh chỉnh các điểm đến nhé!</p>
+                <h2 className="text-3xl md:text-4xl font-display font-black text-on-surface mb-4">
+                  {t('recommendations.result_title')}{' '}
+                  <span className="text-primary">
+                    {t('recommendations.result_title_days', { days: daysCount, nights: nightsCount })}
+                  </span>
+                </h2>
+                <p className="text-on-surface-variant font-body leading-relaxed text-lg">
+                  {t('recommendations.result_desc')}
+                  <strong className="text-primary font-bold">{t('recommendations.result_desc_drag')}</strong>
+                  {t('recommendations.result_desc_after')}
+                </p>
               </div>
 
               <div className="w-full mt-6 px-4 md:px-10 z-20">
@@ -382,7 +394,7 @@ export default function RecommendationsPage() {
                   className="group text-on-surface-variant font-black hover:text-primary transition-all flex items-center justify-center gap-3 font-body px-10 py-5 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-2xl border border-outline-variant/30 hover:border-primary/50 shadow-sm hover:shadow-md"
                 >
                   <span className="material-symbols-outlined text-[20px] group-hover:rotate-180 transition-transform duration-500">refresh</span>
-                  Tạo lại lịch trình
+                  {t('recommendations.btn_recreate')}
                 </button>
                 <button
                   onClick={handleSave}
@@ -392,7 +404,7 @@ export default function RecommendationsPage() {
                   <span className="material-symbols-outlined text-[20px] group-hover:scale-125 transition-transform">
                     {isSaving ? 'sync' : 'auto_awesome'}
                   </span>
-                  {isSaving ? 'ĐANG LƯU HÀNH TRÌNH...' : 'LƯU CHUYẾN ĐI 3N2Đ'}
+                  {isSaving ? t('recommendations.btn_saving') : t('recommendations.btn_save', { days: daysCount, nights: nightsCount })}
                 </button>
               </div>
             </div>

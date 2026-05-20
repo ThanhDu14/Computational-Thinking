@@ -53,6 +53,7 @@ const Navbar = () => {
   const navLinks = [
     { path: '/home', label: t('nav.explore', 'Explore') },
     { path: '/destinations', label: t('nav.destinations', 'Destinations') },
+    { path: '/recommendations', label: t('nav.recommendations', 'Recommendations') },
     { path: '/ai-concierge', label: t('nav.ai_concierge', 'AI Concierge') },
     { path: '/about', label: t('nav.about', 'About') },
   ];
@@ -169,18 +170,11 @@ const Navbar = () => {
                     </div>
                     {/* Menu Items */}
                     <button
-                      onClick={() => { setShowUserMenu(false); navigate('/recommendations'); }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
-                    >
-                      <User size={15} />
-                      {t('nav.recommendations', 'Recommendations')}
-                    </button>
-                    <button
                       onClick={() => { setShowUserMenu(false); navigate('/my-itineraries'); }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
                     >
                       <Calendar size={15} />
-                      Lịch trình của tôi
+                      {t('nav.my_itineraries', 'My Itineraries')}
                     </button>
                     <button
                       onClick={() => { setShowUserMenu(false); setIsWishlistOpen(prev => !prev); }}
@@ -201,7 +195,7 @@ const Navbar = () => {
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors rounded-b-2xl"
                     >
                       <LogOut size={15} />
-                      Đăng xuất
+                      {t('nav.logout', 'Logout')}
                     </button>
                   </div>
                 )}

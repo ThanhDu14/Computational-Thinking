@@ -13,7 +13,9 @@
     "register": "Đăng ký",
     "get_recommendations": "Nhận gợi ý",
     "wishlist": "Yêu thích",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "my_itineraries": "Lịch trình của tôi",
+    "logout": "Đăng xuất"
   },
   "home": {
     "hero": {
@@ -96,7 +98,7 @@
       "heading_1": "Học hỏi &",
       "heading_2": "Ứng dụng thực tế.",
       "p1": "Trong quá trình học tập, chúng tôi nhận ra rằng kiến thức lý thuyết sẽ có giá trị nhất khi được áp dụng vào thực tiễn. Đồ án này là nỗ lực của cả nhóm nhằm kết nối lý thuyết trên giảng đường với công nghệ hiện đại.",
-      "p2": "Sản phẩm tích hợp các tính năng như gợi ý lịch trình bằng AI, quản lý người dùng và đánh giá địa điểm. Mọi dòng code, từ Front-End đến Back-End, đều được viết với sự tỉ mỉ và tinh thần cầu thị.",
+      "p2": "Sản phẩm tích hợp các tính năng thông minh như AI gợi ý lịch trình, quản lý người dùng và đánh giá địa điểm. Hệ thống được phát triển toàn diện từ Front-End đến Back-End với tiêu chuẩn cao, chú trọng vào tính tối ưu và trải nghiệm người dùng.",
       "p3": "Dù vẫn còn nhiều điểm cần hoàn thiện, SmartTravel chính là cột mốc đáng nhớ và là bước đệm để chúng tôi tiến xa hơn trên con đường trở thành những kỹ sư phần mềm chuyên nghiệp."
     },
     "team": {
@@ -262,6 +264,23 @@
     "btn_view_itinerary": "Xem Lịch Trình Chi Tiết",
     "btn_restart": "Làm Lại Từ Đầu",
     "loading_ai": "AI đang phân tích và thiết kế chuyến đi hoàn hảo cho bạn...",
+    "result_title": "Lịch trình đề xuất",
+    "result_title_days": "{{days}} Ngày {{nights}} Đêm",
+    "result_desc": "Chúng tôi đã thiết kế một hành trình hoàn hảo dựa trên sở thích của Sếp. Sếp có thể tự do ",
+    "result_desc_drag": "KÉO & THẢ",
+    "result_desc_after": " để tinh chỉnh các điểm đến nhé!",
+    "btn_recreate": "Tạo lại lịch trình",
+    "btn_saving": "ĐANG LƯU HÀNH TRÌNH...",
+    "btn_save": "LƯU CHUYẾN ĐI {{days}}N{{nights}}Đ",
+    "day_title": "Ngày {{index}}",
+    "save_warning_title": "Thông báo",
+    "save_warning_msg": "Không có lịch trình nào để lưu. Vui lòng tạo lịch trình trước!",
+    "save_success_title": "Thành Công!",
+    "save_success_msg": "Lưu lịch trình thành công vào My Itinerary. Sếp có thể xem lại trong mục Lịch Trình Của Tôi nhé!",
+    "save_error_title": "Thất Bại",
+    "save_error_msg": "Không thể lưu lịch trình. Vui lòng đăng nhập và thử lại.",
+    "load_error_title": "Lỗi Tải Dữ Liệu",
+    "load_error_msg": "Không thể tải lịch trình để chỉnh sửa. Vui lòng thử lại sau.",
     "mock_result": {
       "title": "Chuyến Đi Dành Riêng Cho Bạn",
       "dest_name": "Phố cổ Hội An",
@@ -324,7 +343,19 @@
     "chip_creative": "Chế độ Sáng tạo",
     "chip_summary": "Tóm tắt văn bản",
     "chip_image": "Tạo hình ảnh",
-    "sent_image": "Đã gửi một hình ảnh"
+    "sent_image": "Đã gửi một hình ảnh",
+    "new_chat": "Đoạn chat mới",
+    "recent": "Gần đây",
+    "new_conversation": "Cuộc hội thoại mới",
+    "no_conversations": "Chưa có cuộc hội thoại nào",
+    "delete_title": "Xóa cuộc hội thoại",
+    "delete_message": "Bạn có chắc chắn muốn xóa cuộc hội thoại này? Lịch sử chat sẽ bị xóa vĩnh viễn.",
+    "delete_confirm": "Xóa",
+    "delete_cancel": "Hủy",
+    "sending_image": "Đang gửi hình ảnh (Không thể nhập văn bản)...",
+    "ready_to_send": "Sẵn sàng gửi",
+    "clear_image": "Xóa ảnh",
+    "upload_image": "Tải ảnh lên"
   },
   "footer": {
     "desc": "Trải nghiệm thế giới với \"Kẻ Khám Phá Thanh Khiết\". Những cảnh quan bao la, đầy cảm xúc đang chờ bạn khám phá.",
@@ -397,5 +428,64 @@
       "pw_error": "Đổi mật khẩu thất bại."
     },
     "save_changes": "Lưu Thay Đổi"
+  },
+  "my_itineraries_page": {
+    "title_1": "Lịch Trình",
+    "title_2": "Của Tôi",
+    "subtitle": "Quản lý và xem lại hành trình du lịch thông minh do Quản gia AI thiết kế riêng cho Sếp",
+    "total": "Tổng số",
+    "unit": "Lịch trình",
+    "updating": "Đang cập nhật...",
+    "loading": "Đang nạp dữ liệu từ kho lưu trữ...",
+    "no_itineraries": "Chưa có lịch trình nào!",
+    "no_itineraries_desc": "Kế hoạch du lịch của Sếp đang trống trơn. Hãy để Quản gia AI đồng hành và thiết kế cho Sếp những hành trình đáng nhớ nhất.",
+    "create_now": "Tạo lịch trình ngay",
+    "days_nights": "3 Ngày 2 Đêm",
+    "days": "{{count}} Ngày",
+    "time": "Thời gian",
+    "locations": "Địa điểm",
+    "stops": "{{count}} Điểm dừng",
+    "view_detail": "XEM CHI TIẾT LỊCH TRÌNH",
+    "transport": {
+      "motorbike": "Xe máy",
+      "car": "Ô tô",
+      "walk": "Đi bộ"
+    },
+    "delete_confirm": {
+      "title": "Xác Nhận Xóa",
+      "message": "Bạn có chắc chắn muốn xóa lịch trình đi {{province}} không? Hành động này không thể hoàn tác.",
+      "error_title": "Lỗi",
+      "error_message": "Không thể xóa lịch trình lúc này. Vui lòng thử lại sau.",
+      "confirm_btn": "Xác nhận xóa",
+      "agree_btn": "Đồng ý"
+    }
+  },
+  "itinerary_detail_modal": {
+    "error_load": "Không thể tải chi tiết lịch trình này. Vui lòng thử lại sau.",
+    "transport": {
+      "motorbike": "Xe máy",
+      "car": "Ô tô / Taxi",
+      "walk": "Đi bộ / Công cộng"
+    },
+    "save_success_title": "Đã Cập Nhật",
+    "save_success_msg": "Thứ tự các địa điểm trong lịch trình của Sếp đã được lưu lại thành công!",
+    "save_error_title": "Lỗi",
+    "save_error_msg": "Không thể lưu thay đổi lúc này. Sếp vui lòng thử lại sau nhé.",
+    "ai_suggestion": "Gợi ý từ AI Concierge",
+    "title": "Lịch trình {{province}}",
+    "transport_by": "Di chuyển bằng",
+    "drag_hint": "💡 Giữ và kéo thả để đổi vị trí",
+    "close_btn": "Đóng lại",
+    "day": "Ngày {{day}}",
+    "recommended_time": "Thời gian gợi ý: {{time}}",
+    "no_places": "Không có địa điểm nào được gợi ý cho ngày này.",
+    "saving": "Đang lưu...",
+    "save_changes": "Lưu thay đổi",
+    "edit_itinerary": "Chỉnh sửa lịch trình",
+    "close": "Đóng"
+  },
+  "sweet_modal": {
+    "confirm": "Đồng ý",
+    "cancel": "Hủy"
   }
 }
