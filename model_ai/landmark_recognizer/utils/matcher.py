@@ -19,7 +19,7 @@ def match_local_ransac(query_local, cand_local, num_patches=576, patch_grid=24):
     for i in range(num_patches):
         j = best_match_q_to_c[i]          
         if best_match_c_to_q[j] == i:
-            if sim_matrix[i, j] > 0.6:
+            if sim_matrix[i, j] > 0.45:  # [PERF] Hạ từ 0.6 → 0.45 để tăng recall, RANSAC sẽ tự lọc outliers
                 y1, x1 = divmod(i, patch_grid)
                 y2, x2 = divmod(j, patch_grid)
                 pts_q.append([x1, y1])

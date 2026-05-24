@@ -40,8 +40,8 @@ llm:
   # [TEMPERATURE] Độ ngẫu nhiên khi sinh câu trả lời
   temperature: 0.2
 
-  # [MAX TOKENS] Số token tối đa trong response
-  max_tokens: 2500
+  # [MAX TOKENS] Số token tối đa trong response (giảm từ 2500 → 1200 để tăng tốc)
+  max_tokens: 1200
 
 vector_store:
   # [HF REPO] HuggingFace repo chứa vector DB
