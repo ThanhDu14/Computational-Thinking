@@ -2,7 +2,7 @@
  * Gửi email từ form liên hệ lên backend.
  * @param {Object} formData - Dữ liệu từ form { first_name, last_name, email, message }
  */
-export const sendContactEmail = async (formData) => {
+export const sendContactEmail = async (formData, token) => {
   const payload = {
     ho: formData.first_name,
     ten: formData.last_name,
@@ -19,6 +19,7 @@ export const sendContactEmail = async (formData) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
     },
     body: JSON.stringify(payload),
   });

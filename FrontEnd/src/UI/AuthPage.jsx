@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogIn, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const FIREBASE_ERRORS = {
     'auth/user-not-found': 'Không tìm thấy tài khoản với email này.',
@@ -16,6 +17,7 @@ const FIREBASE_ERRORS = {
 };
 
 const AuthPage = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { login, register, loginWithGoogle, isAuthenticated } = useAuth();
@@ -54,20 +56,20 @@ const AuthPage = () => {
 
         if (isLogin) {
             if (!formData.username || !formData.password) {
-                setError('Vui lòng nhập đầy đủ thông tin.');
+                setError(t('auth.error_fill_fields'));
                 return;
             }
         } else {
             if (!formData.username || !formData.password || !formData.confirmPassword) {
-                setError('Vui lòng nhập đầy đủ thông tin.');
+                setError(t('auth.error_fill_fields'));
                 return;
             }
             if (formData.password !== formData.confirmPassword) {
-                setError('Mật khẩu xác nhận không khớp.');
+                setError(t('auth.error_confirm_mismatch'));
                 return;
             }
             if (formData.password.length < 6) {
-                setError('Mật khẩu phải có ít nhất 6 ký tự.');
+                setError(t('auth.error_password_length'));
                 return;
             }
         }
@@ -124,25 +126,11 @@ const AuthPage = () => {
                             SmartTravel
                         </h1>
                         <p className="text-xl lg:text-2xl text-white/80 font-medium max-w-lg leading-relaxed">
-                            The voyage doesn't start at the gate. <br className="hidden lg:block" />
-                            It begins with a single <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 italic font-serif">ascent.</span>
+                            {t('auth.brand_desc_1')} <br className="hidden lg:block" />
+                            {t('auth.brand_desc_2')}<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 italic">{t('auth.brand_desc_ascent')}</span>
                         </p>
                     </div>
 
-                    {/* Social Proof */}
-                    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 lg:mt-12">
-                        <div className="flex -space-x-3 overflow-hidden">
-                            <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white/10 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Voyager 1" />
-                            <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white/10 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80" alt="Voyager 2" />
-                            <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white/10 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Voyager 3" />
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 ring-2 ring-white/10 backdrop-blur-sm">
-                                <span className="text-xs font-bold text-white">+</span>
-                            </div>
-                        </div>
-                        <p className="text-sm text-white/60 font-medium tracking-wide">
-                            Join 15,000+ elite voyagers today.
-                        </p>
-                    </div>
                 </div>
 
                 {/* Right Section: Auth Card */}
@@ -168,9 +156,9 @@ const AuthPage = () => {
                         {/* Card Header */}
                         <div className="mb-10">
                             <h2 className="text-3xl font-black text-white tracking-tight mb-2">
-                                {isLogin ? 'Welcome Back' : 'Create Account'}
+                                {isLogin ? t('auth.welcome_back') : t('auth.create_account')}
                             </h2>
-                            <p className="text-white/50 text-sm font-medium">Continue your ethereal journey.</p>
+                            <p className="text-white/50 text-sm font-medium">{t('auth.subtitle')}</p>
                         </div>
 
                         {/* Toggle Pill */}
@@ -183,25 +171,25 @@ const AuthPage = () => {
                                 className={`flex-1 relative z-10 text-[11px] font-black tracking-[0.1em] transition-colors duration-300 ${isLogin ? 'text-white' : 'text-white/30 hover:text-white/50'}`}
                                 onClick={() => handleToggle('login')}
                             >
-                                LOGIN
+                                {t('auth.login_pill')}
                             </button>
                             <button
                                 type="button"
                                 className={`flex-1 relative z-10 text-[11px] font-black tracking-[0.1em] transition-colors duration-300 ${!isLogin ? 'text-white' : 'text-white/30 hover:text-white/50'}`}
                                 onClick={() => handleToggle('register')}
                             >
-                                REGISTER
+                                {t('auth.register_pill')}
                             </button>
                         </div>
 
                         {/* Form */}
                         <form className="space-y-5" onSubmit={handleSubmit}>
                             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-400">
-                                <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">Username</label>
+                                <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">{t('auth.username_label')}</label>
                                 <input
                                     name="username"
                                     className="w-full bg-black/20 border border-white/5 rounded-full py-4 px-7 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400/50 transition-all font-body text-sm shadow-inner"
-                                    placeholder="Username"
+                                    placeholder={t('auth.username_placeholder')}
                                     type="text"
                                     value={formData.username}
                                     onChange={handleChange}
@@ -210,15 +198,15 @@ const AuthPage = () => {
 
                             <div className="space-y-1.5">
                                 <div className="flex justify-between items-center ml-5 mr-3">
-                                    <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em]">Secret Key</label>
+                                    <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em]">{t('auth.password_label')}</label>
                                     {isLogin && (
-                                        <button type="button" className="text-blue-300/60 text-[9px] font-bold hover:text-blue-300 transition-colors uppercase tracking-wider">Forgot Access?</button>
+                                        <button type="button" className="text-blue-300/60 text-[9px] font-bold hover:text-blue-300 transition-colors uppercase tracking-wider">{t('auth.forgot_access')}</button>
                                     )}
                                 </div>
                                 <input
                                     name="password"
                                     className="w-full bg-black/20 border border-white/5 rounded-full py-4 px-7 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400/50 transition-all font-body text-sm shadow-inner"
-                                    placeholder="••••••••••••"
+                                    placeholder={t('auth.password_placeholder')}
                                     type="password"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -227,11 +215,11 @@ const AuthPage = () => {
 
                             {!isLogin && (
                                 <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-400">
-                                    <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">Verify Key</label>
+                                    <label className="text-white/40 text-[9px] font-bold uppercase tracking-[0.15em] ml-5">{t('auth.verify_key_label')}</label>
                                     <input
                                         name="confirmPassword"
                                         className="w-full bg-black/20 border border-white/5 rounded-full py-4 px-7 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400/50 transition-all font-body text-sm shadow-inner"
-                                        placeholder="Confirm Password"
+                                        placeholder={t('auth.verify_key_placeholder')}
                                         type="password"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
@@ -247,7 +235,7 @@ const AuthPage = () => {
                                 {isLoading ? (
                                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
-                                    isLogin ? 'Begin Your Ascent' : 'Join the Voyage'
+                                    isLogin ? t('auth.btn_login') : t('auth.btn_register')
                                 )}
                             </button>
                         </form>
@@ -255,7 +243,7 @@ const AuthPage = () => {
                         {/* Divider */}
                         <div className="w-full flex items-center gap-4 my-8">
                             <div className="h-[1px] flex-1 bg-white/5"></div>
-                            <span className="text-white/20 text-[8px] font-black tracking-[0.2em] uppercase">Or Connecting Via</span>
+                            <span className="text-white/20 text-[8px] font-black tracking-[0.2em] uppercase">{t('auth.or_connect')}</span>
                             <div className="h-[1px] flex-1 bg-white/5"></div>
                         </div>
 
@@ -298,8 +286,8 @@ const AuthPage = () => {
                                 className="text-white/30 text-[10px] font-bold hover:text-white/60 transition-colors tracking-wide uppercase"
                                 onClick={() => handleToggle(isLogin ? 'register' : 'login')}
                             >
-                                {isLogin ? 'New to the fleet? ' : 'Already a member? '}
-                                <span className="text-blue-300">{isLogin ? 'Apply for Membership' : 'Sign In'}</span>
+                                {isLogin ? t('auth.new_member') : t('auth.already_member')}
+                                <span className="text-blue-300">{isLogin ? t('auth.register_now') : t('auth.login_now')}</span>
                             </button>
                         </p>
                     </div>

@@ -173,9 +173,9 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {/* Card 1 */}
-          <motion.div variants={itemVariants} onClick={() => navigate('/destinations')} className="group cursor-pointer">
+          <motion.div variants={itemVariants} onClick={() => navigate('/destinations?city=ho chi minh')} className="group cursor-pointer">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-lg mb-6">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ha Long Bay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAor8-VL8aSjFgd2aYj_8mO8V-yknKZRYUtrCe25pyZ50niS1U3L0Zx4567DCKL2KpCKV2HsUnAYWdEkbbwhnqzTMc76T221i-sDTDgJ7E6np289LksLcf1m7cY7YxNwoUJIo6kgo8AcTDzefsvFzZRiAAMxI4-h4jqXD8NznZe8aNFqTBSwLZ3tA7XJinmKo4p0eTHKo-jpentIXGDjMQhOPH43TRuDBh-ZP9fGjzeZj42yXcG_5u4wWbQmm-f39XBMRRfk4Gj6zo" />
+              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ho Chi Minh City" src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800" />
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold uppercase text-primary font-body tracking-wider">{t('home.trending.card1.tag')}</span>
               </div>
@@ -186,9 +186,9 @@ export default function HomePage() {
           </motion.div>
 
           {/* Card 2 */}
-          <motion.div variants={itemVariants} onClick={() => navigate('/destinations')} className="group cursor-pointer">
+          <motion.div variants={itemVariants} onClick={() => navigate('/destinations?city=ha noi')} className="group cursor-pointer">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-lg mb-6">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Marrakesh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3egscJhpY_1IoeW1Cv9kfFEoejfvUZYHukquUWQhfGIwc5TSYlvnCUSPR194EWjsKIFXEGMzg7p_btVjMdk_MK6Cxbm4OdaYCyMCYhvxpQL2kEyRgHDyykQ88L2ZVSsrd5cyy-QbLLiwwnt8QJ8Y2-zr5yYbR7eZ3xAI1kMOpXCvzDpAd4AxKTqxMA-PaKv0_XlAEfvvQnnolDc2kMPDpOQi7EoLlg03lFc5kWxfVko5mxjCYbaAcdePNGmeQ2qFQfmW-hKxz1eg" />
+              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Hanoi" src="https://cdn-media.sforum.vn/storage/app/media/anh-ho-hoan-kiem-19.jpg" />
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold uppercase text-primary font-body tracking-wider">{t('home.trending.card2.tag')}</span>
               </div>
@@ -199,9 +199,9 @@ export default function HomePage() {
           </motion.div>
 
           {/* Card 3 */}
-          <motion.div variants={itemVariants} onClick={() => navigate('/destinations')} className="group cursor-pointer">
+          <motion.div variants={itemVariants} onClick={() => navigate('/destinations?city=da nang')} className="group cursor-pointer">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-lg mb-6">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR69MUONwdFrqK0ny1AdsNsgSRtqFHDtdCoAj3Vc0nzZyOkn-RkFhpjCYDKHo7UbcpKFYkDhwSjD0Gx1jUFh4-o_aQVrAHM1hXCIJB93AYctHO2JPYDxrJS3NNaMSU6J78a-wec4_JjPTiB--CDHIrxGfvZQUCGAlSIMkZnLrj6q78MKF2TVlZVXmRxCEDsQdXrXfZbpBXll6tqeeuUuvR3fPWL9szQBHk5DdzCso1RK0lxp1VN41_SJMBRl_6MD9gnTShsswH6B0" />
+              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Da Nang" src="https://vietluxtour.com/Upload/images/2024/khamphatrongnuoc/C%E1%BA%A7u%20R%E1%BB%93ng%20%C4%90%C3%A0%20N%E1%BA%B5ng/cau-rong-da-nang-main-min.jpg" />
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold uppercase text-primary font-body tracking-wider">{t('home.trending.card3.tag')}</span>
               </div>
