@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
@@ -38,6 +38,7 @@ const CATEGORIES = [
 
 export default function DestinationsPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { isAuthenticated } = useAuth();
@@ -68,6 +69,12 @@ export default function DestinationsPage() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const [appliedSearch, setAppliedSearch] = useState('');
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const cityParam = queryParams.get('city') || '';
+        setSelectedCity(cityParam);
+    }, [location.search]);
 
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
 

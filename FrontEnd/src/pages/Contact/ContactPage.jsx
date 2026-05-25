@@ -5,9 +5,11 @@ import Button from '../../components/common/Button';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { sendContactEmail } from '../../services/contactService';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ContactPage() {
   const { t } = useTranslation();
+  const { getToken } = useAuth();
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -28,7 +30,8 @@ export default function ContactPage() {
     setErrorMessage('');
 
     try {
-      await sendContactEmail(formData);
+      const token = await getToken();
+      await sendContactEmail(formData, token);
       setStatus('success');
       setFormData({ first_name: '', last_name: '', email: '', message: '' });
     } catch (err) {

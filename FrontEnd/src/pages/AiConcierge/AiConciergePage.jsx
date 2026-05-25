@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import '../../components/AiConcierge/ChatCards.css';
 import renderMessageContent from '../../components/AiConcierge/ChatRenderer';
-import ConfirmModal from '../../components/common/ConfirmModal';
+import SweetModal from '../../components/common/SweetModal';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
@@ -349,15 +349,16 @@ export default function AiConciergePage() {
         </div>
       </main>
 
-      <ConfirmModal 
+      <SweetModal 
         isOpen={!!deleteSessionId}
         onClose={() => setDeleteSessionId(null)}
         onConfirm={() => removeSession(deleteSessionId)}
+        type="warning"
         title={t('aiconcierge.delete_title')}
         message={t('aiconcierge.delete_message')}
         confirmText={t('aiconcierge.delete_confirm')}
         cancelText={t('aiconcierge.delete_cancel')}
-        isDanger={true}
+        showCancel={true}
       />
     </div>
   );

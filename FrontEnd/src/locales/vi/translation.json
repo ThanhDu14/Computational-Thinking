@@ -35,19 +35,19 @@
       "title": "Điểm Đến Đang Thịnh Hành",
       "view_all": "Xem tất cả",
       "card1": {
-        "tag": "Thiên nhiên",
-        "title": "Bờ biển Azure Địa Trung Hải",
-        "desc": "Trải nghiệm những vịnh nhỏ ẩn mình và làn nước ngọc bích của Bờ biển Amalfi tuyệt đẹp."
+        "tag": "Hiện đại",
+        "title": "Thành phố Hồ Chí Minh",
+        "desc": "Khám phá nhịp sống năng động, các tòa nhà chọc trời sầm uất và nền văn hóa ẩm thực đường phố đa dạng tại đô thị lớn nhất Việt Nam."
       },
       "card2": {
         "tag": "Văn hóa",
-        "title": "Những Khu chợ cổ trên Con Đường Tơ Lụa",
-        "desc": "Chuyến hành trình đánh thức giác quan qua những hương liệu, dải lụa và câu chuyện lịch sử của Uzbekistan."
+        "title": "Thủ đô Hà Nội",
+        "desc": "Hành trình khám phá nghìn năm văn hiến với Hồ Gươm cổ kính, 36 phố phường nhộn nhịp và nét ẩm thực truyền thống tinh tế."
       },
       "card3": {
-        "tag": "Thiên nhiên",
-        "title": "Đỉnh Băng Hà và Thung Lũng Yên Tĩnh",
-        "desc": "Trốn tìm sự thanh bình trên vùng núi Alps cao vút, nơi thời gian trôi chậm chạp như các dòng sông băng."
+        "tag": "Biển cả",
+        "title": "Thành phố biển Đà Nẵng",
+        "desc": "Trải nghiệm những cây cầu độc đáo, danh thắng Ngũ Hành Sơn kỳ vĩ và bãi biển Mỹ Khê - một trong những bãi biển đẹp nhất hành tinh."
       },
       "view_details": "Xem chi tiết"
     },
@@ -487,5 +487,33 @@
   "sweet_modal": {
     "confirm": "Đồng ý",
     "cancel": "Hủy"
+  },
+  "auth": {
+    "welcome_back": "Chào mừng quay trở lại",
+    "create_account": "Tạo tài khoản mới",
+    "subtitle": "Tiếp tục hành trình khám phá của bạn.",
+    "login_pill": "ĐĂNG NHẬP",
+    "register_pill": "ĐĂNG KÝ",
+    "username_label": "Tên đăng nhập",
+    "username_placeholder": "Tên đăng nhập",
+    "password_label": "Mật khẩu",
+    "password_placeholder": "••••••••••••",
+    "forgot_access": "Quên mật khẩu?",
+    "verify_key_label": "Xác nhận mật khẩu",
+    "verify_key_placeholder": "Xác nhận mật khẩu",
+    "btn_login": "Đăng nhập",
+    "btn_register": "Đăng ký",
+    "or_connect": "Hoặc đăng nhập bằng",
+    "new_member": "Chưa có tài khoản? ",
+    "register_now": "Đăng ký ngay",
+    "already_member": "Đã có tài khoản? ",
+    "login_now": "Đăng nhập",
+    "brand_desc_1": "Hành trình không bắt đầu ở cổng khởi hành.",
+    "brand_desc_2": "Nó bắt đầu bằng một bước ",
+    "brand_desc_ascent": "cất cánh.",
+    "social_proof": "Tham gia cùng hơn 15.000+ lữ khách ngay hôm nay.",
+    "error_fill_fields": "Vui lòng nhập đầy đủ thông tin.",
+    "error_confirm_mismatch": "Mật khẩu xác nhận không khớp.",
+    "error_password_length": "Mật khẩu phải có ít nhất 6 ký tự."
   }
 }

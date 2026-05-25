@@ -35,19 +35,19 @@
       "title": "Trending Destinations",
       "view_all": "View all",
       "card1": {
-        "tag": "Nature",
-        "title": "Azure Coastlines of the Mediterranean",
-        "desc": "Experience the hidden coves and sapphire waters of the Amalfi Coast's best kept secrets."
+        "tag": "Modern",
+        "title": "Ho Chi Minh City",
+        "desc": "Explore the dynamic pace of life, bustling skyscrapers, and rich street food culture in Vietnam's largest metropolis."
       },
       "card2": {
         "tag": "Culture",
-        "title": "Ancient Markets of the Silk Road",
-        "desc": "A sensory journey through the spices, silks, and stories of historical Uzbekistan."
+        "title": "Hanoi Capital",
+        "desc": "A journey back in time with the ancient Hoan Kiem Lake, 36 bustling streets, and elegant traditional cuisine."
       },
       "card3": {
-        "tag": "Nature",
-        "title": "Glacial Peaks and Silent Valleys",
-        "desc": "Escape to the serenity of the high Alps, where time moves as slowly as the glaciers."
+        "tag": "Coastal",
+        "title": "Da Nang Coastal City",
+        "desc": "Experience unique architectural bridges, majestic Marble Mountains, and the stunning My Khe beach - one of the most attractive beaches on the planet."
       },
       "view_details": "View details"
     },
@@ -487,5 +487,33 @@
   "sweet_modal": {
     "confirm": "OK",
     "cancel": "Cancel"
+  },
+  "auth": {
+    "welcome_back": "Welcome Back",
+    "create_account": "Create Account",
+    "subtitle": "Continue your journey.",
+    "login_pill": "LOGIN",
+    "register_pill": "REGISTER",
+    "username_label": "Username",
+    "username_placeholder": "Username",
+    "password_label": "Password",
+    "password_placeholder": "••••••••••••",
+    "forgot_access": "Forgot Password?",
+    "verify_key_label": "Confirm Password",
+    "verify_key_placeholder": "Confirm Password",
+    "btn_login": "Log In",
+    "btn_register": "Register",
+    "or_connect": "Or connecting via",
+    "new_member": "New to SmartTravel? ",
+    "register_now": "Register Now",
+    "already_member": "Already a member? ",
+    "login_now": "Sign In",
+    "brand_desc_1": "The voyage doesn't start at the gate.",
+    "brand_desc_2": "It begins with a single ",
+    "brand_desc_ascent": "step.",
+    "social_proof": "Join 15,000+ happy travelers today.",
+    "error_fill_fields": "Please fill in all fields.",
+    "error_confirm_mismatch": "Confirm password does not match.",
+    "error_password_length": "Password must be at least 6 characters."
   }
 }
