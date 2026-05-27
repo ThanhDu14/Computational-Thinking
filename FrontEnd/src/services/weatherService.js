@@ -14,6 +14,33 @@ const removeVietnameseAccents = (str) => {
         .replace(/Đ/g, 'D');
 };
 
+const MAPPED_PROVINCES = {
+    'ba ria vung tau': 'Vung Tau',
+    'binh dinh': 'Qui Nhon',
+    'binh phuoc': 'Dong Xoai',
+    'binh thuan': 'Phan Thiet',
+    'dak lak': 'Buon Ma Thuot',
+    'dak nong': 'Buon Ma Thuot',
+    'dien bien': 'Dien Bien Phu',
+    'dong nai': 'Bien Hoa',
+    'dong thap': 'Cao Lanh',
+    'ha nam': 'Phu Ly',
+    'hai phong': 'Haiphong',
+    'hau giang': 'Vi Thanh',
+    'khanh hoa': 'Nha Trang',
+    'kien giang': 'Rach Gia',
+    'lam dong': 'Da Lat',
+    'nghe an': 'Vinh',
+    'ninh thuan': 'Phan Rang-Thap Cham',
+    'phu yen': 'Tuy Hoa',
+    'quang binh': 'Dong Hoi',
+    'quang nam': 'Hoi An',
+    'quang ninh': 'Ha Long',
+    'thua thien hue': 'Hue',
+    'tien giang': 'My Tho',
+    'vinh phuc': 'Vinh Yen'
+};
+
 /**
  * Chuẩn hóa tên thành phố trước khi gửi lên API Backend
  * @param {string} province - Tên tỉnh/thành phố
@@ -37,11 +64,19 @@ export const normalizeCity = (province) => {
         return "Danang";
     }
 
-    // Loại bỏ tiền tố "Tỉnh" hoặc "Thành phố"
-    queryCity = queryCity.replace(/^(tỉnh|thành phố)\s+/i, "");
+    // Loại bỏ tiền tố "Tỉnh" hoặc "Thành phố" hoặc "Thị xã"
+    queryCity = queryCity.replace(/^(tỉnh|thành phố|thị xã)\s+/i, "");
 
     // Loại bỏ dấu tiếng Việt
     queryCity = removeVietnameseAccents(queryCity);
+
+    // Chuẩn hóa khoảng trắng, loại bỏ dấu gạch ngang (-) và chuyển sang chữ thường để đối chiếu
+    const cleanKey = queryCity.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+
+    // Nếu nằm trong map các tỉnh thành không được OpenWeatherMap nhận diện trực tiếp
+    if (MAPPED_PROVINCES[cleanKey]) {
+        return MAPPED_PROVINCES[cleanKey];
+    }
 
     return queryCity.trim();
 };
@@ -54,13 +89,13 @@ export const getWeatherByProvince = async (province) => {
     if (!province) return null;
     const queryCity = normalizeCity(province);
 
-    // Double URL-encode to prevent backend http.Get crash on spaces
-    const doubleEncodedCity = encodeURIComponent(encodeURIComponent(queryCity));
-    const url = `${API_BASE_URL}/api/weather?city=${doubleEncodedCity}`;
-    console.log(url);
+    // Dùng single URL-encode thay vì double URL-encode vì API backend hỗ trợ tốt nhất ở định dạng này
+    const encodedCity = encodeURIComponent(queryCity);
+    const url = `${API_BASE_URL}/api/weather?city=${encodedCity}`;
+    console.log("Weather API Request URL:", url);
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
+    console.log("Weather API Response Data:", data);
 
     if (data.status !== "success" || !data.data) {
         throw new Error(data.message || "Failed to fetch weather data");

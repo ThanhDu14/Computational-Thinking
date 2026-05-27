@@ -87,7 +87,7 @@ export default function BlogDetailPage() {
   const related = BLOG_POSTS.filter(p => p.id !== post.id).slice(0, 2);
 
   return (
-    <div className="w-full pt-28 pb-20">
+    <div className="w-full pt-36 pb-20">
       {/* Hero Image */}
       <div className="relative h-[55vh] w-full overflow-hidden mb-16">
         <img src={post.image} alt={post.title} className="w-full h-full object-cover" />

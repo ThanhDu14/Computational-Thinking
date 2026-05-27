@@ -144,7 +144,7 @@ export default function MyItinerariesPage() {
   };
 
   return (
-    <div className="pt-28 pb-24 min-h-screen bg-background transition-colors duration-500 relative overflow-hidden">
+    <div className="pt-36 pb-24 min-h-screen bg-background transition-colors duration-500 relative overflow-hidden">
       {/* Decorative Blobs */}
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>

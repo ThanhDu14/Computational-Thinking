@@ -65,7 +65,10 @@ export default function DestinationsPage() {
     };
 
     // Filters
-    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedCity, setSelectedCity] = useState(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        return queryParams.get('city') || '';
+    });
     const [selectedCategory, setSelectedCategory] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const [appliedSearch, setAppliedSearch] = useState('');
@@ -137,7 +140,7 @@ export default function DestinationsPage() {
             showModal(
                 'info',
                 'Yêu Cầu Đăng Nhập',
-                'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Sếp nhé. Sếp có muốn chuyển tới trang đăng nhập không?',
+                'Vui lòng đăng nhập để lưu địa điểm này vào Wishlist Bạn nhé. Bạn có muốn chuyển tới trang đăng nhập không?',
                 true,
                 () => navigate('/login')
             );
@@ -210,7 +213,7 @@ export default function DestinationsPage() {
         }
       `}</style>
 
-            <main className="pt-20 pb-20 px-6 max-w-7xl mx-auto">
+            <main className="pt-36 pb-20 px-6 max-w-7xl mx-auto">
                 {/* Header Section */}
                 <header className="mb-16">
                     <span className="font-label text-xs font-bold tracking-[0.1em] text-primary uppercase mb-4 block">{t('destinations.header.label')}</span>

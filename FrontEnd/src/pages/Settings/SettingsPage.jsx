@@ -156,7 +156,7 @@ const SettingsPage = () => {
   const avatarLetter = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
   return (
-    <div className="min-h-screen bg-background pt-28 pb-16 px-6 font-body text-on-surface">
+    <div className="min-h-screen bg-background pt-36 pb-16 px-6 font-body text-on-surface">
       <div className="max-w-6xl mx-auto">
         <div className="mb-10">
           <h1 className="text-4xl font-display font-bold tracking-tight text-on-surface mb-2">
