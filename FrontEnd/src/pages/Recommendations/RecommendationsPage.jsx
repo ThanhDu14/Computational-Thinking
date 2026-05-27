@@ -319,7 +319,7 @@ export default function RecommendationsPage() {
         }
       `}</style>
 
-      <main className="flex-grow flex items-center justify-center relative px-6 py-12 hero-gradient-bg-recom overflow-hidden">
+      <main className="flex-grow flex items-center justify-center relative px-6 pt-36 pb-12 hero-gradient-bg-recom overflow-hidden">
         {/* Abstract Background Blobs */}
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#C7D2FE] rounded-full mix-blend-multiply filter blur-3xl opacity-30">
         </div>

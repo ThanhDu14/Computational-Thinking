@@ -242,7 +242,7 @@ export default function PlaceDetailPage() {
   const longitude = location.longitude || location.lng || location.lon || null;
   const hasCoordinates = latitude !== null && longitude !== null && latitude !== 0 && longitude !== 0;
   const allImages = (location.images || []).map(img => typeof img === 'string' ? img : img.image).filter(Boolean);
-  const displayImages = allImages.length > 0 ? allImages.slice(0, 4) : [getCityImage(city)];
+  const displayImages = allImages.length > 0 ? allImages.slice(0, 5) : [getCityImage(city)];
   const heroImage = displayImages[0];
   const inWishlist = isInWishlist(location);
   const currentUserId = user?.uid || user?.id;
@@ -274,31 +274,117 @@ export default function PlaceDetailPage() {
 
           {/* Side Images Grid */}
           {displayImages.length > 1 && (
-            <div className="hidden md:grid md:col-span-2 grid-cols-2 gap-1 md:gap-2 h-full">
-              {displayImages.slice(1, 4).map((img, i) => (
-                <div
-                  key={i}
-                  className={`overflow-hidden ${i === 1 && displayImages.length === 3 ? 'col-span-2' : ''
-                    } ${i === 1 && displayImages.length === 4 ? 'rounded-tr-2xl' : ''
-                    } ${i === 2 && displayImages.length === 4 ? 'rounded-br-2xl' : ''
-                    }`}
-                >
+            <div className="hidden md:grid md:col-span-2 gap-1 md:gap-2 h-full grid-cols-2">
+              {/* Nếu có đúng 1 ảnh nhỏ (tổng 2 ảnh) */}
+              {displayImages.length === 2 && (
+                <div className="col-span-2 overflow-hidden rounded-r-2xl h-full">
                   <motion.img
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 + (i * 0.1) }}
-                    src={img}
-                    alt={`${name} ${i + 2}`}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    src={displayImages[1]}
+                    alt={`${name} 2`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 cursor-pointer"
                   />
                 </div>
-              ))}
+              )}
 
-              {/* If fewer than 4 images, fill with empty/pattern or just stretch others */}
-              {displayImages.length === 2 && (
-                <div className="col-span-2 bg-surface-container-low flex items-center justify-center rounded-r-2xl border border-white/10">
-                  <Sparkles className="w-8 h-8 text-primary/20" />
+              {/* Nếu có đúng 2 ảnh nhỏ (tổng 3 ảnh) */}
+              {displayImages.length === 3 && (
+                <div className="col-span-2 flex flex-col gap-1 md:gap-2 h-full">
+                  <div className="overflow-hidden rounded-tr-2xl h-[calc(50%-2px)] md:h-[calc(50%-4px)]">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[1]}
+                      alt={`${name} 2`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="overflow-hidden rounded-br-2xl h-[calc(50%-2px)] md:h-[calc(50%-4px)]">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[2]}
+                      alt={`${name} 3`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
                 </div>
+              )}
+
+              {/* Nếu có 3 ảnh nhỏ (tổng 4 ảnh) */}
+              {displayImages.length === 4 && (
+                <>
+                  <div className="overflow-hidden">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[1]}
+                      alt={`${name} 2`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="overflow-hidden rounded-tr-2xl">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[2]}
+                      alt={`${name} 3`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="col-span-2 overflow-hidden rounded-br-2xl">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[3]}
+                      alt={`${name} 4`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Nếu có 4 ảnh nhỏ (tổng 5 ảnh) */}
+              {displayImages.length === 5 && (
+                <>
+                  <div className="overflow-hidden">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[1]}
+                      alt={`${name} 2`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="overflow-hidden rounded-tr-2xl">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[2]}
+                      alt={`${name} 3`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="overflow-hidden">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[3]}
+                      alt={`${name} 4`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                  <div className="overflow-hidden rounded-br-2xl">
+                    <motion.img
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      src={displayImages[4]}
+                      alt={`${name} 5`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer"
+                    />
+                  </div>
+                </>
               )}
             </div>
           )}

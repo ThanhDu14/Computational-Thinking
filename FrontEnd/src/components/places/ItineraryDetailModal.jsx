@@ -120,13 +120,13 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
       const token = await getToken();
       await saveRecommendation(plan, token);
       setHasChanges(false);
-      showModal('success', 'Đã Cập Nhật', 'Thứ tự các địa điểm trong lịch trình của Sếp đã được lưu lại thành công!');
+      showModal('success', 'Đã Cập Nhật', 'Thứ tự các địa điểm trong lịch trình của bạn đã được lưu lại thành công!');
       if (onSaveSuccess) {
         onSaveSuccess();
       }
     } catch (err) {
       console.error("Save plan changes error:", err);
-      showModal('error', 'Lỗi', 'Không thể lưu thay đổi lúc này. Sếp vui lòng thử lại sau nhé.');
+      showModal('error', 'Lỗi', 'Không thể lưu thay đổi lúc này. Bạn vui lòng thử lại sau nhé.');
     } finally {
       setIsSaving(false);
     }
@@ -426,7 +426,7 @@ export default function ItineraryDetailModal({ planId, isOpen, onClose, onSaveSu
                         </div>
                       </div>
                       <p className="text-[11px] text-on-surface-variant/60 mt-2 italic text-center px-4">
-                        * Lộ trình được vẽ tự động dựa trên tên địa điểm. Sếp có thể kéo thả địa điểm ở bên trái để thay đổi vị trí.
+                        * Lộ trình được vẽ tự động dựa trên tên địa điểm. Bạn có thể kéo thả địa điểm ở bên trái để thay đổi vị trí.
                       </p>
                     </div>
                   )}

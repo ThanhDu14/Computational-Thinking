@@ -103,7 +103,7 @@ export default function SearchPage() {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
-    <div className="w-full pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <div className="w-full pt-36 pb-20 px-6 max-w-7xl mx-auto">
       {/* Search hero area */}
       <div className="bg-gradient-to-br from-primary to-primary-container rounded-[3rem] p-10 md:p-20 mb-16 text-center text-white relative shadow-xl shadow-primary/20">
         <div className="absolute inset-0 rounded-[3rem] overflow-hidden pointer-events-none">

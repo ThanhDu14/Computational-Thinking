@@ -1,7 +1,7 @@
 export const VIETNAM_PROVINCES = [
     { label: 'Tất cả', value: '' },
     { label: 'An Giang', value: 'an giang' },
-    { label: 'Bà Rịa - Vũng Tàu', value: 'ba ria vung tau' },
+    { label: 'Bà Rịa - Vũng Tàu', value: 'ba ria - vung tau' },
     { label: 'Bạc Liêu', value: 'bac lieu' },
     { label: 'Bắc Giang', value: 'bac giang' },
     { label: 'Bắc Kạn', value: 'bac kan' },

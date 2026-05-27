@@ -148,7 +148,7 @@ export default function BlogPage() {
   const [featured, ...rest] = BLOG_POSTS;
 
   return (
-    <div className="w-full pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <div className="w-full pt-36 pb-20 px-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="text-center mb-16">
         <span className="inline-block px-4 py-1.5 bg-primary-container/30 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-4 font-body">

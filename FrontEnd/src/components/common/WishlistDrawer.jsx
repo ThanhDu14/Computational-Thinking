@@ -56,49 +56,52 @@ const WishlistDrawer = () => {
                             </button>
                         </div>
                     ) : (
-                        wishlist.map((place, idx) => (
-                            <div key={`wl-${idx}`} className="flex gap-4 p-3 bg-surface-container/30 hover:bg-surface-container rounded-2xl border border-outline-variant/20 transition-colors group">
-                                {/* Image */}
-                                <div className="w-24 h-24 shrink-0 rounded-xl overflow-hidden cursor-pointer" onClick={() => { setIsWishlistOpen(false); navigate('/place/' + encodeURIComponent(place.location_name)); }}>
-                                    <img 
-                                        src={place.images?.[0] || place.image || "https://placehold.co/150"} 
-                                        alt={place.location_name} 
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                </div>
-                                {/* Details */}
-                                <div className="flex flex-col flex-1 py-1 overflow-hidden">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h3 
-                                            onClick={() => { setIsWishlistOpen(false); navigate('/place/' + encodeURIComponent(place.location_name)); }}
-                                            className="font-bold text-on-surface line-clamp-1 hover:text-primary cursor-pointer transition-colors"
-                                        >
-                                            {place.location_name || place.name}
-                                        </h3>
-                                        <button 
-                                            onClick={() => toggleWishlist(place)}
-                                            className="p-1.5 text-on-surface-variant hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0 -mr-1"
-                                            title="Xóa khỏi Wishlist"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
+                        wishlist.map((place, idx) => {
+                            const identifier = place.id || place.location_id || encodeURIComponent(place.name || place.location_name);
+                            return (
+                                <div key={`wl-${idx}`} className="flex gap-4 p-3 bg-surface-container/30 hover:bg-surface-container rounded-2xl border border-outline-variant/20 transition-colors group">
+                                    {/* Image */}
+                                    <div className="w-24 h-24 shrink-0 rounded-xl overflow-hidden cursor-pointer" onClick={() => { setIsWishlistOpen(false); navigate('/place/' + identifier); }}>
+                                        <img 
+                                            src={place.images?.[0] || place.image || "https://placehold.co/150"} 
+                                            alt={place.name || place.location_name} 
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
                                     </div>
-                                    <p className="text-xs text-on-surface-variant flex items-center gap-1 mb-auto line-clamp-1">
-                                        <MapPin className="w-3 h-3 text-primary" /> {place.region || place.location || 'Unknown'}
-                                    </p>
-                                    
-                                    <div className="flex justify-between items-center mt-2">
-                                        <span className="text-sm font-bold text-primary">Free</span>
-                                        <button 
-                                            onClick={() => { setIsWishlistOpen(false); navigate('/place/' + encodeURIComponent(place.location_name)); }}
-                                            className="text-xs font-bold flex items-center gap-1 group-hover:underline text-on-surface"
-                                        >
-                                            Chi tiết <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                                        </button>
+                                    {/* Details */}
+                                    <div className="flex flex-col flex-1 py-1 overflow-hidden">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h3 
+                                                onClick={() => { setIsWishlistOpen(false); navigate('/place/' + identifier); }}
+                                                className="font-bold text-on-surface line-clamp-1 hover:text-primary cursor-pointer transition-colors"
+                                            >
+                                                {place.name || place.location_name}
+                                            </h3>
+                                            <button 
+                                                onClick={() => toggleWishlist(place)}
+                                                className="p-1.5 text-on-surface-variant hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0 -mr-1"
+                                                title="Xóa khỏi Wishlist"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-on-surface-variant flex items-center gap-1 mb-auto line-clamp-1">
+                                            <MapPin className="w-3 h-3 text-primary" /> {place.region || place.location || 'Unknown'}
+                                        </p>
+                                        
+                                        <div className="flex justify-between items-center mt-2">
+                                            <span className="text-sm font-bold text-primary">Free</span>
+                                            <button 
+                                                onClick={() => { setIsWishlistOpen(false); navigate('/place/' + identifier); }}
+                                                className="text-xs font-bold flex items-center gap-1 group-hover:underline text-on-surface"
+                                            >
+                                                Chi tiết <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
 

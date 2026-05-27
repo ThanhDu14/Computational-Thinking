@@ -42,7 +42,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto pt-20 pb-20 px-6">
+    <div className="w-full max-w-5xl mx-auto pt-36 pb-20 px-6">
       <div className="text-center mb-16">
         <SectionHeader title={t('contact.header.title')} subtitle={t('contact.header.subtitle')} className="items-center" />
         <p className="text-lg text-on-surface-variant font-body mt-6 max-w-2xl mx-auto">
